@@ -28,61 +28,93 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().intToRoman(58))
+    println(Solution().intToRoman(2000))
 
 }
 
 class Solution {
-    val romanMap = HashMap<Int, String>().apply {
-        put(1,"I")
-        put(4,"IV")
-        put(5,"V")
-        put(9,"IX")
-        put(10,"X")
-        put(40,"XL")
-        put(50,"L")
-        put(90,"XC")
-        put(100,"C")
-        put(400,"CD")
-        put(500,"D")
-        put(900,"CM")
-        put(1000,"M")
-    }
+    fun intToRoman(num: Int): String {
+        return buildString {
+            var number = num
+            while (number >= 1000) {
+                number -= 1000
+                append('M')
+            }
 
-    val tensMap = HashMap<Int, Int>().apply{
-        put(0,1)
-        put(1,10)
-        put(2,100)
-        put(3,1000)
-    }
+            when (number) {
+                in 900..999 -> {
+                    number -= 900
+                    append("CM")
+                }
+                in 500..899 -> {
+                    number -= 500
+                    append("D")
+                    while (number >= 100) {
+                        number -= 100
+                        append('C')
+                    }
+                }
+                in 400..499 -> {
+                    number -= 400
+                    append("CD")
+                }
+                else -> {
+                    while (number >= 100) {
+                        number -= 100
+                        append('C')
+                    }
+                }
+            }
 
-    fun intToRoman(num: Int): String = buildString{
-        var currentNum = num
-        val count = num.toString().length
+            when (number) {
+                in 90..99 -> {
+                    number -= 90
+                    append("XC")
+                }
+                in 50..89 -> {
+                    number -= 50
+                    append("L")
+                    while (number >= 10) {
+                        number -= 10
+                        append('X')
+                    }
+                }
+                in 40..49 -> {
+                    number -= 40
+                    append("XL")
+                }
+                else -> {
+                    while (number >= 10) {
+                        number -= 10
+                        append('X')
+                    }
+                }
+            }
 
-        repeat(count) { index ->
-            val numForAdding = currentNum % 10
-            currentNum /= 10
-            append(getRomanNumber(numForAdding * tensMap[index]!!))
-        }
-        reverse()
-    }
-
-    private fun getRomanNumber(num: Int): String{
-        return when(num){
-            in 1 until 4 -> getCurrentNum(1, num)
-            in 5 until 9 -> getCurrentNum(5, num)
-            in 10 until 40 -> getCurrentNum(10, num/10)
-            in 50 until 90 -> getCurrentNum(50, num/10)
-            in 100 until 400 -> getCurrentNum(100, num/100)
-            in 500 until 900 -> getCurrentNum(500, num/100)
-            else -> romanMap[num]!!
-        }
-    }
-
-    private fun getCurrentNum(key: Int, count: Int): String = buildString{
-        repeat(count){
-            append(romanMap[key])
+            when (number) {
+                9 -> {
+                    number -= 9
+                    append("IX")
+                }
+                in 5..8 -> {
+                    number -= 5
+                    append("V")
+                    while (number >= 1) {
+                        number -= 1
+                        append('I')
+                    }
+                }
+                4 -> {
+                    number -= 4
+                    append("IV")
+                }
+                else -> {
+                    while (number >= 1) {
+                        number -= 1
+                        append('I')
+                    }
+                }
+            }
         }
     }
 }
