@@ -28,94 +28,41 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().intToRoman(2000))
+    println(Solution().multiply("22","32"))
 
 }
 
 class Solution {
-    fun intToRoman(num: Int): String {
-        return buildString {
-            var number = num
-            while (number >= 1000) {
-                number -= 1000
-                append('M')
-            }
+    fun multiply(num1: String, num2: String): String {
+        if (num1 == "0" || num2 == "0") {
+            return "0"
+        }
 
-            when (number) {
-                in 900..999 -> {
-                    number -= 900
-                    append("CM")
-                }
-                in 500..899 -> {
-                    number -= 500
-                    append("D")
-                    while (number >= 100) {
-                        number -= 100
-                        append('C')
-                    }
-                }
-                in 400..499 -> {
-                    number -= 400
-                    append("CD")
-                }
-                else -> {
-                    while (number >= 100) {
-                        number -= 100
-                        append('C')
-                    }
-                }
-            }
-
-            when (number) {
-                in 90..99 -> {
-                    number -= 90
-                    append("XC")
-                }
-                in 50..89 -> {
-                    number -= 50
-                    append("L")
-                    while (number >= 10) {
-                        number -= 10
-                        append('X')
-                    }
-                }
-                in 40..49 -> {
-                    number -= 40
-                    append("XL")
-                }
-                else -> {
-                    while (number >= 10) {
-                        number -= 10
-                        append('X')
-                    }
-                }
-            }
-
-            when (number) {
-                9 -> {
-                    number -= 9
-                    append("IX")
-                }
-                in 5..8 -> {
-                    number -= 5
-                    append("V")
-                    while (number >= 1) {
-                        number -= 1
-                        append('I')
-                    }
-                }
-                4 -> {
-                    number -= 4
-                    append("IV")
-                }
-                else -> {
-                    while (number >= 1) {
-                        number -= 1
-                        append('I')
-                    }
-                }
+        val len1: Int = num1.length
+        val len2: Int = num2.length
+        val len = len1 + len2
+        val product = IntArray(len)
+        for (i in num1.length - 1 downTo 0) {
+            val a: Int = num1[i] - '0'
+            println("a - $a")
+            for (j in num2.length - 1 downTo 0) {
+                val b: Int = num2[j] - '0'
+                val idx: Int = i + j + 1
+                val p = a * b + product[idx]
+                println("b - $b, i = $i. j = $j, p = $p")
+                product[idx] = p % 10
+                product[idx - 1] += p / 10
             }
         }
+
+        val start = if (product[0] != 0) 0 else 1
+        val result = StringBuilder()
+        for (i in start until len) {
+            print("${product[i]} ")
+            result.append(product[i])
+        }
+        println()
+        return result.toString()
     }
 }
 
