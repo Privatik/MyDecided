@@ -28,41 +28,41 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().multiply("22","32"))
-
+    println((Solution().searchRange(intArrayOf(1, 4),4)).joinToString(" "))
 }
 
 class Solution {
-    fun multiply(num1: String, num2: String): String {
-        if (num1 == "0" || num2 == "0") {
-            return "0"
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        if (nums.size < 2){
+           if (nums.isEmpty()) return intArrayOf(-1,-1)
         }
-
-        val len1: Int = num1.length
-        val len2: Int = num2.length
-        val len = len1 + len2
-        val product = IntArray(len)
-        for (i in num1.length - 1 downTo 0) {
-            val a: Int = num1[i] - '0'
-            println("a - $a")
-            for (j in num2.length - 1 downTo 0) {
-                val b: Int = num2[j] - '0'
-                val idx: Int = i + j + 1
-                val p = a * b + product[idx]
-                println("b - $b, i = $i. j = $j, p = $p")
-                product[idx] = p % 10
-                product[idx - 1] += p / 10
+        var l = 0
+        var r = nums.size - 1
+        while (l < r){
+            val m = (l + r) / 2
+            if (nums[m] >= target){
+                r = m
+            } else {
+                l = m + 1
             }
         }
+        val startPoint = if (nums[l] == target) l else -1
 
-        val start = if (product[0] != 0) 0 else 1
-        val result = StringBuilder()
-        for (i in start until len) {
-            print("${product[i]} ")
-            result.append(product[i])
+        l = 0
+        r = nums.size - 1
+        while (l < r){
+            val m = (l + r) / 2
+            if (nums[m] > target){
+                r = m
+            } else {
+                l = m + 1
+            }
         }
-        println()
-        return result.toString()
+        val endPoint = if (nums[l - 1] == target) {
+            if (nums.last() == target) l else l - 1
+        } else -1
+
+        return intArrayOf(startPoint,endPoint)
     }
 }
 
