@@ -28,41 +28,43 @@ fun main(args: Array<String>) {
     }
 
 
-    println((Solution().searchRange(intArrayOf(1, 4),4)).joinToString(" "))
+    println((Solution().searchRange(intArrayOf(5,7,7,8,8),8)).joinToString(" "))
 }
 
 class Solution {
     fun searchRange(nums: IntArray, target: Int): IntArray {
-        if (nums.size < 2){
-           if (nums.isEmpty()) return intArrayOf(-1,-1)
-        }
-        var l = 0
-        var r = nums.size - 1
-        while (l < r){
-            val m = (l + r) / 2
-            if (nums[m] >= target){
-                r = m
-            } else {
-                l = m + 1
-            }
-        }
-        val startPoint = if (nums[l] == target) l else -1
+        var left = 0
+        var right = nums.size - 1
 
-        l = 0
-        r = nums.size - 1
-        while (l < r){
-            val m = (l + r) / 2
-            if (nums[m] > target){
-                r = m
-            } else {
-                l = m + 1
-            }
+        if (nums.isEmpty() || nums[left] > target || nums[right] < target) {
+            return intArrayOf(-1, -1)
         }
-        val endPoint = if (nums[l - 1] == target) {
-            if (nums.last() == target) l else l - 1
-        } else -1
 
-        return intArrayOf(startPoint,endPoint)
+        while (left < right) {
+            val mid = left + (right - left) / 2
+            if (nums[mid] < target) left = mid + 1
+            else if (nums[mid] > target) right = mid - 1
+            else right = mid
+        }
+
+        if (nums[left] != target) {
+            return intArrayOf(-1, -1)
+        }
+
+        val leftBound = left
+
+        right = nums.size - 1
+
+
+        while (left < right) {
+            val mid = left + (right - left) / 2
+            if (nums[mid] == target) left = mid + 1
+            else right = mid
+        }
+
+        val rightBound = if (nums[left] == target) left else left - 1
+
+        return intArrayOf(leftBound, rightBound)
     }
 }
 
