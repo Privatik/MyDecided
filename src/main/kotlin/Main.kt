@@ -1,3 +1,6 @@
+import java.util.*
+
+
 fun main(args: Array<String>) {
 
     val head = TreeNode(3).also { root ->
@@ -28,43 +31,49 @@ fun main(args: Array<String>) {
     }
 
 
-    println((Solution().searchRange(intArrayOf(5,7,7,8,8),8)).joinToString(" "))
+    println((Solution().groupAnagrams(arrayOf("eat","tea","tan","ate","nat","bat"))))
 }
 
 class Solution {
-    fun searchRange(nums: IntArray, target: Int): IntArray {
-        var left = 0
-        var right = nums.size - 1
+    fun groupAnagrams(strs: Array<String>): List<List<String>> {
+       val res: List<List<String>> = LinkedList()
 
-        if (nums.isEmpty() || nums[left] > target || nums[right] < target) {
-            return intArrayOf(-1, -1)
+        val mapStr = strs.map { str ->
+            str.groupingBy { it }
+                .eachCount()
         }
 
-        while (left < right) {
-            val mid = left + (right - left) / 2
-            if (nums[mid] < target) left = mid + 1
-            else if (nums[mid] > target) right = mid - 1
-            else right = mid
+        mapStr.forEachIndexed { index, map ->
+            res.forEach { resList ->
+                resList
+            }
         }
 
-        if (nums[left] != target) {
-            return intArrayOf(-1, -1)
+
+        return emptyList()
+    }
+
+    fun fgroupAnagrams(strs: Array<String>): List<List<String>> {
+        val stringToOutputWords = HashMap<String, MutableList<String>>()
+
+        for (str in strs) {
+            val freqMap = TreeMap<Char, Int>()
+
+            str.chars().forEach { c: Int ->
+                freqMap.merge(
+                    c.toChar(), 1
+                ) { a: Int?, b: Int? -> Integer.sum(a!!, b!!) }
+            }
+
+            stringToOutputWords
+                .computeIfAbsent(freqMap.toString()) {
+                    s: String? -> ArrayList()
+            }
+
+            stringToOutputWords[freqMap.toString()]!!.add(str)
         }
 
-        val leftBound = left
-
-        right = nums.size - 1
-
-
-        while (left < right) {
-            val mid = left + (right - left) / 2
-            if (nums[mid] == target) left = mid + 1
-            else right = mid
-        }
-
-        val rightBound = if (nums[left] == target) left else left - 1
-
-        return intArrayOf(leftBound, rightBound)
+        return stringToOutputWords.values.stream().toList()
     }
 }
 
