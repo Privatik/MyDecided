@@ -31,49 +31,26 @@ fun main(args: Array<String>) {
     }
 
 
-    println((Solution().groupAnagrams(arrayOf("eat","tea","tan","ate","nat","bat"))))
+    println((Solution().groupAnagrams(arrayOf("eeat","tea","tan","ate","nat","bat"))))
 }
 
 class Solution {
     fun groupAnagrams(strs: Array<String>): List<List<String>> {
-       val res: List<List<String>> = LinkedList()
-
-        val mapStr = strs.map { str ->
-            str.groupingBy { it }
-                .eachCount()
-        }
-
-        mapStr.forEachIndexed { index, map ->
-            res.forEach { resList ->
-                resList
-            }
-        }
-
-
-        return emptyList()
-    }
-
-    fun fgroupAnagrams(strs: Array<String>): List<List<String>> {
         val stringToOutputWords = HashMap<String, MutableList<String>>()
 
         for (str in strs) {
             val freqMap = TreeMap<Char, Int>()
 
-            str.chars().forEach { c: Int ->
-                freqMap.merge(
-                    c.toChar(), 1
-                ) { a: Int?, b: Int? -> Integer.sum(a!!, b!!) }
+            str.toCharArray().forEach { c ->
+                freqMap.merge(c, 1) { a: Int, b: Int -> a + b }
             }
 
-            stringToOutputWords
-                .computeIfAbsent(freqMap.toString()) {
-                    s: String? -> ArrayList()
-            }
+            stringToOutputWords.computeIfAbsent(freqMap.toString()) { s: String? -> ArrayList() }
 
             stringToOutputWords[freqMap.toString()]!!.add(str)
         }
 
-        return stringToOutputWords.values.stream().toList()
+        return stringToOutputWords.values.toList()
     }
 }
 
