@@ -30,27 +30,42 @@ fun main(args: Array<String>) {
         }
     }
 
+    val link = ListNode(1).apply {
+        add(mutableListOf(4,3,2,5,2))
+    }
 
-    println((Solution().groupAnagrams(arrayOf("eeat","tea","tan","ate","nat","bat"))))
+
+    println(Solution().partition(link,4).toString())
 }
 
 class Solution {
-    fun groupAnagrams(strs: Array<String>): List<List<String>> {
-        val stringToOutputWords = HashMap<String, MutableList<String>>()
+    fun partition(head: ListNode?, x: Int): ListNode? {
+        val lessList = HeadAndCurr()
+        val geList = HeadAndCurr()
 
-        for (str in strs) {
-            val freqMap = TreeMap<Char, Int>()
-
-            str.toCharArray().forEach { c ->
-                freqMap.merge(c, 1) { a: Int, b: Int -> a + b }
-            }
-
-            stringToOutputWords.computeIfAbsent(freqMap.toString()) { s: String? -> ArrayList() }
-
-            stringToOutputWords[freqMap.toString()]!!.add(str)
+        var curr = head
+        while (curr != null) {
+            (if (curr.`val` < x) lessList else geList).append(curr)
+            curr = curr.next
         }
 
-        return stringToOutputWords.values.toList()
+        lessList.curr?.next = null
+        geList.curr?.next = null
+        return lessList.curr?.let { lessListCurr ->
+            lessListCurr.next = geList.head
+            lessList.head
+        } ?: geList.head
+    }
+
+    private data class HeadAndCurr(var head: ListNode? = null, var curr: ListNode? = null) {
+        inline fun append(node: ListNode) {
+            if (curr == null) {
+                head = node
+            } else {
+                curr!!.next = node
+            }
+            curr = node
+        }
     }
 }
 
