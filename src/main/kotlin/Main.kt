@@ -35,38 +35,39 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().partition(link,4).toString())
+    println(Solution().numDecodings("06"))
 }
 
 class Solution {
-    fun partition(head: ListNode?, x: Int): ListNode? {
-        val lessList = HeadAndCurr()
-        val geList = HeadAndCurr()
-
-        var curr = head
-        while (curr != null) {
-            (if (curr.`val` < x) lessList else geList).append(curr)
-            curr = curr.next
-        }
-
-        lessList.curr?.next = null
-        geList.curr?.next = null
-        return lessList.curr?.let { lessListCurr ->
-            lessListCurr.next = geList.head
-            lessList.head
-        } ?: geList.head
-    }
-
-    private data class HeadAndCurr(var head: ListNode? = null, var curr: ListNode? = null) {
-        inline fun append(node: ListNode) {
-            if (curr == null) {
-                head = node
+    fun numDecodings(s: String): Int {
+        var counter = 0
+        val currentSte = StringBuilder()
+        s.forEachIndexed { index, number ->
+            if (number == '0' && currentSte.isNotEmpty()){
+                currentSte.append(number)
             } else {
-                curr!!.next = node
+                if (number != '0'){
+                    counter++
+                    currentSte.append(number)
+                }
+                if (currentSte.length > 1){
+                    if (isGetNumber(currentSte.toString().toInt())){
+                        counter++
+                    } else {
+                        currentSte.clear()
+                    }
+                }
             }
-            curr = node
         }
+
+        return counter
     }
+
+    fun isGetNumber(strNumber: Int): Boolean =
+        when (strNumber){
+            in 10..26 -> true
+            else -> false
+        }
 }
 
 
