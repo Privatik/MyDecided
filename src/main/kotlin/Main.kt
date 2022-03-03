@@ -35,28 +35,24 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().numDecodings("06"))
+    println(Solution().numDecodings("106"))
 }
 
 class Solution {
     fun numDecodings(s: String): Int {
         var counter = 0
         val currentSte = StringBuilder()
-        s.forEachIndexed { index, number ->
-            if (number == '0' && currentSte.isNotEmpty()){
+        if (s[0] == '0') return 0
+        s.forEach { number ->
+            if (number != '0'){
+                counter++
                 currentSte.append(number)
-            } else {
-                if (number != '0'){
+            }
+            if (currentSte.length > 1){
+                if (isGetNumber(currentSte.toString().toInt())){
                     counter++
-                    currentSte.append(number)
                 }
-                if (currentSte.length > 1){
-                    if (isGetNumber(currentSte.toString().toInt())){
-                        counter++
-                    } else {
-                        currentSte.clear()
-                    }
-                }
+                currentSte.deleteAt(0)
             }
         }
 
