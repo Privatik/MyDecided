@@ -1,6 +1,3 @@
-import java.util.*
-
-
 fun main(args: Array<String>) {
 
     val head = TreeNode(3).also { root ->
@@ -35,35 +32,30 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().numDecodings("106"))
+    println(Solution().numDecodings("1086"))
 }
 
 class Solution {
-    fun numDecodings(s: String): Int {
-        var counter = 0
-        val currentSte = StringBuilder()
-        if (s[0] == '0') return 0
-        s.forEach { number ->
-            if (number != '0'){
-                counter++
-                currentSte.append(number)
+    fun numDecodings(s: String?): Int {
+        if (s == null || s.isEmpty()) {
+            return 0
+        }
+        val n = s.length
+        val dp = IntArray(n + 1)
+        dp[0] = 1
+        dp[1] = if (s[0] != '0') 1 else 0
+        for (i in 2..n) {
+            val first = s.substring(i - 1, i).toInt()
+            val second = s.substring(i - 2, i).toInt()
+            if (first in 1..9) {
+                dp[i] += dp[i - 1]
             }
-            if (currentSte.length > 1){
-                if (isGetNumber(currentSte.toString().toInt())){
-                    counter++
-                }
-                currentSte.deleteAt(0)
+            if (second in 10..26) {
+                dp[i] += dp[i - 2]
             }
         }
-
-        return counter
+        return dp[n]
     }
-
-    fun isGetNumber(strNumber: Int): Boolean =
-        when (strNumber){
-            in 10..26 -> true
-            else -> false
-        }
 }
 
 
