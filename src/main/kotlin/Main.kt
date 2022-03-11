@@ -32,29 +32,29 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().numDecodings("1086"))
+    println(Solution().simplifyPath("/../"))
 }
 
 class Solution {
-    fun numDecodings(s: String?): Int {
-        if (s == null || s.isEmpty()) {
-            return 0
-        }
-        val n = s.length
-        val dp = IntArray(n + 1)
-        dp[0] = 1
-        dp[1] = if (s[0] != '0') 1 else 0
-        for (i in 2..n) {
-            val first = s.substring(i - 1, i).toInt()
-            val second = s.substring(i - 2, i).toInt()
-            if (first in 1..9) {
-                dp[i] += dp[i - 1]
+    fun simplifyPath(path: String): String {
+        val builder = StringBuilder("/")
+        path
+            .drop(1)
+            .split("/")
+            .filter { it.isNotBlank() }
+            .forEach {
+                if (it != ".."){
+                    builder.append("$it/")
+                } else {
+                    val newStr = builder.dropLast(1).dropLastWhile { char -> char != '/' }
+                    builder.clear()
+                    builder.append(newStr)
+                }
             }
-            if (second in 10..26) {
-                dp[i] += dp[i - 2]
-            }
-        }
-        return dp[n]
+
+        if (builder.isEmpty()) builder.append("/")
+
+        return builder.dropLast(if (builder.length == 1) 0 else 1).toString()
     }
 }
 
