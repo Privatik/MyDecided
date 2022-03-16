@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
 
     val head = TreeNode(3).also { root ->
@@ -32,29 +34,24 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().simplifyPath("/../"))
+    println(Solution().canVisitAllRooms(listOf(listOf(2), listOf(), listOf(1))))
 }
 
 class Solution {
-    fun simplifyPath(path: String): String {
-        val builder = StringBuilder("/")
-        path
-            .drop(1)
-            .split("/")
-            .filter { it.isNotBlank() }
-            .forEach {
-                if (it != ".."){
-                    builder.append("$it/")
-                } else {
-                    val newStr = builder.dropLast(1).dropLastWhile { char -> char != '/' }
-                    builder.clear()
-                    builder.append(newStr)
-                }
+    fun canVisitAllRooms(rooms: List<List<Int>>): Boolean {
+        val hasKeysMap = hashMapOf<Int, Int>()
+        var currentRoom = 0
+
+        while (currentRoom < rooms.size){
+            if (currentRoom == 0 || hasKeysMap.containsKey(currentRoom)) {
+                hasKeysMap += rooms[currentRoom].map { Pair(it,it) }
+            } else {
+                return false
             }
+            currentRoom++
+        }
 
-        if (builder.isEmpty()) builder.append("/")
-
-        return builder.dropLast(if (builder.length == 1) 0 else 1).toString()
+        return true
     }
 }
 
