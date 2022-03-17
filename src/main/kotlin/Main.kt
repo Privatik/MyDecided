@@ -1,5 +1,6 @@
 import java.util.*
 
+
 fun main(args: Array<String>) {
 
     val head = TreeNode(3).also { root ->
@@ -34,24 +35,33 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().canVisitAllRooms(listOf(listOf(2), listOf(), listOf(1))))
+    println(Solution().combine(4,2))
 }
 
 class Solution {
-    fun canVisitAllRooms(rooms: List<List<Int>>): Boolean {
-        val hasKeysMap = hashMapOf<Int, Int>()
-        var currentRoom = 0
-
-        while (currentRoom < rooms.size){
-            if (currentRoom == 0 || hasKeysMap.containsKey(currentRoom)) {
-                hasKeysMap += rooms[currentRoom].map { Pair(it,it) }
-            } else {
-                return false
+    fun combine(n: Int, k: Int): List<List<Int>> {
+        val listCombine = mutableListOf<List<Int>>()
+        val count = countCombinations(n,k)
+        repeat(count){ indexCombine ->
+            repeat(k){ indexInCouple ->
+                listCombine.add()
             }
-            currentRoom++
         }
+        return emptyList()
+    }
 
-        return true
+    private fun currentList(start: Int, endIndex: Int): List<Int> {
+
+        return emptyList()
+    }
+
+    private fun countCombinations(n: Int, k: Int): Int {
+        return factorial(n)/(factorial(k) * factorial(n - k))
+    }
+
+    private fun factorial(n: Int): Int {
+        if (n == 1) return n
+        return n * factorial(n - 1)
     }
 }
 
