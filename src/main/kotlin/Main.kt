@@ -35,19 +35,41 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().combine(4,2))
+    println(Solution().combine(4,3))
 }
+
+/*
+
+  List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (k > n || k < 0) {
+            return result;
+        }
+        if (k == 0) {
+            result.add(new ArrayList<Integer>());
+            return result;
+        }
+        result = combine(n - 1, k - 1);
+        for (List<Integer> list : result) {
+            list.add(n);
+        }
+        result.addAll(combine(n - 1, k));
+        return result;
+
+
+ */
 
 class Solution {
     fun combine(n: Int, k: Int): List<List<Int>> {
-        val listCombine = mutableListOf<List<Int>>()
-        val count = countCombinations(n,k)
-        repeat(count){ indexCombine ->
-            repeat(k){ indexInCouple ->
-                listCombine.add()
-            }
+        if (k == 0) {
+            return listOf(listOf())
         }
-        return emptyList()
+
+        val result = combine(n - 1, TestJavaClass.k - 1)
+        for (list in result) {
+            list.add(n)
+        }
+        result.addAll(combine(n - 1, TestJavaClass.k))
+        return result
     }
 
     private fun currentList(start: Int, endIndex: Int): List<Int> {
