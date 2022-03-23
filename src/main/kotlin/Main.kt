@@ -35,7 +35,10 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().combine(4,3))
+    println(Solution().searchMatrix(
+        matrix = arrayOf(intArrayOf(1,3,5,6), intArrayOf(10,11,16,20), intArrayOf(23,30,34,60)),
+        target = 3
+    ))
 }
 
 /*
@@ -59,31 +62,35 @@ fun main(args: Array<String>) {
  */
 
 class Solution {
-    fun combine(n: Int, k: Int): List<List<Int>> {
-        if (k == 0) {
-            return listOf(listOf())
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        var currentPosition = -1
+
+        for(index in matrix.indices) {
+            val currentRow = matrix[index]
+            if (currentRow.last() >= target && target >= currentRow.first()){
+                if (currentRow.last() == target || currentRow.first() == target) return true
+                currentPosition = index
+                break
+            }
         }
 
-        val result = combine(n - 1, TestJavaClass.k - 1)
-        for (list in result) {
-            list.add(n)
+        return if (currentPosition == -1) false else isHasValue(matrix[currentPosition], target)
+    }
+
+    private fun isHasValue(row: IntArray, target: Int): Boolean{
+        var l = 0
+        var r = row.lastIndex
+
+        while (l < r){
+            val m = (l + r) / 2
+            if (row[m] >= target){
+                r = m
+            } else {
+                l = m + 1
+            }
         }
-        result.addAll(combine(n - 1, TestJavaClass.k))
-        return result
-    }
 
-    private fun currentList(start: Int, endIndex: Int): List<Int> {
-
-        return emptyList()
-    }
-
-    private fun countCombinations(n: Int, k: Int): Int {
-        return factorial(n)/(factorial(k) * factorial(n - k))
-    }
-
-    private fun factorial(n: Int): Int {
-        if (n == 1) return n
-        return n * factorial(n - 1)
+        return target == row[l]
     }
 }
 
