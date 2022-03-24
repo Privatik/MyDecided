@@ -35,10 +35,7 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().searchMatrix(
-        matrix = arrayOf(intArrayOf(1,3,5,6), intArrayOf(10,11,16,20), intArrayOf(23,30,34,60)),
-        target = 3
-    ))
+    println(Solution().isValidSerialization("9,#,92,#,#"))
 }
 
 /*
@@ -62,35 +59,33 @@ fun main(args: Array<String>) {
  */
 
 class Solution {
-    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
-        var currentPosition = -1
+    private val sentinel = "#"
+    private val point = ","
 
-        for(index in matrix.indices) {
-            val currentRow = matrix[index]
-            if (currentRow.last() >= target && target >= currentRow.first()){
-                if (currentRow.last() == target || currentRow.first() == target) return true
-                currentPosition = index
-                break
+    private val endPreorder = "#,#"
+
+    fun isValidSerialization(preorder: String): Boolean {
+        val stack = Stack<Int>()
+
+        if (preorder == sentinel) return true
+        if (endPreorder != preorder.takeLast(3)) return false
+
+        preorder
+            .dropLast(2)
+            .split(point)
+            .asSequence()
+            .filter {
+                it != point
+            }.forEach {
+                if (it != sentinel){
+                    stack.add(it.toInt())
+                } else {
+                    if (stack.empty()) return false
+                    stack.pop()
+                }
             }
-        }
 
-        return if (currentPosition == -1) false else isHasValue(matrix[currentPosition], target)
-    }
-
-    private fun isHasValue(row: IntArray, target: Int): Boolean{
-        var l = 0
-        var r = row.lastIndex
-
-        while (l < r){
-            val m = (l + r) / 2
-            if (row[m] >= target){
-                r = m
-            } else {
-                l = m + 1
-            }
-        }
-
-        return target == row[l]
+        return stack.empty()
     }
 }
 
