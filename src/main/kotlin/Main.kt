@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 
 fun main(args: Array<String>) {
@@ -35,7 +36,7 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().isValidSerialization("9,#,92,#,#"))
+    println(Solution().isValidSerialization("9,#,5,#,1,#,#"))
 }
 
 /*
@@ -59,33 +60,28 @@ fun main(args: Array<String>) {
  */
 
 class Solution {
-    private val sentinel = "#"
-    private val point = ","
-
-    private val endPreorder = "#,#"
-
     fun isValidSerialization(preorder: String): Boolean {
-        val stack = Stack<Int>()
+        // preorder: root, left, right
+        if (preorder.isBlank() || preorder.isEmpty())
+            return false
 
-        if (preorder == sentinel) return true
-        if (endPreorder != preorder.takeLast(3)) return false
+        val stack: Deque<String> = ArrayDeque()
 
-        preorder
-            .dropLast(2)
-            .split(point)
-            .asSequence()
-            .filter {
-                it != point
-            }.forEach {
-                if (it != sentinel){
-                    stack.add(it.toInt())
-                } else {
-                    if (stack.empty()) return false
-                    stack.pop()
+        val array = preorder.split(",")
+
+        array.forEach { char ->
+            while (char == "#" && stack.isNotEmpty() && stack.peek() == char) {
+                stack.pop()
+                if (stack.isEmpty()) {
+                    return false
                 }
+                stack.pop()
             }
+            stack.push(char)
+        }
 
-        return stack.empty()
+
+        return stack.size == 1 && stack.peek() == "#"
     }
 }
 
