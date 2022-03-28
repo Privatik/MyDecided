@@ -1,4 +1,6 @@
 import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 import kotlin.system.measureTimeMillis
 
 
@@ -36,7 +38,7 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().isValidSerialization("9,#,5,#,1,#,#"))
+    println(Solution().canFinish(2, arrayOf(intArrayOf(1,0), intArrayOf(0,1))))
 }
 
 /*
@@ -60,29 +62,30 @@ fun main(args: Array<String>) {
  */
 
 class Solution {
-    fun isValidSerialization(preorder: String): Boolean {
-        // preorder: root, left, right
-        if (preorder.isBlank() || preorder.isEmpty())
-            return false
 
-        val stack: Deque<String> = ArrayDeque()
+    fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
+        val set = HashMap<Int,Item>()
 
-        val array = preorder.split(",")
-
-        array.forEach { char ->
-            while (char == "#" && stack.isNotEmpty() && stack.peek() == char) {
-                stack.pop()
-                if (stack.isEmpty()) {
-                    return false
-                }
-                stack.pop()
-            }
-            stack.push(char)
+        var couunt = 0
+        while (couunt < prerequisites.size){
+            val arr = prerequisites[couunt]
+            if (arr[1] == set)
+            val currentItem = Item(arr[1])
+            val nextItem = Item(arr[0])
+            currentItem.nextItems.add(nextItem)
+            set.add(currentItem)
+            set.add(nextItem)
+            couunt++
         }
 
-
-        return stack.size == 1 && stack.peek() == "#"
+        return true
     }
+
+    private data class Item(
+        val courseCourse: Int,
+        val nextItems: MutableList<Item> = mutableListOf()
+
+    )
 }
 
 
