@@ -1,7 +1,4 @@
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
-import kotlin.system.measureTimeMillis
+import kotlin.collections.ArrayList
 
 
 fun main(args: Array<String>) {
@@ -38,7 +35,7 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().canFinish(2, arrayOf(intArrayOf(1,0), intArrayOf(0,1))))
+    println(Solution().canFinish(3, arrayOf(intArrayOf(2,0), intArrayOf(1,2))))
 }
 
 /*
@@ -64,28 +61,24 @@ fun main(args: Array<String>) {
 class Solution {
 
     fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
-        val set = HashMap<Int,Item>()
+        val graph = Array<ArrayList<Int>>(numCourses) { arrayListOf() }
+        val degree = IntArray(numCourses)
+        val bfs = arrayListOf<Int>()
 
-        var couunt = 0
-        while (couunt < prerequisites.size){
-            val arr = prerequisites[couunt]
-            if (arr[1] == set)
-            val currentItem = Item(arr[1])
-            val nextItem = Item(arr[0])
-            currentItem.nextItems.add(nextItem)
-            set.add(currentItem)
-            set.add(nextItem)
-            couunt++
+        /*
+        5   [[1,4],[2,4],[3,1],[3,2]]
+
+
+         */
+        for (e in prerequisites) {
+            graph[e[1]].add(e[0])
+            degree[e[0]]++
         }
 
-        return true
+        for (i in 0 until numCourses) if (degree[i] == 0) bfs.add(i)
+        for (i in bfs.indices) for (j in graph[bfs[i]]) if (--degree[j] == 0) bfs.add(j)
+        return bfs.size == numCourses
     }
-
-    private data class Item(
-        val courseCourse: Int,
-        val nextItems: MutableList<Item> = mutableListOf()
-
-    )
 }
 
 
