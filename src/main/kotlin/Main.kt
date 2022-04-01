@@ -35,49 +35,30 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().canFinish(3, arrayOf(intArrayOf(2,0), intArrayOf(1,2))))
+    println(Solution().jump(intArrayOf(2,3,1,1,4)))
 }
 
-/*
-
-  List<List<Integer>> result = new ArrayList<List<Integer>>();
-        if (k > n || k < 0) {
-            return result;
-        }
-        if (k == 0) {
-            result.add(new ArrayList<Integer>());
-            return result;
-        }
-        result = combine(n - 1, k - 1);
-        for (List<Integer> list : result) {
-            list.add(n);
-        }
-        result.addAll(combine(n - 1, k));
-        return result;
-
-
- */
 
 class Solution {
+    fun jump(nums: IntArray): Int {
+        val array = IntArray(nums.size)
+        var currentIndex = 0
+        var result = nums.size
 
-    fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
-        val graph = Array<ArrayList<Int>>(numCourses) { arrayListOf() }
-        val degree = IntArray(numCourses)
-        val bfs = arrayListOf<Int>()
+        while (currentIndex < nums.size){
+            repeat(nums[currentIndex]) { index ->
+                array[currentIndex + index]++
+                if (array[currentIndex + index] >= nums.size){
+                    result = currentIndex + index
 
-        /*
-        5   [[1,4],[2,4],[3,1],[3,2]]
+                }
 
+            }
 
-         */
-        for (e in prerequisites) {
-            graph[e[1]].add(e[0])
-            degree[e[0]]++
+            currentIndex++
         }
 
-        for (i in 0 until numCourses) if (degree[i] == 0) bfs.add(i)
-        for (i in bfs.indices) for (j in graph[bfs[i]]) if (--degree[j] == 0) bfs.add(j)
-        return bfs.size == numCourses
+        return result
     }
 }
 
