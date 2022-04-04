@@ -41,24 +41,22 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun jump(nums: IntArray): Int {
-        val array = IntArray(nums.size)
-        var currentIndex = 0
-        var result = nums.size
+        val array = IntArray(nums.size + 1)
 
-        while (currentIndex < nums.size){
-            repeat(nums[currentIndex]) { index ->
-                array[currentIndex + index]++
-                if (array[currentIndex + index] >= nums.size){
-                    result = currentIndex + index
+        array[1] = 1
+        array[2] = if (nums[0] > 1) 1 else 2
+        for (index in 2..nums.size){
+            var post = array[index - 2]
 
-                }
-
+            if (nums[index - 2] < nums[index - 1]){
+                post += array[index - 1]
             }
 
-            currentIndex++
+            array[index] = post
         }
 
-        return result
+        println(array.joinToString(" "))
+        return array[nums.size]
     }
 }
 
