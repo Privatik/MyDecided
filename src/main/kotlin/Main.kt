@@ -35,27 +35,28 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().jump(intArrayOf(2,3,1,1,4)))
+    println(Solution().jump(intArrayOf(2,1)))
 }
 
 
 class Solution {
     fun jump(nums: IntArray): Int {
+        if (nums.size < 2){
+            return 0
+        }
+
         val array = IntArray(nums.size + 1)
 
         array[1] = 1
         array[2] = if (nums[0] > 1) 1 else 2
-        for (index in 2..nums.size){
-            var post = array[index - 2]
+        for (index in 2 until nums.size){
+            array[index + 1] = array[index]
 
-            if (nums[index - 2] < nums[index - 1]){
-                post += array[index - 1]
+            if (nums[index - 2] + (index - 2) > index){
+                array[index + 1]++
             }
-
-            array[index] = post
         }
 
-        println(array.joinToString(" "))
         return array[nums.size]
     }
 }
