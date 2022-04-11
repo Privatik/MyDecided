@@ -34,23 +34,25 @@ fun main(args: Array<String>) {
 //    }
 
 
-    println(Solution().jump(intArrayOf(2,3,1,1,4)))
+    println(Solution().checkSubarraySum(intArrayOf(23,2,6,4,7),6))
 }
 
 
 class Solution {
-    fun jump(nums: IntArray): Int {
-        var jumps = 0
-        var curEnd = 0
-        var curFarthest = 0
-        for (i in nums.indices) {
-            curFarthest = max(curFarthest, i + nums[i])
-            if (i == curEnd) {
-                jumps++
-                curEnd = curFarthest
-            }
+    fun checkSubarraySum(nums: IntArray, k: Int): Boolean {
+        nums.sort()
+
+
+        var prefix = 1
+
+        val currentMap = hashMapOf<Int, Int>()
+        currentMap[0] = nums[0]
+
+        while (prefix != nums.size){
+            currentMap[0] +=
         }
-        return jumps
+
+        return true
     }
 }
 
