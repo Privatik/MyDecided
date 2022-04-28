@@ -1,5 +1,3 @@
-import kotlin.math.max
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -29,50 +27,62 @@ fun main(args: Array<String>) {
 //        }
 //    }
 //
-//    val link = ListNode(1).apply {
-//        add(mutableListOf(4,3,2,5,2))
-//    }
+    val link = ListNode(1).apply {
+        add(mutableListOf(2,3,4))
+    }
+
+    val link3 = ListNode(1)
+    val link4 = ListNode(1).apply {
+        add(mutableListOf(2,3,4,5))
+    }
+    val link5 = ListNode(1).apply {
+        add(mutableListOf(2,3))
+    }
 
 
-    println(Solution().checkSubarraySum(intArrayOf(23,2,6,4,7),6))
+    println(Solution().swapPairs(link))
+    println(Solution().swapPairs(null))
+    println(Solution().swapPairs(link3))
+    println(Solution().swapPairs(link4))
+    println(Solution().swapPairs(link5))
 }
 
 
 class Solution {
-    fun checkSubarraySum(nums: IntArray, k: Int): Boolean {
-        nums.sort()
+    fun swapPairs(head: ListNode?): ListNode? {
+        return next(head)
+    }
 
-
-        var prefix = 1
-
-        val currentMap = hashMapOf<Int, Int>()
-        currentMap[0] = nums[0]
-
-        while (prefix != nums.size){
-            currentMap[0] +=
+    private fun next(
+        start: ListNode?
+    ): ListNode? {
+        if (start?.next == null){
+            return start
         }
-
-        return true
+        val current = start.next
+        start.next = next(current?.next)
+        current?.next = start
+        return current
     }
 }
 
 
-//class ListNode(var `val`: Int) {
-//    var next: ListNode? = null
-//
-//    fun add(list: MutableList<Int>){
-//        val l = list.removeAt(0)
-//        next = ListNode(l).also {
-//            if (list.isNotEmpty()){
-//                it.add(list)
-//            }
-//        }
-//    }
-//
-//    override fun toString(): String {
-//        return "$`val` ${next.toString()}"
-//    }
-//}
+class ListNode(var `val`: Int) {
+    var next: ListNode? = null
+
+    fun add(list: MutableList<Int>){
+        val l = list.removeAt(0)
+        next = ListNode(l).also {
+            if (list.isNotEmpty()){
+                it.add(list)
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return "$`val` ${next.toString()}"
+    }
+}
 //
 //
 //class TreeNode(var `val`: Int) {
