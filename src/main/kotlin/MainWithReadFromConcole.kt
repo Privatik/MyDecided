@@ -1,77 +1,72 @@
-/*
-3 5
-1 10
-2 9
-3 8
-4 7
-5 6
- */
+import java.lang.Integer.max
 
-data class Session(
-    val n: Int,
-    val workPairs: List<Pair<Int, Int>>
-)
+const val WATER = '~'
+const val EMPTY = '.'
+const val STONE = '*'
 
 fun main(){
     val count = readLine()!!.toInt()
-    val sessions = Array<Session?>(count) { null }
     val result = StringBuilder()
     repeat(count){ rootIndex ->
-        readLine()
-        readLine()!!.split(" ").also {
-            val n = it[0].toInt()
-            val k = it[1].toInt()
-
-            val list = List(k) {
-                val longValue = readLine()!!.split(" ").map { s -> s.toInt() }
-                Pair(longValue[0], longValue[1])
-            }
-            sessions[rootIndex] = Session(n, list)
+        if (rootIndex != 0){
+            result.append("\n")
         }
-    }
+        val values = readLine()!!.split(" ").map { it.toInt() }
 
-    sessions.forEachIndexed { index, session ->
-        val workArr = Array<Int>(session!!.n) { 0 }
-        val resultCurrentWork = StringBuilder()
-
-        session.workPairs.forEach { pair ->
-            var isAdd = false
-
-            var wIndex = 0
-
-            var minThread = 0
-
-            while (wIndex < workArr.size){
-                val currentValue = workArr[wIndex]
-                if (pair.first >= currentValue){
-                    val value = pair.first + pair.second
-                    resultCurrentWork.append(value)
-                    workArr[wIndex] = value
-
-                    isAdd = true
-                    break
+        val n = values[0]
+        val k = values[1]
+        val pool = Array(k) { 0 }
+        val water = Array(k) { 0 }
+        repeat(n){
+            readLine()!!.forEachIndexed { index, element ->
+                if (element == STONE){
+                    pool[index]++
                 }
-
-                if (workArr[minThread] > currentValue){
-                    minThread = wIndex
-                }
-
-                wIndex++
-            }
-
-            if (!isAdd){
-                val update = workArr[minThread] + pair.second
-                resultCurrentWork.append(update)
-                workArr[minThread] = update
-            }
-
-            if (index != session.workPairs.size - 1){
-                resultCurrentWork.append(" ")
             }
         }
 
-        result.append(resultCurrentWork)
-        if (index != count - 1){
+        val max = pool.maxOrNull()
+        val firstMax = pool.indexOfFirst { max == it }
+        val lastMax = pool.indexOfLast { max == it }
+
+        var maxIndex = 0
+        for (index in 1 until firstMax){
+            if (pool[maxIndex] <= pool[index]) {
+                maxIndex = index
+            } else {
+                water[index] = pool[maxIndex] - pool[index]
+            }
+        }
+
+        for (index in firstMax + 1 until lastMax){
+            water[index] = pool[firstMax] - pool[index]
+        }
+
+        maxIndex = pool.size - 1
+        for (index in pool.size - 2 downTo lastMax + 1){
+            if (pool[maxIndex] <= pool[index]) {
+                maxIndex = index
+            } else {
+                water[index] = pool[maxIndex] - pool[index]
+            }
+        }
+
+        for (row in n downTo 1){
+            for (column in 0 until k){
+                val w = water[column]
+                val p = pool[column]
+                if (w + p >= row){
+                    if (w != 0){
+                        result.append(WATER)
+                        water[column]--
+                    } else {
+                        result.append(STONE)
+                    }
+                } else{
+                    result.append(EMPTY)
+                }
+            }
+
             result.append("\n")
         }
     }
