@@ -1,75 +1,60 @@
-import java.lang.Integer.max
+import kotlin.math.abs
 
-const val WATER = '~'
+const val CROSS = 'X'
+const val ZERO = '0'
 const val EMPTY = '.'
-const val STONE = '*'
+
+const val YES = "YES"
+const val NO = "NO"
 
 fun main(){
-    val count = readLine()!!.toInt()
-    val result = StringBuilder()
-    repeat(count){ rootIndex ->
-        if (rootIndex != 0){
-            result.append("\n")
-        }
-        val values = readLine()!!.split(" ").map { it.toInt() }
+    val verticalZero = Array(3) {0}
+    val horizontalZero = Array(3) {0}
 
-        val n = values[0]
-        val k = values[1]
-        val pool = Array(k) { 0 }
-        val water = Array(k) { 0 }
-        repeat(n){
-            readLine()!!.forEachIndexed { index, element ->
-                if (element == STONE){
-                    pool[index]++
-                }
-            }
-        }
+    val verticalCross = Array(3) {0}
+    val horizontalCross = Array(3) {0}
 
-        val max = pool.maxOrNull()
-        val firstMax = pool.indexOfFirst { max == it }
-        val lastMax = pool.indexOfLast { max == it }
+    var countCross = 0
+    var countZero = 0
 
-        var maxIndex = 0
-        for (index in 1 until firstMax){
-            if (pool[maxIndex] <= pool[index]) {
-                maxIndex = index
-            } else {
-                water[index] = pool[maxIndex] - pool[index]
-            }
-        }
+    var isWin = false
 
-        for (index in firstMax + 1 until lastMax){
-            water[index] = pool[firstMax] - pool[index]
-        }
-
-        maxIndex = pool.size - 1
-        for (index in pool.size - 2 downTo lastMax + 1){
-            if (pool[maxIndex] <= pool[index]) {
-                maxIndex = index
-            } else {
-                water[index] = pool[maxIndex] - pool[index]
-            }
-        }
-
-        for (row in n downTo 1){
-            for (column in 0 until k){
-                val w = water[column]
-                val p = pool[column]
-                if (w + p >= row){
-                    if (w != 0){
-                        result.append(WATER)
-                        water[column]--
-                    } else {
-                        result.append(STONE)
+    repeat(3){ row ->
+        readLine()!!.forEachIndexed { column, c ->
+            when (c){
+                CROSS -> {
+                    countCross++
+                    verticalCross[row] += 1
+                    horizontalCross[column] += 1
+                    if (verticalCross[row] == 3 || horizontalCross[column] == 3){
+                        if (isWin){
+                            println(NO)
+                            return
+                        }
+                        isWin = true
                     }
-                } else{
-                    result.append(EMPTY)
                 }
+                ZERO -> {
+                    countZero++
+                    verticalZero[row] += 1
+                    horizontalZero[column] += 1
+                    if (verticalZero[row] == 3 || horizontalZero[column] == 3){
+                        if (isWin){
+                            println(NO)
+                            return
+                        }
+                        isWin = true
+                    }
+                }
+                EMPTY -> { }
             }
-
-            result.append("\n")
         }
     }
 
-    println(result)
+    if (abs(countCross - countZero) > 1){
+        println(NO)
+        return
+    }
+
+    println(YES)
 }
