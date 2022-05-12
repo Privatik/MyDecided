@@ -40,29 +40,30 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().swapPairs(link))
-    println(Solution().swapPairs(null))
-    println(Solution().swapPairs(link3))
-    println(Solution().swapPairs(link4))
-    println(Solution().swapPairs(link5))
+    println(Solution().generateParenthesis(3))
 }
 
 
 class Solution {
-    fun swapPairs(head: ListNode?): ListNode? {
-        return next(head)
+    fun generateParenthesis(n: Int): List<String> {
+        val result = mutableListOf<String>()
+        recurse(n, 0, 0, "", result)
+        return result
     }
 
-    private fun next(
-        start: ListNode?
-    ): ListNode? {
-        if (start?.next == null){
-            return start
+    private fun recurse(n: Int, openBracket: Int, closedBracket: Int, currentString: String, result: MutableList<String>) {
+        if(currentString.length == n*2) {
+            result.add(currentString)
+            return
         }
-        val current = start.next
-        start.next = next(current?.next)
-        current?.next = start
-        return current
+
+        if(openBracket < n) {
+            recurse(n, openBracket + 1, closedBracket, "$currentString(", result)
+        }
+
+        if(closedBracket < openBracket) {
+            recurse(n, openBracket, closedBracket + 1, "$currentString)", result)
+        }
     }
 }
 
