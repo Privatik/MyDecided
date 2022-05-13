@@ -45,25 +45,36 @@ fun main(args: Array<String>) {
 
 
 class Solution {
+
+    private data class Decision(
+        val str: StringBuilder,
+        val open: Int,
+        val close: Int
+    )
+
     fun generateParenthesis(n: Int): List<String> {
-        val result = mutableListOf<String>()
-        recurse(n, 0, 0, "", result)
-        return result
-    }
+        val result = mutableListOf<Decision>()
+        val startDecision = Decision(StringBuilder(), 0, 0)
+        result.add(startDecision)
 
-    private fun recurse(n: Int, openBracket: Int, closedBracket: Int, currentString: String, result: MutableList<String>) {
-        if(currentString.length == n*2) {
-            result.add(currentString)
-            return
+        while (result.first().close != n){
+            val count = result.size
+            repeat(count){
+                val current = result.removeAt(0)
+
+                if (current.open < n){
+                    val decision = Decision(StringBuilder(current.str).apply { append('(') }, current.open + 1, current.close)
+                    result.add(decision)
+                }
+
+                if (current.close < current.open){
+                    val decision = Decision(StringBuilder(current.str).apply { append(')') }, current.open, current.close + 1)
+                    result.add(decision)
+                }
+            }
         }
 
-        if(openBracket < n) {
-            recurse(n, openBracket + 1, closedBracket, "$currentString(", result)
-        }
-
-        if(closedBracket < openBracket) {
-            recurse(n, openBracket, closedBracket + 1, "$currentString)", result)
-        }
+        return result.map { it.str.toString() }
     }
 }
 
