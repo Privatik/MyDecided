@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -47,34 +49,34 @@ fun main(args: Array<String>) {
 class Solution {
 
     private data class Decision(
-        val str: StringBuilder,
+        val str: String,
         val open: Int,
         val close: Int
     )
 
     fun generateParenthesis(n: Int): List<String> {
-        val result = mutableListOf<Decision>()
-        val startDecision = Decision(StringBuilder(), 0, 0)
+        val result: Queue<Decision> = LinkedList()
+        val startDecision = Decision("", 0, 0)
         result.add(startDecision)
 
-        while (result.first().close != n){
+        while (result.peek().close != n){
             val count = result.size
             repeat(count){
-                val current = result.removeAt(0)
+                val current = result.poll()
 
                 if (current.open < n){
-                    val decision = Decision(StringBuilder(current.str).apply { append('(') }, current.open + 1, current.close)
+                    val decision = Decision("${current.str}(", current.open + 1, current.close)
                     result.add(decision)
                 }
 
                 if (current.close < current.open){
-                    val decision = Decision(StringBuilder(current.str).apply { append(')') }, current.open, current.close + 1)
+                    val decision = Decision("${current.str})", current.open, current.close + 1)
                     result.add(decision)
                 }
             }
         }
 
-        return result.map { it.str.toString() }
+        return result.map { it.str }
     }
 }
 
