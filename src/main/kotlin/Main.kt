@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -40,29 +42,41 @@ fun main(args: Array<String>) {
     }
 
 
-    println(Solution().swapPairs(link))
-    println(Solution().swapPairs(null))
-    println(Solution().swapPairs(link3))
-    println(Solution().swapPairs(link4))
-    println(Solution().swapPairs(link5))
+    println(Solution().generateParenthesis(3))
 }
 
 
 class Solution {
-    fun swapPairs(head: ListNode?): ListNode? {
-        return next(head)
-    }
 
-    private fun next(
-        start: ListNode?
-    ): ListNode? {
-        if (start?.next == null){
-            return start
+    private data class Decision(
+        val str: String,
+        val open: Int,
+        val close: Int
+    )
+
+    fun generateParenthesis(n: Int): List<String> {
+        val result: Queue<Decision> = LinkedList()
+        val startDecision = Decision("", 0, 0)
+        result.add(startDecision)
+
+        while (result.peek().close != n){
+            val count = result.size
+            repeat(count){
+                val current = result.poll()
+
+                if (current.open < n){
+                    val decision = Decision("${current.str}(", current.open + 1, current.close)
+                    result.add(decision)
+                }
+
+                if (current.close < current.open){
+                    val decision = Decision("${current.str})", current.open, current.close + 1)
+                    result.add(decision)
+                }
+            }
         }
-        val current = start.next
-        start.next = next(current?.next)
-        current?.next = start
-        return current
+
+        return result.map { it.str }
     }
 }
 
