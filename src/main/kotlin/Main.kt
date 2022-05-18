@@ -41,42 +41,28 @@ fun main(args: Array<String>) {
         add(mutableListOf(2,3))
     }
 
-
-    println(Solution().generateParenthesis(3))
+    val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
+    println(Solution().kthSmallest(arr, 8))
 }
 
 
 class Solution {
 
-    private data class Decision(
-        val str: String,
-        val open: Int,
-        val close: Int
-    )
-
-    fun generateParenthesis(n: Int): List<String> {
-        val result: Queue<Decision> = LinkedList()
-        val startDecision = Decision("", 0, 0)
-        result.add(startDecision)
-
-        while (result.peek().close != n){
-            val count = result.size
-            repeat(count){
-                val current = result.poll()
-
-                if (current.open < n){
-                    val decision = Decision("${current.str}(", current.open + 1, current.close)
-                    result.add(decision)
-                }
-
-                if (current.close < current.open){
-                    val decision = Decision("${current.str})", current.open, current.close + 1)
-                    result.add(decision)
-                }
+    fun kthSmallest(matrix: Array<IntArray>, k: Int): Int {
+        val queue: Queue<Int> = PriorityQueue()
+        for (i in matrix.lastIndex downTo 0) {
+            for (j in matrix.lastIndex downTo 0){
+                queue.offer(matrix[j][i])
             }
         }
 
-        return result.map { it.str }
+        println(queue.joinToString(" "))
+
+        repeat(k){
+            queue.poll()
+        }
+
+        return queue.poll()
     }
 }
 
