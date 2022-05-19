@@ -42,28 +42,41 @@ fun main(args: Array<String>) {
     }
 
     val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
-    println(Solution().kthSmallest(arr, 8))
+    val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
+    val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
+    println(Solution().numUniqueEmails(strArr))
 }
 
 
 class Solution {
 
-    fun kthSmallest(matrix: Array<IntArray>, k: Int): Int {
-        val queue: Queue<Int> = PriorityQueue()
-        for (i in matrix.lastIndex downTo 0) {
-            for (j in matrix.lastIndex downTo 0){
-                queue.offer(matrix[j][i])
-            }
-        }
+    private val DOG = '@'
+    private val POINT = '.'
+    private val PLUS = '+'
 
-        println(queue.joinToString(" "))
-
-        repeat(k){
-            queue.poll()
-        }
-
-        return queue.poll()
+    fun numUniqueEmails(emails: Array<String>): Int {
+        val mailSet = HashSet<String>()
+        for (s in emails) mailSet.add(normalizeEmail(s))
+        return mailSet.size
     }
+
+    private fun normalizeEmail(s: String): String = StringBuilder().apply {
+        // append significant chars from the local name
+        var i = 0
+        var ch = s[i++]
+        do {
+            when (ch) {
+                POINT  -> Unit // skip
+                PLUS  -> while (i < s.length && s[i] != DOG) i++ // advance till end of local name
+                else -> append(ch)
+            }
+            ch = s[i++]
+        } while (i < s.length && ch != DOG)
+
+        // append the rest of the string
+        i--
+        while (i < s.length) append(s[i++])
+    }.toString()
 }
 
 
