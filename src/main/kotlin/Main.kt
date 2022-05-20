@@ -44,39 +44,55 @@ fun main(args: Array<String>) {
     val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
-    println(Solution().numUniqueEmails(strArr))
+
+    val arrmas = arrayOf(intArrayOf(0,0,0), intArrayOf(0,1,0), intArrayOf(0,0,0))
+    val arrmas2 = arrayOf(intArrayOf(0,1), intArrayOf(0,0))
+    val arrmas3 = arrayOf(intArrayOf(0,0), intArrayOf(0,1))
+    val arrmas4 = arrayOf(intArrayOf(1))
+    val arrmas5 = arrayOf(intArrayOf(0))
+    val arrmas6 = arrayOf(intArrayOf(1,0), intArrayOf(0,1))
+    println(Solution().uniquePathsWithObstacles(arrmas))
+    println(Solution().uniquePathsWithObstacles(arrmas2))
+    println(Solution().uniquePathsWithObstacles(arrmas3))
+    println(Solution().uniquePathsWithObstacles(arrmas4))
+    println(Solution().uniquePathsWithObstacles(arrmas5))
+    println(Solution().uniquePathsWithObstacles(arrmas6))
 }
 
 
 class Solution {
 
-    private val DOG = '@'
-    private val POINT = '.'
-    private val PLUS = '+'
+    fun uniquePathsWithObstacles(obstacleGrid: Array<IntArray>): Int {
+        val m = obstacleGrid.size
+        val n = obstacleGrid[0].size
 
-    fun numUniqueEmails(emails: Array<String>): Int {
-        val mailSet = HashSet<String>()
-        for (s in emails) mailSet.add(normalizeEmail(s))
-        return mailSet.size
-    }
+        val dp = ArrayList<IntArray>()
 
-    private fun normalizeEmail(s: String): String = StringBuilder().apply {
-        // append significant chars from the local name
-        var i = 0
-        var ch = s[i++]
-        do {
-            when (ch) {
-                POINT  -> Unit // skip
-                PLUS  -> while (i < s.length && s[i] != DOG) i++ // advance till end of local name
-                else -> append(ch)
+        val firstLine = IntArray(n) { 0 }
+
+        firstLine[0] = if (obstacleGrid[0][0] == 0) 1 else 0
+
+        for (i in 1 until n) {
+            firstLine[i] = if (obstacleGrid[0][i] == 1) 0 else firstLine[i-1]
+        }
+        dp.add(firstLine)
+
+        for (i in 1 until m) {
+            dp.add(IntArray(n) { 0 })
+        }
+
+        for (i in 1 until m) {
+            dp[i][0] = if (obstacleGrid[i][0] == 1) 0 else dp[i-1][0]
+        }
+
+        for (i in 1 until m) {
+            for (j in 1 until n) {
+                dp[i][j] = if (obstacleGrid[i][j] == 1) 0 else dp[i-1][j] + dp[i][j-1]
             }
-            ch = s[i++]
-        } while (i < s.length && ch != DOG)
+        }
 
-        // append the rest of the string
-        i--
-        while (i < s.length) append(s[i++])
-    }.toString()
+        return dp[m-1][n-1]
+    }
 }
 
 
