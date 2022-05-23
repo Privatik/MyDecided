@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.max
 
 fun main(args: Array<String>) {
 
@@ -65,47 +66,22 @@ class Solution {
     private val ONE = '1'
 
     fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
-        val list: Queue<Element> = LinkedList<Element>()
-        var step = strs.size - 1
-        var cursor = 0
-
-        repeat(strs.size){ index ->
-            val (zero, one) = strs[index].toCharArray().partition { it == ZERO }
-            list.add(Element(1, zero.size, one.size))
-        }
-
-        println(list)
-
-        while (step != 0){
-            val first = list.poll()
-            val second = list.peek()
-
-            val newM = first.m + second.m
-            val newN = first.n + second.n
-            if (newM > m || newN > n){
-                list.add(Element())
-            } else {
-                list.add(
-                    Element(
-                        first.count + second.count,
-                        newM,
-                        newN
-                    )
-                )
+        val dp = Array(m + 1) { Array(n + 1) { 0 } }
+        strs.forEach { s ->
+            val count = count(s)
+            for (i in m downTo count[0]) {
+                for (j in n downTo  count[1]) {
+                    dp[i][j] = max(1 + dp[i - count[0]][j - count[1]], dp[i][j])
+                }
             }
-            cursor++
-            if (step == cursor){
-                list.poll()
-                step--
-                cursor = 0
-                println("new step")
-            }
-            println(list)
         }
+        return dp[m][n]
+    }
 
-        println(list)
-
-        return list.poll().count
+    private fun count(str: String): IntArray {
+        val res = IntArray(2)
+        for (element in str) res[element - '0']++
+        return res
     }
 }
 
