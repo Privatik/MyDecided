@@ -45,53 +45,67 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    val arrmas = arrayOf(intArrayOf(0,0,0), intArrayOf(0,1,0), intArrayOf(0,0,0))
-    val arrmas2 = arrayOf(intArrayOf(0,1), intArrayOf(0,0))
-    val arrmas3 = arrayOf(intArrayOf(0,0), intArrayOf(0,1))
-    val arrmas4 = arrayOf(intArrayOf(1))
-    val arrmas5 = arrayOf(intArrayOf(0))
-    val arrmas6 = arrayOf(intArrayOf(1,0), intArrayOf(0,1))
-    println(Solution().uniquePathsWithObstacles(arrmas))
-    println(Solution().uniquePathsWithObstacles(arrmas2))
-    println(Solution().uniquePathsWithObstacles(arrmas3))
-    println(Solution().uniquePathsWithObstacles(arrmas4))
-    println(Solution().uniquePathsWithObstacles(arrmas5))
-    println(Solution().uniquePathsWithObstacles(arrmas6))
+
+    val arrStr = arrayOf("10","0001","111001","1","0")
+    val arrStr1 = arrayOf("10","0","1")
+    println(Solution().findMaxForm(arrStr,4,3))
+//    println(Solution().findMaxForm(arrStr1,1,1))
 }
 
 
 class Solution {
 
-    fun uniquePathsWithObstacles(obstacleGrid: Array<IntArray>): Int {
-        val m = obstacleGrid.size
-        val n = obstacleGrid[0].size
+    private data class Element(
+        val count: Int = 0,
+        val m: Int = 0,
+        val n: Int = 0
+    )
 
-        val dp = ArrayList<IntArray>()
+    private val ZERO = '0'
+    private val ONE = '1'
 
-        val firstLine = IntArray(n) { 0 }
+    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
+        val list: Queue<Element> = LinkedList<Element>()
+        var step = strs.size - 1
+        var cursor = 0
 
-        firstLine[0] = if (obstacleGrid[0][0] == 0) 1 else 0
-
-        for (i in 1 until n) {
-            firstLine[i] = if (obstacleGrid[0][i] == 1) 0 else firstLine[i-1]
-        }
-        dp.add(firstLine)
-
-        for (i in 1 until m) {
-            dp.add(IntArray(n) { 0 })
-        }
-
-        for (i in 1 until m) {
-            dp[i][0] = if (obstacleGrid[i][0] == 1) 0 else dp[i-1][0]
+        repeat(strs.size){ index ->
+            val (zero, one) = strs[index].toCharArray().partition { it == ZERO }
+            list.add(Element(1, zero.size, one.size))
         }
 
-        for (i in 1 until m) {
-            for (j in 1 until n) {
-                dp[i][j] = if (obstacleGrid[i][j] == 1) 0 else dp[i-1][j] + dp[i][j-1]
+        println(list)
+
+        while (step != 0){
+            val first = list.poll()
+            val second = list.peek()
+
+            val newM = first.m + second.m
+            val newN = first.n + second.n
+            if (newM > m || newN > n){
+                list.add(Element())
+            } else {
+                list.add(
+                    Element(
+                        first.count + second.count,
+                        newM,
+                        newN
+                    )
+                )
             }
+            cursor++
+            if (step == cursor){
+                list.poll()
+                step--
+                cursor = 0
+                println("new step")
+            }
+            println(list)
         }
 
-        return dp[m-1][n-1]
+        println(list)
+
+        return list.poll().count
     }
 }
 
