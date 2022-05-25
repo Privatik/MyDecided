@@ -1,5 +1,5 @@
 import java.util.*
-import kotlin.math.max
+
 
 fun main(args: Array<String>) {
 
@@ -47,41 +47,29 @@ fun main(args: Array<String>) {
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
 
-    val arrStr = arrayOf("10","0001","111001","1","0")
-    val arrStr1 = arrayOf("10","0","1")
-    println(Solution().findMaxForm(arrStr,4,3))
+    val arrStr = arrayOf(intArrayOf(5,4), intArrayOf(6,4), intArrayOf(6,7), intArrayOf(2,3))
+    val arrStr2 = arrayOf(intArrayOf(1,1), intArrayOf(1,1))
+    val arrStr3 = arrayOf(intArrayOf(1,3), intArrayOf(3,5), intArrayOf(6,7), intArrayOf(6,8), intArrayOf(8,4), intArrayOf(9,5))
+    println(Solution().maxEnvelopes(arrStr))
+    println(Solution().maxEnvelopes(arrStr2))
+    println(Solution().maxEnvelopes(arrStr3))
 //    println(Solution().findMaxForm(arrStr1,1,1))
 }
 
 
 class Solution {
 
-    private data class Element(
-        val count: Int = 0,
-        val m: Int = 0,
-        val n: Int = 0
-    )
-
-    private val ZERO = '0'
-    private val ONE = '1'
-
-    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
-        val dp = Array(m + 1) { Array(n + 1) { 0 } }
-        strs.forEach { s ->
-            val count = count(s)
-            for (i in m downTo count[0]) {
-                for (j in n downTo  count[1]) {
-                    dp[i][j] = max(1 + dp[i - count[0]][j - count[1]], dp[i][j])
-                }
-            }
+    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
+        envelopes.sortWith(compareBy({it[0]},{it[1]}))
+        val dp = IntArray(envelopes.size)
+        var len = 0
+        for (envelope in envelopes) {
+            var index = Arrays.binarySearch(dp, 0, len, envelope[1])
+            if (index < 0) index = -(index + 1)
+            dp[index] = envelope[1]
+            if (index == len) len++
         }
-        return dp[m][n]
-    }
-
-    private fun count(str: String): IntArray {
-        val res = IntArray(2)
-        for (element in str) res[element - '0']++
-        return res
+        return len
     }
 }
 
