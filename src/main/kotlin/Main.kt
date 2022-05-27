@@ -46,30 +46,30 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
+    println(Solution().numberOfSteps(14))
+    println(Solution().numberOfSteps(8))
+    println(Solution().numberOfSteps(123))
 
-    val arrStr = arrayOf(intArrayOf(5,4), intArrayOf(6,4), intArrayOf(6,7), intArrayOf(2,3))
-    val arrStr2 = arrayOf(intArrayOf(1,1), intArrayOf(1,1))
-    val arrStr3 = arrayOf(intArrayOf(1,3), intArrayOf(3,5), intArrayOf(6,7), intArrayOf(6,8), intArrayOf(8,4), intArrayOf(9,5))
-    println(Solution().maxEnvelopes(arrStr))
-    println(Solution().maxEnvelopes(arrStr2))
-    println(Solution().maxEnvelopes(arrStr3))
 //    println(Solution().findMaxForm(arrStr1,1,1))
 }
 
 
 class Solution {
 
-    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
-        envelopes.sortWith(compareBy({it[0]},{it[1]}))
-        val dp = IntArray(envelopes.size)
-        var len = 0
-        for (envelope in envelopes) {
-            var index = Arrays.binarySearch(dp, 0, len, envelope[1])
-            if (index < 0) index = -(index + 1)
-            dp[index] = envelope[1]
-            if (index == len) len++
+    fun numberOfSteps(num: Int): Int {
+        var steps= 0
+        var number = num
+
+        while(number > 0){
+            if (number % 2 == 0) {
+                number /= 2
+            }else{
+                number -= 1
+            }
+            steps++
         }
-        return len
+
+        return steps
     }
 }
 
