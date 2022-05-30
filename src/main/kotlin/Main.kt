@@ -1,6 +1,3 @@
-import java.util.*
-
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -46,9 +43,9 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    println(Solution().numberOfSteps(14))
-    println(Solution().numberOfSteps(8))
-    println(Solution().numberOfSteps(123))
+    println(Solution().divide(10,3))
+    println(Solution().divide(7,-3))
+    println(Solution().divide(Int.MIN_VALUE,-1))
 
 //    println(Solution().findMaxForm(arrStr1,1,1))
 }
@@ -56,21 +53,76 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun numberOfSteps(num: Int): Int {
-        var steps= 0
-        var number = num
+    fun divide(dividend: Int, divisor: Int): Int {
+        //Reduce the problem to positive long integer to make it easier.
+        //Use long to avoid integer overflow cases.
+        var sign = 1
+        if (dividend > 0 && divisor < 0 || dividend < 0 && divisor > 0) sign = -1
+        val ldividend = Math.abs(dividend.toLong())
+        val ldivisor = Math.abs(divisor.toLong())
 
-        while(number > 0){
-            if (number % 2 == 0) {
-                number /= 2
-            }else{
-                number -= 1
-            }
-            steps++
+        //Take care the edge cases.
+        if (ldivisor == 0L) return Int.MAX_VALUE
+        if (ldividend == 0L || ldividend < ldivisor) return 0
+        val lans = ldivide(ldividend, ldivisor)
+        val ans: Int
+        ans = if (lans > Int.MAX_VALUE) { //Handle overflow.
+            if (sign == 1) Int.MAX_VALUE else Int.MIN_VALUE
+        } else {
+            (sign * lans).toInt()
         }
-
-        return steps
+        return ans
     }
+
+    private fun ldivide(ldividend: Long, ldivisor: Long): Long {
+        // Recursion exit condition
+        if (ldividend < ldivisor) return 0
+
+        //  Find the largest multiple so that (divisor * multiple <= dividend),
+        //  whereas we are moving with stride 1, 2, 4, 8, 16...2^n for performance reason.
+        //  Think this as a binary search.
+        var sum = ldivisor
+        var multiple: Long = 1
+        while (sum + sum <= ldividend) {
+            sum += sum
+            multiple += multiple
+        }
+        //Look for additional value for the multiple from the reminder (dividend - sum) recursively.
+        return multiple + ldivide(ldividend - sum, ldivisor)
+    }
+
+//    fun divide(dividend: Int, divisor: Int): Int {
+//        var result = 0
+//        var sub = 1
+//        var sum = 0
+//
+//        if (dividend == 0) return 0
+//
+//        val positiveDividend = if (dividend < 0) {
+//            sub = -sub
+//            if (dividend == Int.MIN_VALUE) -(dividend + 1) else -dividend
+//        } else dividend
+//
+//        val positiveDivisor = if (divisor < 0) {
+//            sub = -sub
+//            -divisor
+//        } else divisor
+//
+//        println("divisor $positiveDivisor dividend ${dividend < 0} $positiveDividend $sub")
+//
+//        println("-$sum")
+//        while (sum + positiveDivisor <= positiveDividend){
+//            if (sum + positiveDivisor < 0) {
+//                result = if (sub < 0) Int.MIN_VALUE else Int.MAX_VALUE
+//                break
+//            }
+//            sum += positiveDivisor
+//            println("-next $sum")
+//            result++
+//        }
+//
+//        return result * sub
+//    }
 }
 
 
