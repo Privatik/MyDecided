@@ -45,21 +45,28 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    println(Solution().runningSum(intArrayOf(1,2,3,4)).joinToString(" "))
-    println(Solution().runningSum(intArrayOf(1,1,1,1,1)).joinToString(" "))
-    println(Solution().runningSum(intArrayOf(3,1,2,10,1)).joinToString(" "))
-
-//    println(Solution().findMaxForm(arrStr1,1,1))
+    val l = Solution().transpose(arrayOf(intArrayOf(1,2,3), intArrayOf(4,5,6), intArrayOf(7,8,9)))
+    l.forEach {
+        println(it.joinToString(" "))
+    }
+    println("----")
+    val k = Solution().transpose(arrayOf(intArrayOf(1,2,3), intArrayOf(4,5,6)))
+    k.forEach {
+        println(it.joinToString(" "))
+    }
 }
 
 
 class Solution {
 
-    fun runningSum(nums: IntArray): IntArray {
-        (1 until nums.size).forEach{ index ->
-            nums[index] += nums[index - 1]
+    fun transpose(matrix: Array<IntArray>): Array<IntArray> {
+        val result = Array(matrix[0].size) { IntArray(matrix.size) }
+        for (i in matrix.indices) {
+            for (j in matrix[i].indices) {
+                result[j][i] = matrix[i][j]
+            }
         }
-        return nums
+        return result
     }
 }
 
