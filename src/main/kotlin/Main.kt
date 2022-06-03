@@ -45,29 +45,59 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    val l = Solution().transpose(arrayOf(intArrayOf(1,2,3), intArrayOf(4,5,6), intArrayOf(7,8,9)))
-    l.forEach {
+    val array = arrayOf(
+        intArrayOf(3, 0, 1, 4, 2),
+        intArrayOf(5, 6, 3, 2, 1),
+        intArrayOf(1, 2, 0, 1, 5),
+        intArrayOf(4, 1, 0, 1, 7),
+        intArrayOf(1, 0, 3, 0, 5)
+    )
+
+    array.forEach {
         println(it.joinToString(" "))
     }
-    println("----")
-    val k = Solution().transpose(arrayOf(intArrayOf(1,2,3), intArrayOf(4,5,6)))
-    k.forEach {
-        println(it.joinToString(" "))
-    }
+    println("-------")
+    val numMatrix = NumMatrix(array)
+    println(numMatrix.sumRegion(2,1,4,3))
+    println(numMatrix.sumRegion(1,1,2,2))
+    println(numMatrix.sumRegion(1,2,2,4))
 }
 
 
 class Solution {
 
-    fun transpose(matrix: Array<IntArray>): Array<IntArray> {
-        val result = Array(matrix[0].size) { IntArray(matrix.size) }
+}
+
+class NumMatrix(matrix: Array<IntArray>) {
+
+    val acc = Array<IntArray>(matrix.size) { IntArray(matrix[0].size) }
+
+    init {
         for (i in matrix.indices) {
-            for (j in matrix[i].indices) {
-                result[j][i] = matrix[i][j]
+            var rowSum = 0
+            for (j in 0 until matrix[0].size) {
+                rowSum += matrix.at(i, j)
+                acc[i][j] = rowSum + acc.at(i - 1, j)
             }
         }
-        return result
+
+        println("------")
+        acc.forEach {
+            println(it.joinToString(" "))
+        }
+        println("------")
     }
+
+    fun sumRegion(row1: Int, col1: Int, row2: Int, col2: Int): Int {
+        return acc[row2][col2] - acc.at(row1 - 1, col2) - acc.at(row2, col1 - 1) + acc.at(row1 - 1, col1 - 1)
+    }
+
+    fun Array<IntArray>.at(i: Int, j: Int): Int {
+        if(i < 0 || i >= size || j < 0 || j >= this[0].size) return 0
+
+        return this[i][j]
+    }
+
 }
 
 
