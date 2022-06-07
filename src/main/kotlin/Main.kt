@@ -1,3 +1,5 @@
+import kotlin.math.min
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -43,58 +45,64 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    val headA1 = ListNode(4).apply {
-        add(mutableListOf(1,8,4,5))
-    }
-    val headB1 = ListNode(5).apply {
-        add(mutableListOf(6,1,8,4,5))
-    }
+    val num1 = intArrayOf(1,2,3,0,0,0)
+    val num2 = intArrayOf(2,5,6)
+    Solution().merge(num1, 3, num2, 3)
+    println(num1.joinToString(" "))
 
-    val headA2 = ListNode(1).apply {
-        add(mutableListOf(9,1,2,4))
-    }
-    val headB2 = ListNode(3).apply {
-        add(mutableListOf(2,4))
-    }
+    val num3 = intArrayOf(1)
+    val num4 = intArrayOf()
+    Solution().merge(num3, 1, num4, 0)
+    println(num3.joinToString(" "))
 
-    println(Solution().getIntersectionNode(headA1,headB1))
-    println(Solution().getIntersectionNode(headA2,headB2))
+    val num5 = intArrayOf(0)
+    val num6 = intArrayOf(1)
+    Solution().merge(num5, 0, num6, 1)
+    println(num5.joinToString(" "))
+
+    val num7 = intArrayOf(2,0)
+    val num8 = intArrayOf(1)
+    Solution().merge(num7, 1, num8, 1)
+    println(num7.joinToString(" "))
 }
 
 
 class Solution {
-    fun getIntersectionNode(headA:ListNode?, headB:ListNode?):ListNode? {
-        var p1 = headA
-        var p2 = headB
-
-        var len1 = 0
-        var len2 = 0
-
-        while (p1 != null) {
-            p1 = p1.next
-            len1++
-        }
-        while (p2 != null) {
-            p2 = p2.next
-            len2++
-        }
-
-        p1 = headA
-        p2 = headB
-        if (len1 > len2) {
-            for (i in 0 until len1 - len2) {
-                p1 = p1!!.next
-            }
-        } else {
-            for (i in 0 until len2 - len1) {
-                p2 = p2!!.next
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        if (n == 0) return
+        if (m == 0){
+            for (i in nums1.indices){
+                nums1[i] = nums2[i]
             }
         }
-        while (p1 != p2) {
-            p1 = p1!!.next
-            p2 = p2!!.next
+
+        var point1 = 0
+        var point2 = 0
+
+        val answer = IntArray(nums1.size)
+
+        while (answer.size > point1 + point2){
+            val index = point1 + point2
+
+            val isMore = nums1[point1] > nums2[point2]
+            val min = if (isMore){
+                nums2[point2]
+            } else {
+                nums1[point1]
+            }
+
+            answer[index] = min
+
+            if (isMore){
+                point2 = if (point2 + 1 < n - 1) point2 + 1 else n - 1
+            } else {
+                point1 = if (point1 + 1 < m - 1) point1 + 1 else m - 1
+            }
         }
-        return p1
+
+        for (i in nums1.indices){
+            nums1[i] = answer[i]
+        }
     }
 }
 
