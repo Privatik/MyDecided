@@ -43,40 +43,42 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    val num1 = intArrayOf(1,2,3,0,0,0)
-    val num2 = intArrayOf(2,5,6)
-    Solution().merge(num1, 3, num2, 3)
-    println(num1.joinToString(" "))
-//
-//    val num3 = intArrayOf(1)
-//    val num4 = intArrayOf()
-//    Solution().merge(num3, 1, num4, 0)
-//    println(num3.joinToString(" "))
-//
-//    val num5 = intArrayOf(0)
-//    val num6 = intArrayOf(1)
-//    Solution().merge(num5, 0, num6, 1)
-//    println(num5.joinToString(" "))
-
-//    val num7 = intArrayOf(2,0)
-//    val num8 = intArrayOf(1)
-//    Solution().merge(num7, 1, num8, 1)
-//    println(num7.joinToString(" "))
+    val str1 = "abcabcbb"
+    val str2 = "bbbbb"
+    val str3 = "pwwkew"
+    val str4 = "aab"
+    val str5 = "dvdf"
+    val str6 = "tmmzuxt"
+    println(Solution().lengthOfLongestSubstring(str1))
+//    println(Solution().lengthOfLongestSubstring(str2))
+//    println(Solution().lengthOfLongestSubstring(str3))
+//    println(Solution().lengthOfLongestSubstring(str4))
+//    println(Solution().lengthOfLongestSubstring(str5))
+//    println(Solution().lengthOfLongestSubstring(str6))
 }
 
 
 class Solution {
-    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
-        var tail1 = m - 1
-        var tail2 = n - 1
-        var finished = m + n - 1
-        while (tail1 >= 0 && tail2 >= 0) {
-            nums1[finished--] = if (nums1[tail1] > nums2[tail2]) nums1[tail1--] else nums2[tail2--]
+    fun lengthOfLongestSubstring(s: String): Int {
+        val use = hashMapOf<Char, Int>()
+        var max = 0
+        var preMax = 0
+        var startIndex = 1
+
+        s.forEachIndexed { index, c ->
+            val oldIndex = use[c]
+            println("symbol = $c index = $index oldIndex = $oldIndex  preMAx = $preMax max =$max startIndex = $startIndex")
+            if (oldIndex != null){
+                preMax -= oldIndex
+                startIndex = index + 1
+            }
+            if (++preMax > max){
+                max = preMax
+            }
+            use[c] = index + 1
         }
 
-        while (tail2 >= 0) {
-            nums1[finished--] = nums2[tail2--]
-        }
+        return max
     }
 }
 
