@@ -1,5 +1,6 @@
-public class TestJavaClass {
 
+
+public class TestJavaClass {
     public static void main(String[] args) {
         OutSide.Inside first = new OutSide.Inside();
 
@@ -16,21 +17,3 @@ public class TestJavaClass {
         System.out.println("body 2 " + second.get());
     }
 }
-
-
-
-class OutSide{
-
-    static class Inside {
-        private int count = 0;
-
-        void inc(){
-            count++;
-        }
-
-        int get(){
-            return count;
-        }
-    }
-}
-

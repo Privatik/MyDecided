@@ -1,3 +1,7 @@
+import java.util.*
+import kotlin.math.max
+
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -43,42 +47,42 @@ fun main(args: Array<String>) {
     val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
     val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
 
-    val str1 = "abcabcbb"
-    val str2 = "bbbbb"
-    val str3 = "pwwkew"
-    val str4 = "aab"
-    val str5 = "dvdf"
-    val str6 = "tmmzuxt"
-    println(Solution().lengthOfLongestSubstring(str1))
-//    println(Solution().lengthOfLongestSubstring(str2))
-//    println(Solution().lengthOfLongestSubstring(str3))
+    val str1 = "babad"
+    val str2 = "cbbd"
+
+    println(Solution().longestPalindrome(str1))
+    println(Solution().longestPalindrome(str2))
 //    println(Solution().lengthOfLongestSubstring(str4))
 //    println(Solution().lengthOfLongestSubstring(str5))
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
-
 class Solution {
-    fun lengthOfLongestSubstring(s: String): Int {
-        val use = hashMapOf<Char, Int>()
-        var max = 0
-        var preMax = 0
-        var startIndex = 1
+    fun longestPalindrome(s: String): String {
+        val answer = StringBuilder()
 
-        s.forEachIndexed { index, c ->
-            val oldIndex = use[c]
-            println("symbol = $c index = $index oldIndex = $oldIndex  preMAx = $preMax max =$max startIndex = $startIndex")
-            if (oldIndex != null){
-                preMax -= oldIndex
-                startIndex = index + 1
-            }
-            if (++preMax > max){
-                max = preMax
-            }
-            use[c] = index + 1
+        val couple = LinkedList<StringBuilder>()
+
+        s.forEach {
+            val builder = StringBuilder()
+            builder.append(it)
+            couple.add(builder)
         }
 
-        return max
+        var cycle = s.length
+        while (cycle != 0){
+            for (i in 0 until cycle - 1){
+                if (couple[0].first() == couple[1].last() && answer.length >= s.length - cycle){
+                    answer.clear()
+                    answer.append(couple[0].append(couple[1].last()))
+                }
+                charArr[i][i + 1] = charArr[i + 1].last()
+                charArr[i].print("Progress")
+            }
+            cycle--
+        }
+
+        return answer.toString()
     }
 }
 
