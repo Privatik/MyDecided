@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.math.max
 
 
 fun main(args: Array<String>) {
@@ -59,30 +58,21 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun longestPalindrome(s: String): String {
-        val answer = StringBuilder()
+        val n: Int = s.length
+        var res = ""
 
-        val couple = LinkedList<StringBuilder>()
+        val dp = Array(n) { BooleanArray(n) }
 
-        s.forEach {
-            val builder = StringBuilder()
-            builder.append(it)
-            couple.add(builder)
-        }
-
-        var cycle = s.length
-        while (cycle != 0){
-            for (i in 0 until cycle - 1){
-                if (couple[0].first() == couple[1].last() && answer.length >= s.length - cycle){
-                    answer.clear()
-                    answer.append(couple[0].append(couple[1].last()))
+        for (i in n - 1 downTo 0) {
+            for (j in i until n) {
+                dp[i][j] = s[i] == s[j] && (j - i < 3 || dp[i + 1][j - 1])
+                if (dp[i][j] && (res.isBlank() || j - i + 1 > res.length)) {
+                    res = s.substring(i, j + 1)
                 }
-                charArr[i][i + 1] = charArr[i + 1].last()
-                charArr[i].print("Progress")
             }
-            cycle--
         }
 
-        return answer.toString()
+        return res
     }
 }
 
