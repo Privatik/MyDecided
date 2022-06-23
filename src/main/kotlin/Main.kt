@@ -49,30 +49,57 @@ fun main(args: Array<String>) {
     val str1 = "babad"
     val str2 = "cbbd"
 
-    println(Solution().longestPalindrome(str1))
-    println(Solution().longestPalindrome(str2))
+    val root1 = TreeNode(0).apply{
+        left = TreeNode(0).apply {
+            left = TreeNode(0)
+            right = TreeNode(0)
+        }
+    }
+
+    val root2 = TreeNode(0).apply{
+        left = TreeNode(0).apply {
+            left = TreeNode(0).apply {
+                left = TreeNode(0).apply {
+                    right = TreeNode(0)
+                }
+            }
+        }
+    }
+
+    println(Solution().scheduleCourse(
+        arrayOf(
+            intArrayOf(100,200), intArrayOf(200,1300), intArrayOf(1000,1250), intArrayOf(2000,3200))
+    ))
+    println(Solution().scheduleCourse(
+        arrayOf(
+            intArrayOf(1,2))
+    ))
+    println(Solution().scheduleCourse(
+        arrayOf(
+            intArrayOf(3,2), intArrayOf(4,3))
+    ))
+    println(Solution().scheduleCourse(
+        arrayOf(
+            intArrayOf(5,5), intArrayOf(4,6), intArrayOf(2,6))
+    ))
+//    println(Solution().longestPalindrome(str1))
+//    println(Solution().longestPalindrome(str2))
 //    println(Solution().lengthOfLongestSubstring(str4))
 //    println(Solution().lengthOfLongestSubstring(str5))
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
 class Solution {
-    fun longestPalindrome(s: String): String {
-        val n: Int = s.length
-        var res = ""
-
-        val dp = Array(n) { BooleanArray(n) }
-
-        for (i in n - 1 downTo 0) {
-            for (j in i until n) {
-                dp[i][j] = s[i] == s[j] && (j - i < 3 || dp[i + 1][j - 1])
-                if (dp[i][j] && (res.isBlank() || j - i + 1 > res.length)) {
-                    res = s.substring(i, j + 1)
-                }
-            }
+    fun scheduleCourse(courses: Array<IntArray>): Int {
+        courses.sortWith(compareBy{ it[1] })
+        val pq = PriorityQueue<Int>(compareByDescending { it })
+        var time = 0
+        for (c in courses) {
+            time += c[0]
+            pq.add(c[0])
+            if (time > c[1]) time -= pq.poll()
         }
-
-        return res
+        return pq.size
     }
 }
 
@@ -93,6 +120,14 @@ class ListNode(var `val`: Int) {
         return "$`val` ${next.toString()}"
     }
 }
+
+
+
+class TreeNode(var `val`: Int) {
+    var left: TreeNode? = null
+    var right: TreeNode? = null
+}
+
 //
 //
 //class TreeNode(var `val`: Int) {
