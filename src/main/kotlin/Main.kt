@@ -66,22 +66,11 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().scheduleCourse(
-        arrayOf(
-            intArrayOf(100,200), intArrayOf(200,1300), intArrayOf(1000,1250), intArrayOf(2000,3200))
-    ))
-    println(Solution().scheduleCourse(
-        arrayOf(
-            intArrayOf(1,2))
-    ))
-    println(Solution().scheduleCourse(
-        arrayOf(
-            intArrayOf(3,2), intArrayOf(4,3))
-    ))
-    println(Solution().scheduleCourse(
-        arrayOf(
-            intArrayOf(5,5), intArrayOf(4,6), intArrayOf(2,6))
-    ))
+    println(Solution().isPossible(intArrayOf(9,3,5)))
+    println(Solution().isPossible(intArrayOf(1,1,1,2)))
+    println(Solution().isPossible(intArrayOf(5)))
+    println(Solution().isPossible(intArrayOf(1,5)))
+    println(Solution().isPossible(intArrayOf(1,1000000000)))
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
 //    println(Solution().lengthOfLongestSubstring(str4))
@@ -90,16 +79,22 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun scheduleCourse(courses: Array<IntArray>): Int {
-        courses.sortWith(compareBy{ it[1] })
-        val pq = PriorityQueue<Int>(compareByDescending { it })
-        var time = 0
-        for (c in courses) {
-            time += c[0]
-            pq.add(c[0])
-            if (time > c[1]) time -= pq.poll()
+    fun isPossible(target: IntArray): Boolean {
+        if (target.size == 1) return target[0] == 1
+        val pq = PriorityQueue<Int>(Collections.reverseOrder())
+        var sum = 0
+        for (t in target) {
+            pq.add(t)
+            sum += t
         }
-        return pq.size
+        while (pq.peek() != 1) {
+            val curr = pq.poll()
+            if (sum - curr == 1) return true
+            val x = curr % (sum - curr)
+            sum = sum - curr + x
+            if (x == 0 || x == curr) return false else pq.add(x)
+        }
+        return true
     }
 }
 
