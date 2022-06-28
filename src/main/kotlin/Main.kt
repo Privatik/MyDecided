@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.min
 
 
 fun main(args: Array<String>) {
@@ -66,11 +67,11 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().isPossible(intArrayOf(9,3,5)))
-    println(Solution().isPossible(intArrayOf(1,1,1,2)))
-    println(Solution().isPossible(intArrayOf(5)))
-    println(Solution().isPossible(intArrayOf(1,5)))
-    println(Solution().isPossible(intArrayOf(1,1000000000)))
+    println(Solution().minDeletions("aab"))
+    println(Solution().minDeletions("aaabbbcc"))
+    println(Solution().minDeletions("ceabaacb"))
+    println(Solution().minDeletions("accdcdadddbaadbc"))
+
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
 //    println(Solution().lengthOfLongestSubstring(str4))
@@ -79,22 +80,22 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun isPossible(target: IntArray): Boolean {
-        if (target.size == 1) return target[0] == 1
-        val pq = PriorityQueue<Int>(Collections.reverseOrder())
-        var sum = 0
-        for (t in target) {
-            pq.add(t)
-            sum += t
+    fun minDeletions(s: String): Int {
+        val freq = IntArray(26)
+        for (c in s.toCharArray()) freq[c - 'a']++
+        Arrays.sort(freq)
+
+        var keep = freq[25]
+        var prev = keep
+
+
+        var i = 24
+        while (i >= 0 && freq[i] != 0 && prev != 0) {
+            prev = min(freq[i], prev - 1)
+            keep += prev
+            i--
         }
-        while (pq.peek() != 1) {
-            val curr = pq.poll()
-            if (sum - curr == 1) return true
-            val x = curr % (sum - curr)
-            sum = sum - curr + x
-            if (x == 0 || x == curr) return false else pq.add(x)
-        }
-        return true
+        return s.length - keep
     }
 }
 
