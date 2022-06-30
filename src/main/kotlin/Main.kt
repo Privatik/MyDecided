@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.min
 
 
@@ -67,10 +68,8 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().minDeletions("aab"))
-    println(Solution().minDeletions("aaabbbcc"))
-    println(Solution().minDeletions("ceabaacb"))
-    println(Solution().minDeletions("accdcdadddbaadbc"))
+    println(Solution().minMoves2(intArrayOf(1,2,3)))
+    println(Solution().minMoves2(intArrayOf(1,10,2,3)))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -80,22 +79,24 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun minDeletions(s: String): Int {
-        val freq = IntArray(26)
-        for (c in s.toCharArray()) freq[c - 'a']++
-        Arrays.sort(freq)
+    fun minMoves2(nums: IntArray): Int {
+        nums.sort()
 
-        var keep = freq[25]
-        var prev = keep
+        var total = 0
+        var sum = 0
+        var min = Int.MAX_VALUE
 
-
-        var i = 24
-        while (i >= 0 && freq[i] != 0 && prev != 0) {
-            prev = min(freq[i], prev - 1)
-            keep += prev
-            i--
+        for (number in nums) {
+            total += number
         }
-        return s.length - keep
+
+        for (index in nums.indices) {
+            val ans = (nums[index] * index - sum) + (total - sum - nums[index] * (nums.size - index))
+            min = min(min, ans)
+            sum += nums[index]
+        }
+
+        return min
     }
 }
 
