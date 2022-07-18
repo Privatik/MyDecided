@@ -1,6 +1,4 @@
 import java.util.*
-import kotlin.math.abs
-import kotlin.math.min
 
 
 fun main(args: Array<String>) {
@@ -68,8 +66,9 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().minMoves2(intArrayOf(1,2,3)))
-    println(Solution().minMoves2(intArrayOf(1,10,2,3)))
+    println(Solution().minSubArrayLen(7,intArrayOf(2,3,1,2,4,3)))
+    println(Solution().minSubArrayLen(4,intArrayOf(1,4,4)))
+    println(Solution().minSubArrayLen(11,intArrayOf(1,1,1,1,1,1,1,1)))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -79,24 +78,43 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun minMoves2(nums: IntArray): Int {
-        nums.sort()
+    fun minSubArrayLen(target: Int, nums: IntArray): Int {
+        if (nums.size == 1) return if (nums[0] >= target) 1 else 0
 
-        var total = 0
-        var sum = 0
-        var min = Int.MAX_VALUE
+        var result = nums.size
+        val sumArr = IntArray(nums.size)
 
-        for (number in nums) {
-            total += number
+        // 2 5 6 8 12 15
+        nums.forEachIndexed { index, i ->
+            sumArr[index] = if (index == 0){
+                i
+            } else {
+                i + sumArr[index - 1]
+            }
         }
 
-        for (index in nums.indices) {
-            val ans = (nums[index] * index - sum) + (total - sum - nums[index] * (nums.size - index))
-            min = min(min, ans)
-            sum += nums[index]
+        if (sumArr.last() > target) return 0
+
+        var min = 0
+        var max = 1
+
+        while (min != max){
+            if (sumArr[max] - sumArr[min] >= target){
+                val diff = max - min
+                if (diff < result){
+                    result = diff
+                }
+                min++
+            } else {
+                if (max != nums.lastIndex){
+                    max++
+                }
+            }
         }
 
-        return min
+        return result
+
+
     }
 }
 
