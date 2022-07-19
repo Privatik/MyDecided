@@ -69,6 +69,7 @@ fun main(args: Array<String>) {
     println(Solution().minSubArrayLen(7,intArrayOf(2,3,1,2,4,3)))
     println(Solution().minSubArrayLen(4,intArrayOf(1,4,4)))
     println(Solution().minSubArrayLen(11,intArrayOf(1,1,1,1,1,1,1,1)))
+    println(Solution().minSubArrayLen(5,intArrayOf(2,3,1,1,1,1,1)))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -79,42 +80,21 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun minSubArrayLen(target: Int, nums: IntArray): Int {
-        if (nums.size == 1) return if (nums[0] >= target) 1 else 0
-
-        var result = nums.size
-        val sumArr = IntArray(nums.size)
-
-        // 2 5 6 8 12 15
-        nums.forEachIndexed { index, i ->
-            sumArr[index] = if (index == 0){
-                i
-            } else {
-                i + sumArr[index - 1]
+        var l = 0
+        var res = nums.size + 1
+        var curr = 0
+        for (i in nums.indices) {
+            curr += nums[i]
+            if (curr < target) {
+                continue
             }
-        }
-
-        if (sumArr.last() > target) return 0
-
-        var min = 0
-        var max = 1
-
-        while (min != max){
-            if (sumArr[max] - sumArr[min] >= target){
-                val diff = max - min
-                if (diff < result){
-                    result = diff
-                }
-                min++
-            } else {
-                if (max != nums.lastIndex){
-                    max++
-                }
+            while (curr >= target) {
+                curr -= nums[l++]
             }
+            curr += nums[--l]
+            res = minOf(res, i - l + 1)
         }
-
-        return result
-
-
+        return if (res == nums.size + 1) 0 else res
     }
 }
 
