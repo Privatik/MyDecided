@@ -66,10 +66,8 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().minSubArrayLen(7,intArrayOf(2,3,1,2,4,3)))
-    println(Solution().minSubArrayLen(4,intArrayOf(1,4,4)))
-    println(Solution().minSubArrayLen(11,intArrayOf(1,1,1,1,1,1,1,1)))
-    println(Solution().minSubArrayLen(5,intArrayOf(2,3,1,1,1,1,1)))
+    println(Solution().numMatchingSubseq("abcde",arrayOf("a","bb","acd","ace")))
+    println(Solution().numMatchingSubseq("dsahjpjauf",arrayOf("ahjpjau","ja","ahbwzgqnuk","tnmlanowax")))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -79,22 +77,38 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun minSubArrayLen(target: Int, nums: IntArray): Int {
-        var l = 0
-        var res = nums.size + 1
-        var curr = 0
-        for (i in nums.indices) {
-            curr += nums[i]
-            if (curr < target) {
+    private val indexes = Array(26) { ArrayList<Int>() }
+
+    fun numMatchingSubseq(s: String, words: Array<String>): Int {
+        for(i in s.indices) {
+            indexes[getCharIdx(s[i])].add(i)
+        }
+
+        var total = 0
+        for (word in words) {
+            var currIdx = -1
+            if (word.isEmpty()) {
+                total++
                 continue
             }
-            while (curr >= target) {
-                curr -= nums[l++]
+            for (ch in word) {
+                currIdx = findMinIdxGreaterThan(currIdx, indexes[getCharIdx(ch)])
+                if (currIdx == -1) break
             }
-            curr += nums[--l]
-            res = minOf(res, i - l + 1)
+            if (currIdx > -1) total++
         }
-        return if (res == nums.size + 1) 0 else res
+        return total
+    }
+
+    fun findMinIdxGreaterThan(currIdx: Int, indices: ArrayList<Int>): Int {
+        for(i in indices) {
+            if (i > currIdx) return i
+        }
+        return -1
+    }
+
+    fun getCharIdx(ch: Char): Int {
+        return ch.toInt() - 97
     }
 }
 
