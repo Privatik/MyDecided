@@ -1,4 +1,6 @@
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.min
 
 
 fun main(args: Array<String>) {
@@ -31,15 +33,15 @@ fun main(args: Array<String>) {
 //    }
 //
     val link = ListNode(1).apply {
-        add(mutableListOf(2,3,4))
+        add(mutableListOf(2,3,4,5))
     }
 
     val link3 = ListNode(1)
     val link4 = ListNode(1).apply {
-        add(mutableListOf(2,3,4,5))
+        add(mutableListOf(2))
     }
-    val link5 = ListNode(1).apply {
-        add(mutableListOf(2,3))
+    val link5 = ListNode(7).apply {
+        add(mutableListOf(9,6,6,7,8,3,0,9,5))
     }
 
     val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
@@ -66,8 +68,13 @@ fun main(args: Array<String>) {
         }
     }
 
-    println(Solution().numMatchingSubseq("abcde",arrayOf("a","bb","acd","ace")))
-    println(Solution().numMatchingSubseq("dsahjpjauf",arrayOf("ahjpjau","ja","ahbwzgqnuk","tnmlanowax")))
+//    println(Solution().swapNodes(link,5))
+    println(Solution().swapNodes(link4,1))
+    println(Solution().swapNodes(link,1))
+//    println(Solution().swapNodes(link,3))
+//    println(Solution().swapNodes(link,2))
+//    println(Solution().swapNodes(link,1))
+    println(Solution().swapNodes(link5, 5))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -77,38 +84,32 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    private val indexes = Array(26) { ArrayList<Int>() }
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        var remaining = k
 
-    fun numMatchingSubseq(s: String, words: Array<String>): Int {
-        for(i in s.indices) {
-            indexes[getCharIdx(s[i])].add(i)
+        var h = head
+        while (remaining > 1) {
+            h = h?.next
+            remaining -= 1
         }
 
-        var total = 0
-        for (word in words) {
-            var currIdx = -1
-            if (word.isEmpty()) {
-                total++
-                continue
-            }
-            for (ch in word) {
-                currIdx = findMinIdxGreaterThan(currIdx, indexes[getCharIdx(ch)])
-                if (currIdx == -1) break
-            }
-            if (currIdx > -1) total++
-        }
-        return total
-    }
+        // h now points to the Kth  node
+        val kth = h
 
-    fun findMinIdxGreaterThan(currIdx: Int, indices: ArrayList<Int>): Int {
-        for(i in indices) {
-            if (i > currIdx) return i
+        var p = head
+        var q = h
+        while (q?.next != null) {
+            p = p?.next
+            q = q.next
         }
-        return -1
-    }
 
-    fun getCharIdx(ch: Char): Int {
-        return ch.toInt() - 97
+        // p now points the the Kth node from the tail
+        val t = kth?.`val`
+        kth?.`val` = p!!.`val`
+        p.`val` = t
+
+        return head
+
     }
 }
 
