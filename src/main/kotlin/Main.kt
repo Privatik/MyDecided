@@ -1,6 +1,4 @@
 import java.util.*
-import kotlin.math.abs
-import kotlin.math.min
 
 
 fun main(args: Array<String>) {
@@ -69,12 +67,12 @@ fun main(args: Array<String>) {
     }
 
 //    println(Solution().swapNodes(link,5))
-    println(Solution().swapNodes(link4,1))
-    println(Solution().swapNodes(link,1))
+    println(Solution().lengthOfLIS(intArrayOf(10,9,2,5,3,7,101,18)))
+    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
 //    println(Solution().swapNodes(link,1))
-    println(Solution().swapNodes(link5, 5))
+    println(Solution().lengthOfLIS(intArrayOf(7,7,7,7,7,7,7)))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -84,32 +82,17 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun swapNodes(head: ListNode?, k: Int): ListNode? {
-        var remaining = k
-
-        var h = head
-        while (remaining > 1) {
-            h = h?.next
-            remaining -= 1
+    fun lengthOfLIS(nums: IntArray): Int {
+        var current = nums[0]
+        var size = 1
+        (1 until nums.size).forEach { x ->
+            if (current > nums[x]){
+                current = nums[x]
+            } else {
+                size++
+            }
         }
-
-        // h now points to the Kth  node
-        val kth = h
-
-        var p = head
-        var q = h
-        while (q?.next != null) {
-            p = p?.next
-            q = q.next
-        }
-
-        // p now points the the Kth node from the tail
-        val t = kth?.`val`
-        kth?.`val` = p!!.`val`
-        p.`val` = t
-
-        return head
-
+        return size
     }
 }
 
