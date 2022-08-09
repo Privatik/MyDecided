@@ -67,12 +67,13 @@ fun main(args: Array<String>) {
     }
 
 //    println(Solution().swapNodes(link,5))
-    println(Solution().lengthOfLIS(intArrayOf(10,9,2,5,3,7,101,18)))
-    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
+    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
+    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4,5,10)))
+//    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
 //    println(Solution().swapNodes(link,1))
-    println(Solution().lengthOfLIS(intArrayOf(7,7,7,7,7,7,7)))
+//    println(Solution().lengthOfLIS(intArrayOf(7,7,7,7,7,7,7)))
 
 //    println(Solution().longestPalindrome(str1))
 //    println(Solution().longestPalindrome(str2))
@@ -82,17 +83,30 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun lengthOfLIS(nums: IntArray): Int {
-        var current = nums[0]
-        var size = 1
-        (1 until nums.size).forEach { x ->
-            if (current > nums[x]){
-                current = nums[x]
-            } else {
-                size++
+    fun numFactoredBinaryTrees(arr: IntArray): Int {
+        val mod = 1_000_000_007
+        val n = arr.size
+        arr.sort()
+
+        val dp = LongArray(n) { 1 }
+        val index = HashMap<Int, Int>()
+
+        for (i in 0 until n) index[arr[i]] = i
+
+        for (i in 0 until n) {
+            for (j in 0 until i) {
+                if (arr[i] % arr[j] == 0) {
+                    val right = arr[i] / arr[j]
+                    if (index.containsKey(right)) {
+                        dp[i] = (dp[i] + dp[j] * dp[index[right]!!]) % mod
+                    }
+                }
             }
         }
-        return size
+
+        var ans: Long = 0
+        for (x in dp) ans += x
+        return (ans % mod).toInt()
     }
 }
 
