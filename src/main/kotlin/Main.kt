@@ -1,4 +1,6 @@
 import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 
 fun main(args: Array<String>) {
@@ -49,26 +51,47 @@ fun main(args: Array<String>) {
     val str1 = "babad"
     val str2 = "cbbd"
 
-    val root1 = TreeNode(0).apply{
-        left = TreeNode(0).apply {
-            left = TreeNode(0)
-            right = TreeNode(0)
-        }
+    val root1 = TreeNode(2).apply{
+        left = TreeNode(1)
+        right = TreeNode(3)
     }
 
-    val root2 = TreeNode(0).apply{
-        left = TreeNode(0).apply {
-            left = TreeNode(0).apply {
-                left = TreeNode(0).apply {
-                    right = TreeNode(0)
-                }
-            }
+    val root2 = TreeNode(5).apply{
+        left = TreeNode(1)
+        right = TreeNode(4).apply {
+            left = TreeNode(3)
+            right = TreeNode(6)
         }
     }
 
 //    println(Solution().swapNodes(link,5))
-    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
-    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4,5,10)))
+//    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
+
+    val firstVertex = hashMapOf(
+        0 to Vertex(
+            hashMapOf(1 to 5, 2 to 2),
+        ),
+        1 to Vertex(
+            hashMapOf(3 to 4, 4 to 2),
+        )
+        2 to Vertex(
+            hashMapOf(1 to 8, 4 to 7),
+        ),
+        3 to Vertex(
+            hashMapOf(4 to 6, 5 to 8),
+        ),
+        4 to Vertex(
+            hashMapOf(5 to 1),
+        ),
+        5 to Vertex(
+            hashMapOf(),
+        )
+    )
+//    val firstGraph
+
+    println(Solution().findShortWay(
+        Graph(firstVertex),0,5
+    ))
 //    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
@@ -82,31 +105,38 @@ fun main(args: Array<String>) {
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
+data class Vertex(
+    val ways: Map<Int, Int>
+)
+
+data class Graph(
+    val vertexs: Map<Int, Vertex>
+)
+
 class Solution {
-    fun numFactoredBinaryTrees(arr: IntArray): Int {
-        val mod = 1_000_000_007
-        val n = arr.size
-        arr.sort()
+    fun findShortWay(
+        graph: Graph,
+        startPoint: Int,
+        finishPoint: Int
+    ): Int{
+        val parentMap = hashMapOf<Int, Int>()
+        val shortWayMap = hashMapOf<Int, Int>()
+        val visitedMap = hashMapOf<Int, Boolean>()
+        val nextPointForHandle = LinkedList<Int>()
 
-        val dp = LongArray(n) { 1 }
-        val index = HashMap<Int, Int>()
-
-        for (i in 0 until n) index[arr[i]] = i
-
-        for (i in 0 until n) {
-            for (j in 0 until i) {
-                if (arr[i] % arr[j] == 0) {
-                    val right = arr[i] / arr[j]
-                    if (index.containsKey(right)) {
-                        dp[i] = (dp[i] + dp[j] * dp[index[right]!!]) % mod
-                    }
-                }
-            }
+        visitedMap[startPoint] = true
+        graph.vertexs[startPoint]!!.ways.forEach { (point, length) ->
+            nextPointForHandle.add(point)
+            shortWayMap[point] = length
+            parentMap[point] = startPoint
         }
 
-        var ans: Long = 0
-        for (x in dp) ans += x
-        return (ans % mod).toInt()
+        var visitedPoint = 1
+        while (visitedPoint != graph.vertexs.size){
+            val vertex = nextPointForHandle.removeFirst()
+        }
+
+        return 0
     }
 }
 
