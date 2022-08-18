@@ -73,7 +73,7 @@ fun main(args: Array<String>) {
         ),
         1 to Vertex(
             hashMapOf(3 to 4, 4 to 2),
-        )
+        ),
         2 to Vertex(
             hashMapOf(1 to 8, 4 to 7),
         ),
@@ -91,6 +91,50 @@ fun main(args: Array<String>) {
 
     println(Solution().findShortWay(
         Graph(firstVertex),0,5
+    ))
+
+    val secondVertex = hashMapOf(
+        0 to Vertex(
+            hashMapOf(1 to 10),
+        ),
+        1 to Vertex(
+            hashMapOf(2 to 20),
+        ),
+        2 to Vertex(
+            hashMapOf(3 to 1, 4 to 30),
+        ),
+        3 to Vertex(
+            hashMapOf(1 to 1),
+        ),
+        4 to Vertex(
+            hashMapOf(),
+        )
+    )
+
+    println(Solution().findShortWay(
+        Graph(secondVertex),0,4
+    ))
+
+    val thirdVertex = hashMapOf(
+        0 to Vertex(
+            hashMapOf(1 to 2, 2 to 2),
+        ),
+        1 to Vertex(
+            hashMapOf(4 to 2, 3 to 2),
+        ),
+        2 to Vertex(
+            hashMapOf(1 to 2),
+        ),
+        3 to Vertex(
+            hashMapOf(2 to -1, 4 to 2),
+        ),
+        4 to Vertex(
+            hashMapOf(),
+        )
+    )
+
+    println(Solution().findShortWay(
+        Graph(thirdVertex),0,4
     ))
 //    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 //    println(Solution().swapNodes(link,3))
@@ -121,10 +165,10 @@ class Solution {
     ): Int{
         val parentMap = hashMapOf<Int, Int>()
         val shortWayMap = hashMapOf<Int, Int>()
-        val visitedMap = hashMapOf<Int, Boolean>()
         val nextPointForHandle = LinkedList<Int>()
+        val isVisitedSet = HashSet<Int>()
 
-        visitedMap[startPoint] = true
+        isVisitedSet.add(startPoint)
         graph.vertexs[startPoint]!!.ways.forEach { (point, length) ->
             nextPointForHandle.add(point)
             shortWayMap[point] = length
@@ -133,10 +177,40 @@ class Solution {
 
         var visitedPoint = 1
         while (visitedPoint != graph.vertexs.size){
-            val vertex = nextPointForHandle.removeFirst()
+            val vertex = nextPointForHandle.pop()
+            graph.vertexs[vertex]!!.ways.forEach { (point, length) ->
+                if (isVisitedSet.contains(point)) return@forEach
+                nextPointForHandle.add(point)
+                val wayForParent = shortWayMap[vertex]!!
+                val currentWay = shortWayMap[point]
+                if (currentWay != null){
+                    if (wayForParent + length < currentWay){
+                        shortWayMap[point] = wayForParent + length
+                        parentMap[point] = vertex
+                    }
+                } else {
+                    shortWayMap[point] = wayForParent + length
+                    parentMap[point] = vertex
+                }
+                isVisitedSet.add(point)
+            }
+            visitedPoint++
         }
 
-        return 0
+        var resultWay = 0
+        var currentPoint = finishPoint
+        val wayList = mutableListOf<Int>()
+        while (currentPoint != startPoint){
+            wayList.add(currentPoint)
+            val next = parentMap[currentPoint]!!
+            resultWay += graph.vertexs[next]!!.ways[currentPoint]!!
+            currentPoint = next
+        }
+        wayList.add(startPoint)
+        println(shortWayMap)
+        println("way ${wayList.joinToString("-")}")
+
+        return resultWay
     }
 }
 
