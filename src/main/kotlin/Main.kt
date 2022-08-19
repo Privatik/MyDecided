@@ -67,75 +67,80 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-    val firstVertex = hashMapOf(
-        0 to Vertex(
-            hashMapOf(1 to 5, 2 to 2),
-        ),
-        1 to Vertex(
-            hashMapOf(3 to 4, 4 to 2),
-        ),
-        2 to Vertex(
-            hashMapOf(1 to 8, 4 to 7),
-        ),
-        3 to Vertex(
-            hashMapOf(4 to 6, 5 to 8),
-        ),
-        4 to Vertex(
-            hashMapOf(5 to 1),
-        ),
-        5 to Vertex(
-            hashMapOf(),
+    val firstGraph = Graph(
+        root = 0,
+        vertexs = listOf(
+            Graph(
+                root = 1,
+                vertexs = listOf(
+                    Graph(
+                        root = 2
+                    ),
+                    Graph(
+                        root = 3
+                    )
+                )
+            ),
+            Graph(
+                root = 4
+            )
         )
     )
 //    val firstGraph
 
-    println(Solution().findShortWay(
-        Graph(firstVertex),0,5
-    ))
-
-    val secondVertex = hashMapOf(
-        0 to Vertex(
-            hashMapOf(1 to 10),
-        ),
-        1 to Vertex(
-            hashMapOf(2 to 20),
-        ),
-        2 to Vertex(
-            hashMapOf(3 to 1, 4 to 30),
-        ),
-        3 to Vertex(
-            hashMapOf(1 to 1),
-        ),
-        4 to Vertex(
-            hashMapOf(),
+    println(Solution().isTree(firstGraph))
+//
+    val secondVertex = Graph(
+        root = 0,
+        vertexs = listOf(
+            Graph(
+                root = 1,
+              ),
+            Graph(
+                root = 2,
+                vertexs = listOf(
+                    Graph(
+                        root = 3,
+                        vertexs = listOf(
+                            Graph(
+                                root = 1
+                            )
+                        )
+                    ),
+                    Graph(
+                        root = 4,
+                        vertexs = listOf(
+                            Graph(
+                                root = 0
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+//
+    println(Solution().isTree(secondVertex))
+//
+    val thirdVertex = Graph(
+        root = 0,
+        vertexs = listOf(
+            Graph(
+                root = 1,
+                vertexs = listOf(
+                    Graph(
+                        root = 2
+                    )
+                )
+            ),
+            Graph(
+                root = 4
+            )
         )
     )
 
-    println(Solution().findShortWay(
-        Graph(secondVertex),0,4
-    ))
+    println(Solution().isTree(thirdVertex))
 
-    val thirdVertex = hashMapOf(
-        0 to Vertex(
-            hashMapOf(1 to 2, 2 to 2),
-        ),
-        1 to Vertex(
-            hashMapOf(4 to 2, 3 to 2),
-        ),
-        2 to Vertex(
-            hashMapOf(1 to 2),
-        ),
-        3 to Vertex(
-            hashMapOf(2 to -1, 4 to 2),
-        ),
-        4 to Vertex(
-            hashMapOf(),
-        )
-    )
-
-    println(Solution().findShortWay(
-        Graph(thirdVertex),0,4
-    ))
 //    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
@@ -149,68 +154,28 @@ fun main(args: Array<String>) {
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
-data class Vertex(
-    val ways: Map<Int, Int>
-)
-
 data class Graph(
-    val vertexs: Map<Int, Vertex>
+    val root: Int,
+    val vertexs: List<Graph> = emptyList()
 )
 
 class Solution {
-    fun findShortWay(
-        graph: Graph,
-        startPoint: Int,
-        finishPoint: Int
-    ): Int{
-        val parentMap = hashMapOf<Int, Int>()
-        val shortWayMap = hashMapOf<Int, Int>()
-        val nextPointForHandle = LinkedList<Int>()
-        val isVisitedSet = HashSet<Int>()
+    fun isTree(graph: Graph): Boolean{
+        val isVisited = hashSetOf<Int>()
+        val vertexQueue = LinkedList<Graph>()
 
-        isVisitedSet.add(startPoint)
-        graph.vertexs[startPoint]!!.ways.forEach { (point, length) ->
-            nextPointForHandle.add(point)
-            shortWayMap[point] = length
-            parentMap[point] = startPoint
-        }
+        vertexQueue.add(graph)
 
-        var visitedPoint = 1
-        while (visitedPoint != graph.vertexs.size){
-            val vertex = nextPointForHandle.pop()
-            graph.vertexs[vertex]!!.ways.forEach { (point, length) ->
-                if (isVisitedSet.contains(point)) return@forEach
-                nextPointForHandle.add(point)
-                val wayForParent = shortWayMap[vertex]!!
-                val currentWay = shortWayMap[point]
-                if (currentWay != null){
-                    if (wayForParent + length < currentWay){
-                        shortWayMap[point] = wayForParent + length
-                        parentMap[point] = vertex
-                    }
-                } else {
-                    shortWayMap[point] = wayForParent + length
-                    parentMap[point] = vertex
+        while (vertexQueue.size != 0){
+            vertexQueue.removeFirst().apply {
+                isVisited.add(root)
+                vertexs.forEach {
+                    if (isVisited.contains(it.root)){ return false }
+                    vertexQueue.add(it)
                 }
-                isVisitedSet.add(point)
             }
-            visitedPoint++
         }
-
-        var resultWay = 0
-        var currentPoint = finishPoint
-        val wayList = mutableListOf<Int>()
-        while (currentPoint != startPoint){
-            wayList.add(currentPoint)
-            val next = parentMap[currentPoint]!!
-            resultWay += graph.vertexs[next]!!.ways[currentPoint]!!
-            currentPoint = next
-        }
-        wayList.add(startPoint)
-        println(shortWayMap)
-        println("way ${wayList.joinToString("-")}")
-
-        return resultWay
+        return true
     }
 }
 
