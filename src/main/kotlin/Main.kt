@@ -1,7 +1,4 @@
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
-
+import kotlin.math.max
 
 fun main(args: Array<String>) {
 
@@ -67,81 +64,26 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-    val firstGraph = Graph(
-        root = 0,
-        vertexs = listOf(
-            Graph(
-                root = 1,
-                vertexs = listOf(
-                    Graph(
-                        root = 2
-                    ),
-                    Graph(
-                        root = 3
-                    )
-                )
-            ),
-            Graph(
-                root = 4
-            )
-        )
-    )
-//    val firstGraph
 
-    println(Solution().isTree(firstGraph))
-//
-    val secondVertex = Graph(
-        root = 0,
-        vertexs = listOf(
-            Graph(
-                root = 1,
-              ),
-            Graph(
-                root = 2,
-                vertexs = listOf(
-                    Graph(
-                        root = 3,
-                        vertexs = listOf(
-                            Graph(
-                                root = 1
-                            )
-                        )
-                    ),
-                    Graph(
-                        root = 4,
-                        vertexs = listOf(
-                            Graph(
-                                root = 0
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-//
-    println(Solution().isTree(secondVertex))
-//
-    val thirdVertex = Graph(
-        root = 0,
-        vertexs = listOf(
-            Graph(
-                root = 1,
-                vertexs = listOf(
-                    Graph(
-                        root = 2
-                    )
-                )
-            ),
-            Graph(
-                root = 4
-            )
-        )
-    )
 
-    println(Solution().isTree(thirdVertex))
-
-//    println(Solution().lengthOfLIS(intArrayOf(0,1,0,3,2,3)))
+    println(Solution().minNumberOfHours(
+        initialEnergy = 5,
+        initialExperience = 3,
+        energy = intArrayOf(1,4,3,2),
+        experience = intArrayOf(2,6,3,1)
+    ))
+    println(Solution().minNumberOfHours(
+        initialEnergy = 2,
+        initialExperience = 4,
+        energy = intArrayOf(1),
+        experience = intArrayOf(3)
+    ))
+    println(Solution().minNumberOfHours(
+        initialEnergy = 1,
+        initialExperience = 1,
+        energy = intArrayOf(1,1,1,1),
+        experience = intArrayOf(3,1,1,50)
+    ))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
 //    println(Solution().swapNodes(link,1))
@@ -154,28 +96,38 @@ fun main(args: Array<String>) {
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
-data class Graph(
-    val root: Int,
-    val vertexs: List<Graph> = emptyList()
-)
-
 class Solution {
-    fun isTree(graph: Graph): Boolean{
-        val isVisited = hashSetOf<Int>()
-        val vertexQueue = LinkedList<Graph>()
+    fun minNumberOfHours(initialEnergy: Int, initialExperience: Int, energy: IntArray, experience: IntArray): Int {
+        var ans = 0
+        var energysum = 0
+        var newExc = initialExperience
+        var newEng = initialEnergy
 
-        vertexQueue.add(graph)
-
-        while (vertexQueue.size != 0){
-            vertexQueue.removeFirst().apply {
-                isVisited.add(root)
-                vertexs.forEach {
-                    if (isVisited.contains(it.root)){ return false }
-                    vertexQueue.add(it)
-                }
-            }
+        for (num in energy) {
+            energysum += num
         }
-        return true
+
+        if (newEng < energysum + 1) {
+            ans += energysum - newEng + 1
+            newEng = energysum + 1
+        }
+        var i = 0
+        var add = 0
+
+        while (i < experience.size) {
+
+            if (initialExperience <= experience[i]) {
+                add = max(add, experience[i] - initialExperience + 1)
+            }
+
+            newEng -= energy[i]
+
+            newExc += experience[i]
+            ++i
+        }
+
+        ans += add
+        return ans
     }
 }
 
