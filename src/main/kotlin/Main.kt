@@ -1,5 +1,3 @@
-import kotlin.math.max
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -66,24 +64,10 @@ fun main(args: Array<String>) {
 
 
 
-    println(Solution().minNumberOfHours(
-        initialEnergy = 5,
-        initialExperience = 3,
-        energy = intArrayOf(1,4,3,2),
-        experience = intArrayOf(2,6,3,1)
-    ))
-    println(Solution().minNumberOfHours(
-        initialEnergy = 2,
-        initialExperience = 4,
-        energy = intArrayOf(1),
-        experience = intArrayOf(3)
-    ))
-    println(Solution().minNumberOfHours(
-        initialEnergy = 1,
-        initialExperience = 1,
-        energy = intArrayOf(1,1,1,1),
-        experience = intArrayOf(3,1,1,50)
-    ))
+   println(Solution().maximumTime("2?:?0"))
+   println(Solution().maximumTime("??:?0"))
+   println(Solution().maximumTime("0?:3?"))
+   println(Solution().maximumTime("1?:22"))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
 //    println(Solution().swapNodes(link,1))
@@ -97,37 +81,32 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun minNumberOfHours(initialEnergy: Int, initialExperience: Int, energy: IntArray, experience: IntArray): Int {
-        var ans = 0
-        var energysum = 0
-        var newExc = initialExperience
-        var newEng = initialEnergy
+    fun maximumTime(time: String): String {
+        val sb = StringBuilder(time)
 
-        for (num in energy) {
-            energysum += num
-        }
+        if (sb[0] == '2' && sb[1] == '?')
+            sb[1] = '3'
 
-        if (newEng < energysum + 1) {
-            ans += energysum - newEng + 1
-            newEng = energysum + 1
-        }
-        var i = 0
-        var add = 0
-
-        while (i < experience.size) {
-
-            if (initialExperience <= experience[i]) {
-                add = max(add, experience[i] - initialExperience + 1)
+        if (sb[0] == '?') {
+            if (sb[1] in '0'..'3') {
+                sb[0] = '2'
+            } else if (sb[1] == '?') {
+                sb[0] = '2'
+                sb[1] = '3'
+            } else {
+                sb[0] = '1'
             }
-
-            newEng -= energy[i]
-
-            newExc += experience[i]
-            ++i
         }
+        if (sb[0] in '0'..'1' && sb[1] == '?')
+            sb[1] = '9'
 
-        ans += add
-        return ans
+        if (sb[3] == '?')
+            sb[3] = '5'
+
+        if (sb[4] == '?')
+            sb[4] = '9'
+
+        return sb.toString()
     }
 }
 
