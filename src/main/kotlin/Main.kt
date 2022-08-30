@@ -27,47 +27,51 @@ fun main(args: Array<String>) {
 //        }
 //    }
 //
-    val link = ListNode(1).apply {
-        add(mutableListOf(2,3,4,5))
-    }
-
-    val link3 = ListNode(1)
-    val link4 = ListNode(1).apply {
-        add(mutableListOf(2))
-    }
-    val link5 = ListNode(7).apply {
-        add(mutableListOf(9,6,6,7,8,3,0,9,5))
-    }
-
-    val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
-    val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
-    val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
-
-    val str1 = "babad"
-    val str2 = "cbbd"
-
-    val root1 = TreeNode(2).apply{
-        left = TreeNode(1)
-        right = TreeNode(3)
-    }
-
-    val root2 = TreeNode(5).apply{
-        left = TreeNode(1)
-        right = TreeNode(4).apply {
-            left = TreeNode(3)
-            right = TreeNode(6)
-        }
-    }
+//    val link = ListNode(1).apply {
+//        add(mutableListOf(2,3,4,5))
+//    }
+//
+//    val link3 = ListNode(1)
+//    val link4 = ListNode(1).apply {
+//        add(mutableListOf(2))
+//    }
+//    val link5 = ListNode(7).apply {
+//        add(mutableListOf(9,6,6,7,8,3,0,9,5))
+//    }
+//
+//    val arr = arrayOf( intArrayOf(1,5,9), intArrayOf(10,11,13), intArrayOf(12,13,15) )
+//    val strArr = arrayOf("test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com")
+//    val strArr2 = arrayOf("a@leetcode.com","b@leetcode.com","c@leetcode.com")
+//
+//    val str1 = "babad"
+//    val str2 = "cbbd"
+//
+//    val root1 = TreeNode(2).apply{
+//        left = TreeNode(1)
+//        right = TreeNode(3)
+//    }
+//
+//    val root2 = TreeNode(5).apply{
+//        left = TreeNode(1)
+//        right = TreeNode(4).apply {
+//            left = TreeNode(3)
+//            right = TreeNode(6)
+//        }
+//    }
 
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
 
+    println(Solution().largestSumAfterKNegations(intArrayOf(4,2,3), 1))
+    println(Solution().largestSumAfterKNegations(intArrayOf(3,-1,0,2), 3))
+    println(Solution().largestSumAfterKNegations(intArrayOf(2,-3,-1,5,-4), 2))
+    println(Solution().largestSumAfterKNegations(intArrayOf(-8,3,-5,-3,-5,-2), 6)) // 22
 
-   println(Solution().maximumTime("2?:?0"))
-   println(Solution().maximumTime("??:?0"))
-   println(Solution().maximumTime("0?:3?"))
-   println(Solution().maximumTime("1?:22"))
+//   println(Solution().maximumTime("2?:?0"))
+//   println(Solution().maximumTime("??:?0"))
+//   println(Solution().maximumTime("0?:3?"))
+//   println(Solution().maximumTime("1?:22"))
 //    println(Solution().swapNodes(link,3))
 //    println(Solution().swapNodes(link,2))
 //    println(Solution().swapNodes(link,1))
@@ -81,32 +85,29 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun maximumTime(time: String): String {
-        val sb = StringBuilder(time)
+    fun largestSumAfterKNegations(nums: IntArray, k: Int): Int {
+        nums.sort()
 
-        if (sb[0] == '2' && sb[1] == '?')
-            sb[1] = '3'
+        var i = 0
+        var isDeleteAllNegative = false
 
-        if (sb[0] == '?') {
-            if (sb[1] in '0'..'3') {
-                sb[0] = '2'
-            } else if (sb[1] == '?') {
-                sb[0] = '2'
-                sb[1] = '3'
+        while (!isDeleteAllNegative && i != k){
+            val value = nums[i]
+            if (value < 0) {
+                nums[i] = -value
+                i++
             } else {
-                sb[0] = '1'
+                isDeleteAllNegative = true
             }
         }
-        if (sb[0] in '0'..'1' && sb[1] == '?')
-            sb[1] = '9'
 
-        if (sb[3] == '?')
-            sb[3] = '5'
+        if (isDeleteAllNegative){
+            if ((k - i) % 2 != 0){
+                nums[i] = -nums[i]
+            }
+        }
 
-        if (sb[4] == '?')
-            sb[4] = '9'
-
-        return sb.toString()
+        return nums.sum()
     }
 }
 
