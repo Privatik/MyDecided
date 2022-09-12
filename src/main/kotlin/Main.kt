@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -63,10 +65,8 @@ fun main(args: Array<String>) {
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
 
-    println(Solution().largestSumAfterKNegations(intArrayOf(4,2,3), 1))
-    println(Solution().largestSumAfterKNegations(intArrayOf(3,-1,0,2), 3))
-    println(Solution().largestSumAfterKNegations(intArrayOf(2,-3,-1,5,-4), 2))
-    println(Solution().largestSumAfterKNegations(intArrayOf(-8,3,-5,-3,-5,-2), 6)) // 22
+    println(Solution().largestPerimeter(intArrayOf(2,1,2)))
+    println(Solution().largestPerimeter(intArrayOf(1,1,2)))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -85,29 +85,21 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun largestSumAfterKNegations(nums: IntArray, k: Int): Int {
-        nums.sort()
+    fun largestPerimeter(nums: IntArray): Int {
+        nums.sortDescending()
+
+        val corners = LinkedList<Int>()
+        var isCanBe = false
 
         var i = 0
-        var isDeleteAllNegative = false
-
-        while (!isDeleteAllNegative && i != k){
-            val value = nums[i]
-            if (value < 0) {
-                nums[i] = -value
-                i++
-            } else {
-                isDeleteAllNegative = true
+        while (i < nums.size && corners.size != 3){
+            if (corners.isEmpty() || corners.peek() != nums[i]){
+                corners.addFirst(nums[i])
             }
+            i++
         }
 
-        if (isDeleteAllNegative){
-            if ((k - i) % 2 != 0){
-                nums[i] = -nums[i]
-            }
-        }
-
-        return nums.sum()
+        return if (isCanBe) corners.sum() else 0
     }
 }
 
