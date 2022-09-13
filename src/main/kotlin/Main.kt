@@ -86,17 +86,23 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun largestPerimeter(nums: IntArray): Int {
-        nums.sortDescending()
+        nums.sort()
 
         val corners = LinkedList<Int>()
         var isCanBe = false
 
-        var i = 0
-        while (i < nums.size && corners.size != 3){
-            if (corners.isEmpty() || corners.peek() != nums[i]){
-                corners.addFirst(nums[i])
+        var i = nums.size - 1
+        while (i > -1){
+            corners.add(nums[i])
+            if (corners.size == 3){
+                if ((corners.sum() / 2f) > corners.first){
+                    isCanBe = true
+                    break
+                } else {
+                    corners.removeFirst()
+                }
             }
-            i++
+            i--
         }
 
         return if (isCanBe) corners.sum() else 0
