@@ -64,9 +64,9 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-
-    println(Solution().largestPerimeter(intArrayOf(2,1,2)))
-    println(Solution().largestPerimeter(intArrayOf(1,1,2)))
+    println(Solution().lemonadeChange(intArrayOf(5,5,5,10,20)))
+    println(Solution().lemonadeChange(intArrayOf(5,5,10,10,20)))
+    println(Solution().lemonadeChange(intArrayOf(5,10,5,20,5,10,5,20,5,10,5,20,5,10,5,20,5,10,5,20,5,10)))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -85,27 +85,20 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun largestPerimeter(nums: IntArray): Int {
-        nums.sort()
+    fun lemonadeChange(bills: IntArray): Boolean {
+        var bank = 0
 
-        val corners = LinkedList<Int>()
-        var isCanBe = false
-
-        var i = nums.size - 1
-        while (i > -1){
-            corners.add(nums[i])
-            if (corners.size == 3){
-                if ((corners.sum() / 2f) > corners.first){
-                    isCanBe = true
-                    break
-                } else {
-                    corners.removeFirst()
-                }
+        var i = 0
+        while (i < bills.size){
+            when (bills[i]){
+                10 -> { }
+                20 -> { if (bank < 10) return false else bank -= 10 }
+                else -> { bank += 5 }
             }
-            i--
+            i++
         }
 
-        return if (isCanBe) corners.sum() else 0
+        return true
     }
 }
 
