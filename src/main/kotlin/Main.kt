@@ -64,9 +64,9 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-    println(Solution().lemonadeChange(intArrayOf(5,5,5,10,20)))
-    println(Solution().lemonadeChange(intArrayOf(5,5,10,10,20)))
-    println(Solution().lemonadeChange(intArrayOf(5,10,5,20,5,10,5,20,5,10,5,20,5,10,5,20,5,10,5,20,5,10)))
+    println(Solution().minPartitions("32"))
+    println(Solution().minPartitions("82734"))
+    println(Solution().minPartitions("27346209830709182346"))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -85,20 +85,11 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    fun lemonadeChange(bills: IntArray): Boolean {
-        var bank = 0
+    // 48 49
+    fun minPartitions(n: String): Int {
+        var startNumber = 0
 
-        var i = 0
-        while (i < bills.size){
-            when (bills[i]){
-                10 -> { }
-                20 -> { if (bank < 10) return false else bank -= 10 }
-                else -> { bank += 5 }
-            }
-            i++
-        }
 
-        return true
     }
 }
 
