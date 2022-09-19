@@ -87,8 +87,7 @@ fun main(args: Array<String>) {
 class Solution {
     // 48 49
     fun minPartitions(n: String): Int {
-        var startNumber = 0
-
+        return n.length
 
     }
 }
