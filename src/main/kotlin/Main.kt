@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.min
 
 fun main(args: Array<String>) {
 
@@ -64,9 +65,23 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-    println(Solution().minPartitions("32"))
-    println(Solution().minPartitions("82734"))
-    println(Solution().minPartitions("27346209830709182346"))
+//    println(Solution().maxIncreaseKeepingSkyline(
+//        arrayOf(
+//            intArrayOf(3,0,8,4),
+//            intArrayOf(2,4,5,7),
+//            intArrayOf(9,2,6,3),
+//            intArrayOf(0,3,1,0)
+//        )
+//    ))
+//
+//    println(Solution().maxIncreaseKeepingSkyline(
+//        arrayOf(
+//            intArrayOf(0,0,0),
+//            intArrayOf(0,0,0),
+//            intArrayOf(0,0,0)
+//        )
+//    ))
+
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -85,10 +100,8 @@ fun main(args: Array<String>) {
 }
 
 class Solution {
-    // 48 49
-    fun minPartitions(n: String): Int {
-        return n.length
-
+    fun maximumImportance(n: Int, roads: Array<IntArray>): Long {
+        return 0
     }
 }
 
