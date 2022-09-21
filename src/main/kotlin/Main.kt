@@ -65,22 +65,24 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-//    println(Solution().maxIncreaseKeepingSkyline(
-//        arrayOf(
-//            intArrayOf(3,0,8,4),
-//            intArrayOf(2,4,5,7),
-//            intArrayOf(9,2,6,3),
-//            intArrayOf(0,3,1,0)
-//        )
-//    ))
-//
-//    println(Solution().maxIncreaseKeepingSkyline(
-//        arrayOf(
-//            intArrayOf(0,0,0),
-//            intArrayOf(0,0,0),
-//            intArrayOf(0,0,0)
-//        )
-//    ))
+    println(Solution().maximumImportance(5,
+        arrayOf(
+            intArrayOf(0,1),
+            intArrayOf(1,2),
+            intArrayOf(2,3),
+            intArrayOf(0,2),
+            intArrayOf(1,3),
+            intArrayOf(2,4)
+        )
+    ))
+
+    println(Solution().maximumImportance(5,
+        arrayOf(
+            intArrayOf(0,3),
+            intArrayOf(2,4),
+            intArrayOf(1,3),
+        )
+    ))
 
 
 //   println(Solution().maximumTime("2?:?0"))
@@ -101,7 +103,27 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun maximumImportance(n: Int, roads: Array<IntArray>): Long {
-        return 0
+        val mapBridge = hashMapOf<Int, Int>()
+        val mapSize = hashMapOf<Int, Int>()
+
+        roads.forEach {
+            mapBridge[it[0]] = mapBridge.getOrDefault(it[0],0) + 1
+            mapBridge[it[1]]= mapBridge.getOrDefault(it[1],0) + 1
+        }
+
+        mapBridge
+            .map { Pair(it.key, it.value) }
+            .sortedByDescending { it.second }
+            .forEachIndexed { index, pair ->
+                mapSize[pair.first] = n - index
+            }
+
+        var sum = 0L
+        roads.forEach {
+            sum += mapSize[it[0]]!! + mapSize[it[1]]!!
+        }
+
+        return sum
     }
 }
 
