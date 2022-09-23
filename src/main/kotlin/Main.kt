@@ -1,5 +1,5 @@
 import java.util.*
-import kotlin.math.min
+import kotlin.math.max
 
 fun main(args: Array<String>) {
 
@@ -65,24 +65,19 @@ fun main(args: Array<String>) {
 //    println(Solution().swapNodes(link,5))
 //    println(Solution().numFactoredBinaryTrees(intArrayOf(2,4)))
 
-    println(Solution().maximumImportance(5,
-        arrayOf(
-            intArrayOf(0,1),
-            intArrayOf(1,2),
-            intArrayOf(2,3),
-            intArrayOf(0,2),
-            intArrayOf(1,3),
-            intArrayOf(2,4)
-        )
-    ))
+//    println(Solution().maximumImportance(5,
+//        arrayOf(
+//            intArrayOf(0,1),
+//            intArrayOf(1,2),
+//            intArrayOf(2,3),
+//            intArrayOf(0,2),
+//            intArrayOf(1,3),
+//            intArrayOf(2,4)
+//        )
+//    ))
 
-    println(Solution().maximumImportance(5,
-        arrayOf(
-            intArrayOf(0,3),
-            intArrayOf(2,4),
-            intArrayOf(1,3),
-        )
-    ))
+    println(Solution().stoneGame(intArrayOf(5,3,4,5)))
+    println(Solution().stoneGame(intArrayOf(3,7,2,3)))
 
 
 //   println(Solution().maximumTime("2?:?0"))
@@ -101,29 +96,28 @@ fun main(args: Array<String>) {
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
+//5,3,4,5
 class Solution {
-    fun maximumImportance(n: Int, roads: Array<IntArray>): Long {
-        val mapBridge = hashMapOf<Int, Int>()
-        val mapSize = hashMapOf<Int, Int>()
-
-        roads.forEach {
-            mapBridge[it[0]] = mapBridge.getOrDefault(it[0],0) + 1
-            mapBridge[it[1]]= mapBridge.getOrDefault(it[1],0) + 1
-        }
-
-        mapBridge
-            .map { Pair(it.key, it.value) }
-            .sortedByDescending { it.second }
-            .forEachIndexed { index, pair ->
-                mapSize[pair.first] = n - index
+    fun stoneGame(piles: IntArray): Boolean {
+        val n: Int = piles.size
+        val dp = Array(n) { IntArray(n) }
+        for (i in 0 until n) dp[i][i] = piles[i]
+        for (d in 1 until n){
+            for (i in 0 until n - d) {
+                dp[i][i + d] = max(piles[i] - dp[i + 1][i + d], piles[i + d] - dp[i][i + d - 1])
+                println("----")
+                dp.forEach {
+                    println(it.joinToString(" "))
+                }
+                println("-----")
             }
-
-        var sum = 0L
-        roads.forEach {
-            sum += mapSize[it[0]]!! + mapSize[it[1]]!!
         }
 
-        return sum
+        println("final")
+        dp.forEach {
+            println(it.joinToString(" "))
+        }
+        return dp[0][n - 1] > 0
     }
 }
 
