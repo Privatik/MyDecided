@@ -76,6 +76,8 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
+    println(Solution().stoneGame(intArrayOf(1,6,2)))
+    println(Solution().stoneGame(intArrayOf(5,3,4)))
     println(Solution().stoneGame(intArrayOf(5,3,4,5)))
     println(Solution().stoneGame(intArrayOf(3,7,2,3)))
 
@@ -102,6 +104,7 @@ class Solution {
         val n: Int = piles.size
         val dp = Array(n) { IntArray(n) }
         for (i in 0 until n) dp[i][i] = piles[i]
+
         for (d in 1 until n){
             for (i in 0 until n - d) {
                 dp[i][i + d] = max(piles[i] - dp[i + 1][i + d], piles[i + d] - dp[i][i + d - 1])
