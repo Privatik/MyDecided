@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.max
 
 fun main(args: Array<String>) {
@@ -76,11 +77,8 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    println(Solution().stoneGame(intArrayOf(1,6,2)))
-    println(Solution().stoneGame(intArrayOf(5,3,4)))
-    println(Solution().stoneGame(intArrayOf(5,3,4,5)))
-    println(Solution().stoneGame(intArrayOf(3,7,2,3)))
-
+    println(Solution().getKth(12,15,2))
+    println(Solution().getKth(7,11,4))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -100,27 +98,27 @@ fun main(args: Array<String>) {
 
 //5,3,4,5
 class Solution {
-    fun stoneGame(piles: IntArray): Boolean {
-        val n: Int = piles.size
-        val dp = Array(n) { IntArray(n) }
-        for (i in 0 until n) dp[i][i] = piles[i]
+    fun getKth(lo: Int, hi: Int, k: Int): Int {
+        val cashMap: HashMap<Int, Int> = hashMapOf()
+        cashMap[1] = 0
 
-        for (d in 1 until n){
-            for (i in 0 until n - d) {
-                dp[i][i + d] = max(piles[i] - dp[i + 1][i + d], piles[i + d] - dp[i][i + d - 1])
-                println("----")
-                dp.forEach {
-                    println(it.joinToString(" "))
-                }
-                println("-----")
+        return (lo..hi).map {
+            it to calc(it, cashMap)
+        }.sortedBy { it.second }[k - 1].first
+    }
+
+    private fun calc(item: Int, map: HashMap<Int, Int>): Int{
+        return map[item] ?: kotlin.run{
+            val newValue = if (item % 2 == 0){
+                item / 2
+            } else {
+                (item * 3) + 1
             }
-        }
 
-        println("final")
-        dp.forEach {
-            println(it.joinToString(" "))
+            val step = calc(newValue, map) + 1
+            map[item] = step
+            step
         }
-        return dp[0][n - 1] > 0
     }
 }
 
