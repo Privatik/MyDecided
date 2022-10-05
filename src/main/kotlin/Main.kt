@@ -77,8 +77,9 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    println(Solution().getKth(12,15,2))
-    println(Solution().getKth(7,11,4))
+    println(Solution().longestSubarray(intArrayOf(1,1,0,1)))
+    println(Solution().longestSubarray(intArrayOf(0,1,1,1,0,1,1,0,1)))
+    println(Solution().longestSubarray(intArrayOf(1,1,1)))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -98,27 +99,17 @@ fun main(args: Array<String>) {
 
 //5,3,4,5
 class Solution {
-    fun getKth(lo: Int, hi: Int, k: Int): Int {
-        val cashMap: HashMap<Int, Int> = hashMapOf()
-        cashMap[1] = 0
+    fun longestSubarray(nums: IntArray): Int {
+        val n = nums.size
+        val dp = Array<IntArray>(n){ IntArray(n) }
 
-        return (lo..hi).map {
-            it to calc(it, cashMap)
-        }.sortedBy { it.second }[k - 1].first
-    }
-
-    private fun calc(item: Int, map: HashMap<Int, Int>): Int{
-        return map[item] ?: kotlin.run{
-            val newValue = if (item % 2 == 0){
-                item / 2
-            } else {
-                (item * 3) + 1
+        for (i in 1 until n){
+            for (j in 0 until n - i){
+                dp[j][j + i] = max(nums[j] + dp[j + 1][j + i], nums[j + i] + dp[j][i + j - 1])
             }
-
-            val step = calc(newValue, map) + 1
-            map[item] = step
-            step
         }
+
+        return dp[0][n - 1]
     }
 }
 
