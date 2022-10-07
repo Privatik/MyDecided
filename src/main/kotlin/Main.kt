@@ -1,7 +1,3 @@
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.math.max
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -77,9 +73,9 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    println(Solution().longestSubarray(intArrayOf(1,1,0,1)))
-    println(Solution().longestSubarray(intArrayOf(0,1,1,1,0,1,1,0,1)))
-    println(Solution().longestSubarray(intArrayOf(1,1,1)))
+//    println(Solution().longestSubarray(intArrayOf(1,1,0,1)))
+    println(Solution().partition("aab"))
+    println(Solution().partition("a"))
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -99,17 +95,44 @@ fun main(args: Array<String>) {
 
 //5,3,4,5
 class Solution {
-    fun longestSubarray(nums: IntArray): Int {
-        val n = nums.size
-        val dp = Array<IntArray>(n){ IntArray(n) }
-
-        for (i in 1 until n){
-            for (j in 0 until n - i){
-                dp[j][j + i] = max(nums[j] + dp[j + 1][j + i], nums[j + i] + dp[j][i + j - 1])
+    fun partition(s: String): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        val dp = Array(s.length) { BooleanArray(s.length) }
+        for (i in s.indices) {
+            for (j in 0..i) {
+                if (s[i] == s[j] && (i - j <= 2 || dp[j + 1][i - 1])) {
+                    dp[j][i] = true
+                }
             }
         }
+        println("-------")
+        dp.forEach {
+            println(it.joinToString(" "))
+        }
+        println("-------")
+        helper(res, mutableListOf(), dp, s, 0)
+        return res
+    }
 
-        return dp[0][n - 1]
+    private fun helper(
+        res: MutableList<List<String>>,
+        path: MutableList<String>,
+        dp: Array<BooleanArray>,
+        s: String,
+        pos: Int
+    ) {
+        if (pos == s.length) {
+            res.add(ArrayList(path))
+            return
+        }
+
+        for (i in pos until s.length) {
+            if (dp[pos][i]) {
+                path.add(s.substring(pos, i + 1))
+                helper(res, path, dp, s, i + 1)
+                path.removeAt(path.size - 1)
+            }
+        }
     }
 }
 
