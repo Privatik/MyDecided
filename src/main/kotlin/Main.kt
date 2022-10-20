@@ -1,3 +1,6 @@
+import kotlin.math.max
+import kotlin.math.min
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -74,8 +77,35 @@ fun main(args: Array<String>) {
 //    ))
 
 //    println(Solution().longestSubarray(intArrayOf(1,1,0,1)))
-    println(Solution().partition("aab"))
-    println(Solution().partition("a"))
+//    println(Solution().partition("gagga"))
+//    println(Solution().partition("a"))
+//    println(Solution().distributeCookies(intArrayOf(8,15,10,20,8), 2))
+    println(Solution().maxCompatibilitySum(
+        arrayOf(
+            intArrayOf(1,1,0),
+            intArrayOf(1,0,1),
+            intArrayOf(0,0,1)
+        ),
+        arrayOf(
+            intArrayOf(1,0,0),
+            intArrayOf(0,0,1),
+            intArrayOf(1,1,0)
+        )
+    ))
+
+    println(Solution().maxCompatibilitySum(
+        arrayOf(
+            intArrayOf(0,0),
+            intArrayOf(0,0),
+            intArrayOf(0,0)
+        ),
+        arrayOf(
+            intArrayOf(1,1),
+            intArrayOf(1,1),
+            intArrayOf(1,1)
+        )
+    ))
+
 
 //   println(Solution().maximumTime("2?:?0"))
 //   println(Solution().maximumTime("??:?0"))
@@ -93,46 +123,30 @@ fun main(args: Array<String>) {
 //    println(Solution().lengthOfLongestSubstring(str6))
 }
 
-//5,3,4,5
+//[[0,1,0,1,1,1],[1,0,0,1,0,1],[1,0,1,1,0,0]]
+//[[1,0,0,0,0,1],[0,1,0,0,1,1],[0,1,0,0,1,1]]
+//13
+//10
+
 class Solution {
-    fun partition(s: String): List<List<String>> {
-        val res = mutableListOf<List<String>>()
-        val dp = Array(s.length) { BooleanArray(s.length) }
-        for (i in s.indices) {
-            for (j in 0..i) {
-                if (s[i] == s[j] && (i - j <= 2 || dp[j + 1][i - 1])) {
-                    dp[j][i] = true
+    fun maxCompatibilitySum(students: Array<IntArray>, mentors: Array<IntArray>): Int {
+        val result = IntArray(students.size)
+
+        students.forEachIndexed { indexS, student ->
+            mentors.forEachIndexed { indexM, answers ->
+                var timeAnswer = 0
+                answers.forEachIndexed { index, answer ->
+                    if (answer == student[index]){
+                        timeAnswer += 1
+                    }
+                }
+                if (result[indexS] < timeAnswer){
+                    result[indexS] = timeAnswer
                 }
             }
         }
-        println("-------")
-        dp.forEach {
-            println(it.joinToString(" "))
-        }
-        println("-------")
-        helper(res, mutableListOf(), dp, s, 0)
-        return res
-    }
 
-    private fun helper(
-        res: MutableList<List<String>>,
-        path: MutableList<String>,
-        dp: Array<BooleanArray>,
-        s: String,
-        pos: Int
-    ) {
-        if (pos == s.length) {
-            res.add(ArrayList(path))
-            return
-        }
-
-        for (i in pos until s.length) {
-            if (dp[pos][i]) {
-                path.add(s.substring(pos, i + 1))
-                helper(res, path, dp, s, i + 1)
-                path.removeAt(path.size - 1)
-            }
-        }
+        return result.sum()
     }
 }
 
