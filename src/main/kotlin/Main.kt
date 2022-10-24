@@ -1,5 +1,4 @@
 import kotlin.math.max
-import kotlin.math.min
 
 fun main(args: Array<String>) {
 
@@ -80,29 +79,42 @@ fun main(args: Array<String>) {
 //    println(Solution().partition("gagga"))
 //    println(Solution().partition("a"))
 //    println(Solution().distributeCookies(intArrayOf(8,15,10,20,8), 2))
-    println(Solution().maxCompatibilitySum(
-        arrayOf(
-            intArrayOf(1,1,0),
-            intArrayOf(1,0,1),
-            intArrayOf(0,0,1)
-        ),
-        arrayOf(
-            intArrayOf(1,0,0),
-            intArrayOf(0,0,1),
-            intArrayOf(1,1,0)
-        )
-    ))
+//    println(Solution().maxCompatibilitySum(
+//        arrayOf(
+//            intArrayOf(1,1,0),
+//            intArrayOf(1,0,1),
+//            intArrayOf(0,0,1)
+//        ),
+//        arrayOf(
+//            intArrayOf(1,0,0),
+//            intArrayOf(0,0,1),
+//            intArrayOf(1,1,0)
+//        )
+//    ))
+
+//    println(Solution().maxCompatibilitySum(
+//        arrayOf(
+//            intArrayOf(0,0),
+//            intArrayOf(0,0),
+//            intArrayOf(0,0)
+//        ),
+//        arrayOf(
+//            intArrayOf(1,1),
+//            intArrayOf(1,1),
+//            intArrayOf(1,1)
+//        )
+//    ))
 
     println(Solution().maxCompatibilitySum(
         arrayOf(
-            intArrayOf(0,0),
-            intArrayOf(0,0),
-            intArrayOf(0,0)
+            intArrayOf(0,1,0,1,1,1),
+            intArrayOf(1,0,0,1,0,1),
+            intArrayOf(1,0,1,1,0,0)
         ),
         arrayOf(
-            intArrayOf(1,1),
-            intArrayOf(1,1),
-            intArrayOf(1,1)
+            intArrayOf(1,0,0,0,0,1),
+            intArrayOf(0,1,0,0,1,1),
+            intArrayOf(0,1,0,0,1,1)
         )
     ))
 
@@ -130,23 +142,44 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun maxCompatibilitySum(students: Array<IntArray>, mentors: Array<IntArray>): Int {
-        val result = IntArray(students.size)
+        return helper(0, students, mentors, HashSet(), HashMap())
+    }
 
-        students.forEachIndexed { indexS, student ->
-            mentors.forEachIndexed { indexM, answers ->
-                var timeAnswer = 0
-                answers.forEachIndexed { index, answer ->
-                    if (answer == student[index]){
-                        timeAnswer += 1
-                    }
-                }
-                if (result[indexS] < timeAnswer){
-                    result[indexS] = timeAnswer
-                }
-            }
+    private fun helper(
+        idx: Int,
+        students: Array<IntArray>,
+        mentors: Array<IntArray>,
+        set: MutableSet<Int?>,
+        dp: MutableMap<Pair<Int?, String?>?, Int?>
+    ): Int {
+        if (idx == students.size) {
+            return 0
         }
 
-        return result.sum()
+        val key = Pair(idx, set.toString())
+
+        if (dp.containsKey(key)) return dp[key]!!
+
+        var ans = 0
+        for (i in mentors.indices) {
+            if (set.contains(i)) continue
+            val mentor = mentors[i]
+            val student = students[idx]
+            set.add(i)
+            ans = max(ans, compatibility(mentor, student) + helper(idx + 1, students, mentors, set, dp))
+            set.remove(i)
+        }
+        dp[key] = ans
+        return ans
+    }
+
+    private fun compatibility(arr1: IntArray, arr2: IntArray): Int {
+        val n = arr1.size
+        var ans = 0
+        for (i in 0 until n) {
+            if (arr1[i] == arr2[i]) ans++
+        }
+        return ans
     }
 }
 
