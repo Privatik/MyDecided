@@ -105,21 +105,22 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    println(Solution().maxCompatibilitySum(
-        arrayOf(
-            intArrayOf(0,1,0,1,1,1),
-            intArrayOf(1,0,0,1,0,1),
-            intArrayOf(1,0,1,1,0,0)
-        ),
-        arrayOf(
-            intArrayOf(1,0,0,0,0,1),
-            intArrayOf(0,1,0,0,1,1),
-            intArrayOf(0,1,0,0,1,1)
-        )
-    ))
+//    println(Solution().maxCompatibilitySum(
+//        arrayOf(
+//            intArrayOf(0,1,0,1,1,1),
+//            intArrayOf(1,0,0,1,0,1),
+//            intArrayOf(1,0,1,1,0,0)
+//        ),
+//        arrayOf(
+//            intArrayOf(1,0,0,0,0,1),
+//            intArrayOf(0,1,0,0,1,1),
+//            intArrayOf(0,1,0,0,1,1)
+//        )
+//    ))
 
 
-//   println(Solution().maximumTime("2?:?0"))
+   println(Solution().stoneGameII(intArrayOf(2,7,9,4,4)))
+   println(Solution().stoneGameII(intArrayOf(1,2,3,4,5,100)))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -141,45 +142,34 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun maxCompatibilitySum(students: Array<IntArray>, mentors: Array<IntArray>): Int {
-        return helper(0, students, mentors, HashSet(), HashMap())
+    fun stoneGameII(piles: IntArray): Int {
+        if (piles.isEmpty()) return 0
+        val cache = Array(piles.size) { IntArray(piles.size) }
+
+        val suffixSum = IntArray(piles.size)
+
+        suffixSum[suffixSum.size - 1] = piles[piles.size - 1]
+        for (i in piles.size - 2 downTo 0){
+            suffixSum[i] = piles[i] + suffixSum[i + 1]
+        }
+
+        return helper(piles, suffixSum, cache, 0, 1);
     }
 
-    private fun helper(
-        idx: Int,
-        students: Array<IntArray>,
-        mentors: Array<IntArray>,
-        set: MutableSet<Int?>,
-        dp: MutableMap<Pair<Int?, String?>?, Int?>
-    ): Int {
-        if (idx == students.size) {
-            return 0
+
+    private fun helper(piles: IntArray, suffixSum: IntArray, cache: Array<IntArray>, firstPile: Int, M: Int): Int {
+        if (firstPile == piles.size) return 0
+        if (piles.size - firstPile <= 2 * M) return suffixSum[firstPile]
+        if (cache[firstPile][M] != 0) return cache[firstPile][M]
+
+        var result = 0
+
+        for (x in 1..(2 * M)) {
+            result = max(result, suffixSum[firstPile] - helper(piles, suffixSum, cache, firstPile + x, max(M, x)));
         }
 
-        val key = Pair(idx, set.toString())
-
-        if (dp.containsKey(key)) return dp[key]!!
-
-        var ans = 0
-        for (i in mentors.indices) {
-            if (set.contains(i)) continue
-            val mentor = mentors[i]
-            val student = students[idx]
-            set.add(i)
-            ans = max(ans, compatibility(mentor, student) + helper(idx + 1, students, mentors, set, dp))
-            set.remove(i)
-        }
-        dp[key] = ans
-        return ans
-    }
-
-    private fun compatibility(arr1: IntArray, arr2: IntArray): Int {
-        val n = arr1.size
-        var ans = 0
-        for (i in 0 until n) {
-            if (arr1[i] == arr2[i]) ans++
-        }
-        return ans
+        cache[firstPile][M] = result
+        return result
     }
 }
 
@@ -203,10 +193,10 @@ class ListNode(var `val`: Int) {
 
 
 
-class TreeNode(var `val`: Int) {
-    var left: TreeNode? = null
-    var right: TreeNode? = null
-}
+//class TreeNode(var `val`: Int) {
+//    var left: TreeNode? = null
+//    var right: TreeNode? = null
+//}
 
 //
 //
