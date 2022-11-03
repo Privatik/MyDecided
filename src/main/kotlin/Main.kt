@@ -1,4 +1,5 @@
-import kotlin.math.max
+import java.util.*
+import kotlin.text.StringBuilder
 
 fun main(args: Array<String>) {
 
@@ -118,9 +119,17 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
+    val root1 = TreeNode(1).apply {
+        left = TreeNode(2).apply {
+            right = TreeNode(5)
+        }
+        right = TreeNode(3)
+    }
 
-   println(Solution().stoneGameII(intArrayOf(2,7,9,4,4)))
-   println(Solution().stoneGameII(intArrayOf(1,2,3,4,5,100)))
+    val root2 = TreeNode(1)
+
+   println(Solution().binaryTreePaths(root1))
+   println(Solution().binaryTreePaths(root2))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -142,34 +151,43 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun stoneGameII(piles: IntArray): Int {
-        if (piles.isEmpty()) return 0
-        val cache = Array(piles.size) { IntArray(piles.size) }
-
-        val suffixSum = IntArray(piles.size)
-
-        suffixSum[suffixSum.size - 1] = piles[piles.size - 1]
-        for (i in piles.size - 2 downTo 0){
-            suffixSum[i] = piles[i] + suffixSum[i + 1]
-        }
-
-        return helper(piles, suffixSum, cache, 0, 1);
+    fun binaryTreePaths(root: TreeNode?): List<String> {
+        val list = LinkedList<String>()
+        if (root != null) helper(root, StringBuilder(), list)
+        return list
     }
 
+    private fun helper(next: TreeNode, builder: StringBuilder, answerList: LinkedList<String>){
+        val notHaveRight = next.right == null
+        val notHaveLeft = next.left == null
 
-    private fun helper(piles: IntArray, suffixSum: IntArray, cache: Array<IntArray>, firstPile: Int, M: Int): Int {
-        if (firstPile == piles.size) return 0
-        if (piles.size - firstPile <= 2 * M) return suffixSum[firstPile]
-        if (cache[firstPile][M] != 0) return cache[firstPile][M]
+        builder.append(next.`val`.toString())
 
-        var result = 0
-
-        for (x in 1..(2 * M)) {
-            result = max(result, suffixSum[firstPile] - helper(piles, suffixSum, cache, firstPile + x, max(M, x)));
+        if (!notHaveLeft) {
+            builder.append("->")
+            helper(next.left!!, builder, answerList)
         }
 
-        cache[firstPile][M] = result
-        return result
+        if (!notHaveRight) {
+            builder.append("->")
+            helper(next.right!!, builder, answerList)
+        }
+
+        if (notHaveLeft && notHaveRight) {
+            if (builder.isNotBlank()){ answerList.add(builder.toString()) }
+        }
+
+        removeLastChars(builder)
+    }
+
+    private fun removeLastChars(builder: StringBuilder){
+        repeat(builder.length){
+            if (builder.lastOrNull() != '-') builder.deleteCharAt(builder.lastIndex)
+            else {
+                builder.deleteCharAt(builder.lastIndex)
+                return
+            }
+        }
     }
 }
 
@@ -198,13 +216,13 @@ class ListNode(var `val`: Int) {
 //    var right: TreeNode? = null
 //}
 
-//
-//
-//class TreeNode(var `val`: Int) {
-//    var left: TreeNode? = null
-//    var right: TreeNode? = null
-//
-//    override fun toString(): String {
-//        return `val`.toString()
-//    }
-//}
+
+
+class TreeNode(var `val`: Int) {
+    var left: TreeNode? = null
+    var right: TreeNode? = null
+
+    override fun toString(): String {
+        return `val`.toString()
+    }
+}
