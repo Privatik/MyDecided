@@ -119,17 +119,31 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    val root1 = TreeNode(1).apply {
-        left = TreeNode(2).apply {
-            right = TreeNode(5)
+    val root1 = TreeNode(3).apply {
+        left = TreeNode(4).apply {
+            left = TreeNode(1)
+            right = TreeNode(2)
         }
-        right = TreeNode(3)
+        right = TreeNode(5)
     }
 
-    val root2 = TreeNode(1)
+    val root2 = TreeNode(3).apply {
+        left = TreeNode(4).apply {
+            left = TreeNode(1)
+            right = TreeNode(2).apply {
+                left = TreeNode(0)
+            }
+        }
+        right = TreeNode(5)
+    }
 
-   println(Solution().binaryTreePaths(root1))
-   println(Solution().binaryTreePaths(root2))
+    val subRoot = TreeNode(4).apply {
+        left = TreeNode(1)
+        right = TreeNode(2)
+    }
+
+//   println(Solution().isSubtree(root1, subRoot))
+   println(Solution().isSubtree(root2, subRoot))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -151,43 +165,18 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun binaryTreePaths(root: TreeNode?): List<String> {
-        val list = LinkedList<String>()
-        if (root != null) helper(root, StringBuilder(), list)
-        return list
+    fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
+        return helper(root, subRoot)
     }
 
-    private fun helper(next: TreeNode, builder: StringBuilder, answerList: LinkedList<String>){
-        val notHaveRight = next.right == null
-        val notHaveLeft = next.left == null
+    private fun helper(root: TreeNode?, subRoot: TreeNode?): Boolean{
+        if (root == null && subRoot == null) return true
 
-        builder.append(next.`val`.toString())
-
-        if (!notHaveLeft) {
-            builder.append("->")
-            helper(next.left!!, builder, answerList)
+        if (root?.`val` == subRoot?.`val`){
+            val left =  helper(root?.left, subRoot?.left)
+            val right =  helper(root?.right, subRoot?.right)
         }
 
-        if (!notHaveRight) {
-            builder.append("->")
-            helper(next.right!!, builder, answerList)
-        }
-
-        if (notHaveLeft && notHaveRight) {
-            if (builder.isNotBlank()){ answerList.add(builder.toString()) }
-        }
-
-        removeLastChars(builder)
-    }
-
-    private fun removeLastChars(builder: StringBuilder){
-        repeat(builder.length){
-            if (builder.lastOrNull() != '-') builder.deleteCharAt(builder.lastIndex)
-            else {
-                builder.deleteCharAt(builder.lastIndex)
-                return
-            }
-        }
     }
 }
 
