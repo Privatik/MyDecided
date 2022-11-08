@@ -1,6 +1,3 @@
-import java.util.*
-import kotlin.text.StringBuilder
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -142,8 +139,9 @@ fun main(args: Array<String>) {
         right = TreeNode(2)
     }
 
-//   println(Solution().isSubtree(root1, subRoot))
+   println(Solution().isSubtree(root1, subRoot))
    println(Solution().isSubtree(root2, subRoot))
+   println(Solution().isSubtree(TreeNode(1).apply { left = TreeNode(1) }, TreeNode(1)))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -166,17 +164,18 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
-        return helper(root, subRoot)
+        if (root == null) return false
+        if (isSame(root, subRoot)) return true
+        return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot)
     }
 
-    private fun helper(root: TreeNode?, subRoot: TreeNode?): Boolean{
+    private fun isSame(root: TreeNode?, subRoot: TreeNode?): Boolean {
         if (root == null && subRoot == null) return true
+        if (root == null || subRoot == null) return false
 
-        if (root?.`val` == subRoot?.`val`){
-            val left =  helper(root?.left, subRoot?.left)
-            val right =  helper(root?.right, subRoot?.right)
-        }
+        if (root.`val` != subRoot.`val`) return false
 
+        return isSame(root.left, subRoot.left) && isSame(root.right, subRoot.right)
     }
 }
 
