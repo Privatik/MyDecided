@@ -1,3 +1,6 @@
+import kotlin.math.max
+import kotlin.math.min
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -116,32 +119,21 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    val root1 = TreeNode(3).apply {
-        left = TreeNode(4).apply {
-            left = TreeNode(1)
-            right = TreeNode(2)
+    val root1 = TreeNode(2).apply {
+        left = TreeNode(2)
+        right = TreeNode(5).apply {
+            left = TreeNode(5)
+            right = TreeNode(7)
         }
-        right = TreeNode(5)
     }
 
-    val root2 = TreeNode(3).apply {
-        left = TreeNode(4).apply {
-            left = TreeNode(1)
-            right = TreeNode(2).apply {
-                left = TreeNode(0)
-            }
-        }
-        right = TreeNode(5)
-    }
-
-    val subRoot = TreeNode(4).apply {
-        left = TreeNode(1)
+    val root2 = TreeNode(2).apply {
+        left = TreeNode(2)
         right = TreeNode(2)
     }
 
-   println(Solution().isSubtree(root1, subRoot))
-   println(Solution().isSubtree(root2, subRoot))
-   println(Solution().isSubtree(TreeNode(1).apply { left = TreeNode(1) }, TreeNode(1)))
+   println(Solution().findSecondMinimumValue(root1))
+   println(Solution().findSecondMinimumValue(root2))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -163,20 +155,23 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
-        if (root == null) return false
-        if (isSame(root, subRoot)) return true
-        return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot)
+    fun findSecondMinimumValue(root: TreeNode?): Int {
+        if (root?.left == null) return -1
+        val firstMin = root.`val`
+        val answer = max(helper(firstMin , root.left!!), helper(firstMin, root.right!!))
+
+        return if (firstMin == answer) -1 else answer
     }
 
-    private fun isSame(root: TreeNode?, subRoot: TreeNode?): Boolean {
-        if (root == null && subRoot == null) return true
-        if (root == null || subRoot == null) return false
+    private fun helper(firstMin: Int, root: TreeNode): Int{
+        if (root.left == null || root.`val` != firstMin) return root.`val`
 
-        if (root.`val` != subRoot.`val`) return false
+        val nextMin = max(root.left!!.`val`, root.right!!.`val`)
+        if (nextMin != firstMin) return nextMin
 
-        return isSame(root.left, subRoot.left) && isSame(root.right, subRoot.right)
+        return max(helper(firstMin , root.left!!), helper(firstMin, root.right!!))
     }
+
 }
 
 
