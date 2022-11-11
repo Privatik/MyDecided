@@ -156,22 +156,13 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun findSecondMinimumValue(root: TreeNode?): Int {
-        if (root?.left == null) return -1
-        val firstMin = root.`val`
-        val answer = max(helper(firstMin , root.left!!), helper(firstMin, root.right!!))
+        if (root!!.left == null) return -1
 
-        return if (firstMin == answer) -1 else answer
+        val l = if (root.left!!.`val` == root.`val`) findSecondMinimumValue(root.left) else root.left!!.`val`
+        val r = if (root.right!!.`val` == root.`val`) findSecondMinimumValue(root.right) else root.right!!.`val`
+
+        return if (l == -1 || r == -1) max(l, r) else min(l, r)
     }
-
-    private fun helper(firstMin: Int, root: TreeNode): Int{
-        if (root.left == null || root.`val` != firstMin) return root.`val`
-
-        val nextMin = max(root.left!!.`val`, root.right!!.`val`)
-        if (nextMin != firstMin) return nextMin
-
-        return max(helper(firstMin , root.left!!), helper(firstMin, root.right!!))
-    }
-
 }
 
 
