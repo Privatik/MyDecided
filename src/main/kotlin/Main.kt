@@ -132,8 +132,8 @@ fun main(args: Array<String>) {
         right = TreeNode(2)
     }
 
-   println(Solution().findSecondMinimumValue(root1))
-   println(Solution().findSecondMinimumValue(root2))
+   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
+   println(Solution().validPath(6, arrayOf(intArrayOf(0,1),intArrayOf(0,2),intArrayOf(3,5),intArrayOf(5,4),intArrayOf(4,3)),0, 5))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -155,13 +155,14 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun findSecondMinimumValue(root: TreeNode?): Int {
-        if (root!!.left == null) return -1
+    fun validPath(n: Int, edges: Array<IntArray>, source: Int, destination: Int): Boolean {
+        val paths = HashMap<Int, HashSet<Int>>()
 
-        val l = if (root.left!!.`val` == root.`val`) findSecondMinimumValue(root.left) else root.left!!.`val`
-        val r = if (root.right!!.`val` == root.`val`) findSecondMinimumValue(root.right) else root.right!!.`val`
+        edges.forEach {
 
-        return if (l == -1 || r == -1) max(l, r) else min(l, r)
+        }
+
+        return true
     }
 }
 
