@@ -132,8 +132,25 @@ fun main(args: Array<String>) {
         right = TreeNode(2)
     }
 
-   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
-   println(Solution().validPath(6, arrayOf(intArrayOf(0,1),intArrayOf(0,2),intArrayOf(3,5),intArrayOf(5,4),intArrayOf(4,3)),0, 5))
+//   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
+//   println(Solution().validPath(6, arrayOf(intArrayOf(0,1),intArrayOf(0,2),intArrayOf(3,5),intArrayOf(5,4),intArrayOf(4,3)),0, 5))
+   println(Solution().validPath(
+       10,
+       arrayOf(
+           intArrayOf(0,7),
+           intArrayOf(0,8),
+           intArrayOf(6,1),
+           intArrayOf(2,0),
+           intArrayOf(0,4),
+           intArrayOf(5,8),
+           intArrayOf(4,7),
+           intArrayOf(1,3),
+           intArrayOf(3,5),
+           intArrayOf(6,5),
+       ),
+       7,
+       5
+   ))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -156,13 +173,30 @@ fun main(args: Array<String>) {
 
 class Solution {
     fun validPath(n: Int, edges: Array<IntArray>, source: Int, destination: Int): Boolean {
-        val paths = HashMap<Int, HashSet<Int>>()
+        val nodes = IntArray(n) { it }
+        val uf = UnionFind(nodes)
+        edges.forEach { (a, b) -> uf.unify(a, b) }
+        return uf.find(source) == uf.find(destination)
+    }
+}
 
-        edges.forEach {
+class UnionFind(private val nodes: IntArray) {
 
-        }
+    var components: Int = nodes.size
+        private set
 
-        return true
+    fun find(x: Int): Int {
+        return if (x == nodes[x]) x else find(nodes[x])
+    }
+
+    fun unify(x: Int, y: Int) {
+        val root1 = find(x)
+        val root2 = find(y)
+
+        if (root1 == root2) return
+
+        nodes[root2] = root1
+        components--
     }
 }
 
