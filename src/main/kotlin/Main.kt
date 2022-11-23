@@ -1,5 +1,5 @@
+import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 fun main(args: Array<String>) {
 
@@ -119,38 +119,47 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    val root1 = TreeNode(2).apply {
-        left = TreeNode(2)
-        right = TreeNode(5).apply {
-            left = TreeNode(5)
+    val root1 = TreeNode(3).apply {
+        left = TreeNode(9)
+        right = TreeNode(20).apply {
+            left = TreeNode(15)
             right = TreeNode(7)
         }
     }
 
-    val root2 = TreeNode(2).apply {
-        left = TreeNode(2)
+    val root2 = TreeNode(1).apply {
+        left = TreeNode(2).apply {
+            left = TreeNode(3).apply {
+                left = TreeNode(4)
+                right = TreeNode(4)
+            }
+            right = TreeNode(3)
+        }
         right = TreeNode(2)
     }
 
 //   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
 //   println(Solution().validPath(6, arrayOf(intArrayOf(0,1),intArrayOf(0,2),intArrayOf(3,5),intArrayOf(5,4),intArrayOf(4,3)),0, 5))
-   println(Solution().validPath(
-       10,
-       arrayOf(
-           intArrayOf(0,7),
-           intArrayOf(0,8),
-           intArrayOf(6,1),
-           intArrayOf(2,0),
-           intArrayOf(0,4),
-           intArrayOf(5,8),
-           intArrayOf(4,7),
-           intArrayOf(1,3),
-           intArrayOf(3,5),
-           intArrayOf(6,5),
-       ),
-       7,
-       5
-   ))
+//   println(Solution().validPath(
+//       10,
+//       arrayOf(
+//           intArrayOf(0,7),
+//           intArrayOf(0,8),
+//           intArrayOf(6,1),
+//           intArrayOf(2,0),
+//           intArrayOf(0,4),
+//           intArrayOf(5,8),
+//           intArrayOf(4,7),
+//           intArrayOf(1,3),
+//           intArrayOf(3,5),
+//           intArrayOf(6,5),
+//       ),
+//       7,
+//       5
+//   ))
+    println(Solution().isBalanced(root1))
+    println(Solution().isBalanced(root2))
+    println(Solution().isBalanced(null))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -172,18 +181,35 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun validPath(n: Int, edges: Array<IntArray>, source: Int, destination: Int): Boolean {
-        val nodes = IntArray(n) { it }
-        val uf = UnionFind(nodes)
-        edges.forEach { (a, b) -> uf.unify(a, b) }
-        return uf.find(source) == uf.find(destination)
+    fun isBalanced(root: TreeNode?): Boolean {
+        if (root == null) return true
+
+        val provider = Provider()
+        balanceOnNode(root, provider)
+        return provider.isBalanced
     }
+
+    private fun balanceOnNode(root: TreeNode?, provider: Provider): Int{
+        if (root == null || !provider.isBalanced) return 0
+
+        val left = balanceOnNode(root.left, provider)
+        val right = balanceOnNode(root.right, provider)
+
+        if (abs(left - right) > 1) {
+            provider.isBalanced = false
+        }
+
+        return max(left, right) + 1
+    }
+
+    private data class Provider(
+        var isBalanced: Boolean = true
+    )
 }
 
 class UnionFind(private val nodes: IntArray) {
 
-    var components: Int = nodes.size
-        private set
+    private var components: Int = nodes.size
 
     fun find(x: Int): Int {
         return if (x == nodes[x]) x else find(nodes[x])
