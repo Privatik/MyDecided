@@ -128,14 +128,12 @@ fun main(args: Array<String>) {
     }
 
     val root2 = TreeNode(1).apply {
-        left = TreeNode(2).apply {
-            left = TreeNode(3).apply {
-                left = TreeNode(4)
-                right = TreeNode(4)
-            }
-            right = TreeNode(3)
-        }
-        right = TreeNode(2)
+        left = TreeNode(2)
+        right = TreeNode(3)
+    }
+
+    val root23 = TreeNode(1).apply {
+        left = TreeNode(2)
     }
 
 //   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
@@ -157,9 +155,10 @@ fun main(args: Array<String>) {
 //       7,
 //       5
 //   ))
-    println(Solution().isBalanced(root1))
-    println(Solution().isBalanced(root2))
-    println(Solution().isBalanced(null))
+    println(Solution().sumOfLeftLeaves(root1))
+    println(Solution().sumOfLeftLeaves(TreeNode(1)))
+//    println(Solution().hasPathSum(null, 0))
+//    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
@@ -181,30 +180,24 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    fun isBalanced(root: TreeNode?): Boolean {
-        if (root == null) return true
+    var sum = 0
 
-        val provider = Provider()
-        balanceOnNode(root, provider)
-        return provider.isBalanced
+    fun sumOfLeftLeaves(root: TreeNode?): Int {
+        sum = 0
+        findSumAllLeftLeaves(root, false)
+        return sum
     }
 
-    private fun balanceOnNode(root: TreeNode?, provider: Provider): Int{
-        if (root == null || !provider.isBalanced) return 0
+    private fun findSumAllLeftLeaves(root: TreeNode?, isLeft: Boolean){
+        if (root == null) return
 
-        val left = balanceOnNode(root.left, provider)
-        val right = balanceOnNode(root.right, provider)
+        findSumAllLeftLeaves(root.left, true)
+        findSumAllLeftLeaves(root.right, false)
 
-        if (abs(left - right) > 1) {
-            provider.isBalanced = false
+        if (isLeft && root.left == null && root.right == null){
+            sum += root.`val`
         }
-
-        return max(left, right) + 1
     }
-
-    private data class Provider(
-        var isBalanced: Boolean = true
-    )
 }
 
 class UnionFind(private val nodes: IntArray) {
