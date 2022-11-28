@@ -119,17 +119,36 @@ fun main(args: Array<String>) {
 //        )
 //    ))
 
-    val root1 = TreeNode(3).apply {
-        left = TreeNode(9)
-        right = TreeNode(20).apply {
-            left = TreeNode(15)
-            right = TreeNode(7)
+    val root1 = TreeNode(1).apply {
+        left = TreeNode(2).apply {
+            left = TreeNode(4).apply {
+                left = TreeNode(7)
+            }
+            right = TreeNode(5)
+        }
+        right = TreeNode(3).apply {
+            right = TreeNode(6).apply {
+                right = TreeNode(8)
+            }
         }
     }
 
-    val root2 = TreeNode(1).apply {
-        left = TreeNode(2)
-        right = TreeNode(3)
+    val root2 = TreeNode(6).apply {
+        left = TreeNode(7).apply {
+            left = TreeNode(2).apply {
+                left = TreeNode(9)
+            }
+            right = TreeNode(7).apply {
+                left = TreeNode(1)
+                right = TreeNode(4)
+            }
+        }
+        right = TreeNode(8).apply {
+            left = TreeNode(1)
+            right = TreeNode(3).apply {
+                right = TreeNode(5)
+            }
+        }
     }
 
     val root23 = TreeNode(1).apply {
@@ -155,8 +174,8 @@ fun main(args: Array<String>) {
 //       7,
 //       5
 //   ))
-    println(Solution().sumOfLeftLeaves(root1))
-    println(Solution().sumOfLeftLeaves(TreeNode(1)))
+    println(Solution().deepestLeavesSum(root1))
+    println(Solution().deepestLeavesSum(root2))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -180,23 +199,23 @@ fun main(args: Array<String>) {
 //10
 
 class Solution {
-    var sum = 0
 
-    fun sumOfLeftLeaves(root: TreeNode?): Int {
-        sum = 0
-        findSumAllLeftLeaves(root, false)
-        return sum
+    fun deepestLeavesSum(root: TreeNode?): Int {
+        val nodes = hashMapOf<Int, Int>()
+        val depth = dsf(root, nodes, 0)
+        return nodes[depth] ?: 0
     }
 
-    private fun findSumAllLeftLeaves(root: TreeNode?, isLeft: Boolean){
-        if (root == null) return
+    private fun dsf(root: TreeNode?, nodes: HashMap<Int, Int>, degree: Int): Int{
+        if (root == null) return degree
 
-        findSumAllLeftLeaves(root.left, true)
-        findSumAllLeftLeaves(root.right, false)
-
-        if (isLeft && root.left == null && root.right == null){
-            sum += root.`val`
+        if (root.left == null && root.right == null){
+            val value = nodes[degree] ?: 0
+            nodes[degree] = value + root.`val`
+            return degree
         }
+
+        return max(dsf(root.left, nodes, degree + 1), dsf(root.right, nodes, degree + 1))
     }
 }
 
