@@ -1,6 +1,3 @@
-import kotlin.math.abs
-import kotlin.math.max
-
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -174,8 +171,19 @@ fun main(args: Array<String>) {
 //       7,
 //       5
 //   ))
-    println(Solution().deepestLeavesSum(root1))
-    println(Solution().deepestLeavesSum(root2))
+//    println(Solution().deepestLeavesSum(root1))
+    println(Solution().countBattleships(
+        arrayOf(
+            charArrayOf('X','.','.','.','X'),
+            charArrayOf('.','.','.','.','X'),
+            charArrayOf('.','.','.','.','X')
+        )
+    ))
+    println(Solution().countBattleships(
+        arrayOf(
+            charArrayOf('.'),
+        )
+    ))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -200,22 +208,26 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun deepestLeavesSum(root: TreeNode?): Int {
-        val nodes = hashMapOf<Int, Int>()
-        val depth = dsf(root, nodes, 0)
-        return nodes[depth] ?: 0
-    }
+    private val X = 'X'
+    private val DOT = '.'
 
-    private fun dsf(root: TreeNode?, nodes: HashMap<Int, Int>, degree: Int): Int{
-        if (root == null) return degree
+    fun countBattleships(board: Array<CharArray>): Int {
+        val m: Int = board.size
+        if (m == 0) return 0
+        val n: Int = board[0].size
 
-        if (root.left == null && root.right == null){
-            val value = nodes[degree] ?: 0
-            nodes[degree] = value + root.`val`
-            return degree
+        var count = 0
+
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (board[i][j] == DOT) continue
+                if (i > 0 && board[i - 1][j] == X) continue
+                if (j > 0 && board[i][j - 1] == X) continue
+                count++
+            }
         }
 
-        return max(dsf(root.left, nodes, degree + 1), dsf(root.right, nodes, degree + 1))
+        return count
     }
 }
 
