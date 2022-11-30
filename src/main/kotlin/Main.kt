@@ -118,38 +118,28 @@ fun main(args: Array<String>) {
 
     val root1 = TreeNode(1).apply {
         left = TreeNode(2).apply {
-            left = TreeNode(4).apply {
-                left = TreeNode(7)
-            }
-            right = TreeNode(5)
+            left = TreeNode(2)
         }
         right = TreeNode(3).apply {
-            right = TreeNode(6).apply {
-                right = TreeNode(8)
-            }
+            left = TreeNode(2)
+            right = TreeNode(4)
         }
     }
 
-    val root2 = TreeNode(6).apply {
-        left = TreeNode(7).apply {
-            left = TreeNode(2).apply {
-                left = TreeNode(9)
-            }
-            right = TreeNode(7).apply {
-                left = TreeNode(1)
-                right = TreeNode(4)
-            }
+    val root2 = TreeNode(1).apply {
+        left = TreeNode(3).apply {
+            left = TreeNode(3)
+            right = TreeNode(2)
         }
-        right = TreeNode(8).apply {
-            left = TreeNode(1)
-            right = TreeNode(3).apply {
-                right = TreeNode(5)
-            }
-        }
+        right = TreeNode(3)
     }
 
     val root23 = TreeNode(1).apply {
-        left = TreeNode(2)
+        left = TreeNode(2).apply {
+            left = TreeNode(2).apply {
+                left = TreeNode(2)
+            }
+        }
     }
 
 //   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
@@ -172,18 +162,9 @@ fun main(args: Array<String>) {
 //       5
 //   ))
 //    println(Solution().deepestLeavesSum(root1))
-    println(Solution().countBattleships(
-        arrayOf(
-            charArrayOf('X','.','.','.','X'),
-            charArrayOf('.','.','.','.','X'),
-            charArrayOf('.','.','.','.','X')
-        )
-    ))
-    println(Solution().countBattleships(
-        arrayOf(
-            charArrayOf('.'),
-        )
-    ))
+    println(Solution().removeLeafNodes(root1, 2))
+    println(Solution().removeLeafNodes(root2, 3))
+    println(Solution().removeLeafNodes(root23, 2))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -208,26 +189,21 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    private val X = 'X'
-    private val DOT = '.'
+    fun removeLeafNodes(root: TreeNode?, target: Int): TreeNode? {
+        return if (dfs(root, target)) null else root
+    }
 
-    fun countBattleships(board: Array<CharArray>): Int {
-        val m: Int = board.size
-        if (m == 0) return 0
-        val n: Int = board[0].size
+    private fun dfs(root: TreeNode?, target: Int): Boolean{
+        if (root == null) return false
 
-        var count = 0
-
-        for (i in 0 until m) {
-            for (j in 0 until n) {
-                if (board[i][j] == DOT) continue
-                if (i > 0 && board[i - 1][j] == X) continue
-                if (j > 0 && board[i][j - 1] == X) continue
-                count++
-            }
+        if (dfs(root.left, target)){
+            root.left = null
+        }
+        if (dfs(root.right,target)){
+            root.right = null
         }
 
-        return count
+        return root.left == null && root.right == null && root.`val` == target
     }
 }
 
@@ -282,6 +258,6 @@ class TreeNode(var `val`: Int) {
     var right: TreeNode? = null
 
     override fun toString(): String {
-        return `val`.toString()
+        return "$`val` $left $right"
     }
 }
