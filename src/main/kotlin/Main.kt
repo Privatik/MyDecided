@@ -1,3 +1,5 @@
+import java.util.*
+
 fun main(args: Array<String>) {
 
 //    val head = Solution.TreeNode(3).also { root ->
@@ -162,9 +164,25 @@ fun main(args: Array<String>) {
 //       5
 //   ))
 //    println(Solution().deepestLeavesSum(root1))
-    println(Solution().removeLeafNodes(root1, 2))
-    println(Solution().removeLeafNodes(root2, 3))
-    println(Solution().removeLeafNodes(root23, 2))
+//    println(Solution().removeLeafNodes(root1, 2))
+//    println(Solution().removeLeafNodes(root2, 3))
+    println(Solution().allPathsSourceTarget(
+        graph = arrayOf(
+            intArrayOf(1,2),
+            intArrayOf(3),
+            intArrayOf(3),
+            intArrayOf()
+        )
+    ))
+    println(Solution().allPathsSourceTarget(
+        graph = arrayOf(
+            intArrayOf(4,3,1),
+            intArrayOf(3,2,4),
+            intArrayOf(3),
+            intArrayOf(4),
+            intArrayOf()
+        )
+    ))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -189,21 +207,39 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun removeLeafNodes(root: TreeNode?, target: Int): TreeNode? {
-        return if (dfs(root, target)) null else root
+    fun allPathsSourceTarget(graph: Array<IntArray>): List<List<Int>> {
+        val result = LinkedList<LinkedList<Int>>()
+
+        val parentNode = Array(graph.size) { LinkedList<Int>() }
+
+        graph.forEachIndexed { index, array ->
+            array.forEach { inIndex ->
+                parentNode[inIndex].add(index)
+            }
+        }
+
+        parentNode.last().forEach { indexNode ->
+            val answer = LinkedList<Int>()
+
+            answer.add(graph.size - 1)
+            parentNode[indexNode].forEach {
+                answer.a
+            }
+
+        }
+
+        return result
     }
 
-    private fun dfs(root: TreeNode?, target: Int): Boolean{
-        if (root == null) return false
-
-        if (dfs(root.left, target)){
-            root.left = null
-        }
-        if (dfs(root.right,target)){
-            root.right = null
+    private fun findRoot(currentNode: Int, parentRoot: Array<LinkedList<Int>>, answerList: LinkedList<Int>): LinkedList<Int>{
+        if (currentNode == 0) {
+            answerList.add(currentNode)
+            return answerList
         }
 
-        return root.left == null && root.right == null && root.`val` == target
+        parentRoot[currentNode].forEach {
+            findRoot(it, parentRoot, answerList)
+        }
     }
 }
 
