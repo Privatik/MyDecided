@@ -208,38 +208,27 @@ fun main(args: Array<String>) {
 class Solution {
 
     fun allPathsSourceTarget(graph: Array<IntArray>): List<List<Int>> {
-        val result = LinkedList<LinkedList<Int>>()
+        return dfs(graph)
+    }
 
-        val parentNode = Array(graph.size) { LinkedList<Int>() }
+    private fun dfs(graph: Array<IntArray>, vertex: Int = 0): MutableList<LinkedList<Int>> {
+        val result = mutableListOf<LinkedList<Int>>()
 
-        graph.forEachIndexed { index, array ->
-            array.forEach { inIndex ->
-                parentNode[inIndex].add(index)
-            }
+        if (vertex == graph.lastIndex) {
+            val path = LinkedList<Int>()
+            path.add(vertex)
+            result.add(path)
+            return result
         }
 
-        parentNode.last().forEach { indexNode ->
-            val answer = LinkedList<Int>()
-
-            answer.add(graph.size - 1)
-            parentNode[indexNode].forEach {
-                answer.a
+        for (i in graph[vertex].indices) {
+            dfs(graph, graph[vertex][i]).forEach { path ->
+                path.addFirst(vertex)
+                result.add(path)
             }
-
         }
 
         return result
-    }
-
-    private fun findRoot(currentNode: Int, parentRoot: Array<LinkedList<Int>>, answerList: LinkedList<Int>): LinkedList<Int>{
-        if (currentNode == 0) {
-            answerList.add(currentNode)
-            return answerList
-        }
-
-        parentRoot[currentNode].forEach {
-            findRoot(it, parentRoot, answerList)
-        }
     }
 }
 
