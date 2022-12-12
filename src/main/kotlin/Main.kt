@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.HashSet
 
 fun main(args: Array<String>) {
 
@@ -166,23 +167,9 @@ fun main(args: Array<String>) {
 //    println(Solution().deepestLeavesSum(root1))
 //    println(Solution().removeLeafNodes(root1, 2))
 //    println(Solution().removeLeafNodes(root2, 3))
-    println(Solution().allPathsSourceTarget(
-        graph = arrayOf(
-            intArrayOf(1,2),
-            intArrayOf(3),
-            intArrayOf(3),
-            intArrayOf()
-        )
-    ))
-    println(Solution().allPathsSourceTarget(
-        graph = arrayOf(
-            intArrayOf(4,3,1),
-            intArrayOf(3,2,4),
-            intArrayOf(3),
-            intArrayOf(4),
-            intArrayOf()
-        )
-    ))
+    println(Solution().findLexSmallestString("5525",9,2))
+    println(Solution().findLexSmallestString("74",5,1))
+    println(Solution().findLexSmallestString("0011",4,2))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -207,28 +194,60 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun allPathsSourceTarget(graph: Array<IntArray>): List<List<Int>> {
-        return dfs(graph)
+    // 0 - 48
+    // 3 - 51
+    // 6 - 54
+    // 9 - 57
+    fun findLexSmallestString(s: String, a: Int, b: Int): String {
+        val cacheAnswers  = hashSetOf<String>()
+        return ""
     }
 
-    private fun dfs(graph: Array<IntArray>, vertex: Int = 0): MutableList<LinkedList<Int>> {
-        val result = mutableListOf<LinkedList<Int>>()
+    private fun bfs(
+        currentLex: String,
+        add: Int,
+        rotate: Int,
+        cacheAnswers: HashSet<String>,
+        lexStack: Queue<String>
+    ){
+        val addValue = add(currentLex, add)
+        val rotateValue = rotate(currentLex, rotate)
 
-        if (vertex == graph.lastIndex) {
-            val path = LinkedList<Int>()
-            path.add(vertex)
-            result.add(path)
-            return result
-        }
+        lexStack.
+        if (cacheAnswers.contains(r))
+    }
 
-        for (i in graph[vertex].indices) {
-            dfs(graph, graph[vertex][i]).forEach { path ->
-                path.addFirst(vertex)
-                result.add(path)
+    private fun add(currentLex: String, add: Int): String{
+        val values = currentLex.toCharArray()
+        values.indices.forEach { index ->
+            if (index % 2 == 1){
+                var newChar = values[index] + add
+                if (newChar.code !in 48..57){
+                    newChar -= 12
+                }
+                values[index] = newChar
             }
         }
+        return values.toString()
+    }
 
-        return result
+
+    private fun rotate(currentLex: String, rotate: Int): String{
+
+    }
+
+    private fun min(currentLex: String, lastMinLex: String): String{
+        var isCurrentLex: Boolean? = null
+        var index = 0
+        while (isCurrentLex == null){
+            if (index >= currentLex.length) isCurrentLex = false
+            if (currentLex[index] == lastMinLex[index]) {
+                index++
+                continue
+            }
+            isCurrentLex = currentLex[index] < lastMinLex[index]
+        }
+        return if (isCurrentLex) currentLex else lastMinLex
     }
 }
 
