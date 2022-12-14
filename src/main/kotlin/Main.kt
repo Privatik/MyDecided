@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.collections.HashSet
 
 fun main(args: Array<String>) {
 
@@ -194,27 +193,36 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    // 0 - 48
-    // 3 - 51
-    // 6 - 54
-    // 9 - 57
-    fun findLexSmallestString(s: String, a: Int, b: Int): String {
-        val cacheAnswers  = hashSetOf<String>()
-        return ""
-    }
-
-    private fun bfs(
+    fun findLexSmallestString(
         currentLex: String,
         add: Int,
-        rotate: Int,
-        cacheAnswers: HashSet<String>,
-        lexStack: Queue<String>
-    ){
-        val addValue = add(currentLex, add)
-        val rotateValue = rotate(currentLex, rotate)
+        rotate: Int
+    ): String {
+        val lexStack = LinkedList<String>()
+        val cacheAnswers = hashSetOf<String>()
 
-        lexStack.
-        if (cacheAnswers.contains(r))
+        var min = currentLex
+        var next: String? = currentLex
+
+        while (next != null){
+            val addValue = add(next, add)
+            val rotateValue = rotate(next, rotate)
+
+            if (!cacheAnswers.contains(addValue)){
+                min = min(min, addValue)
+                lexStack.offer(addValue)
+                cacheAnswers.add(addValue)
+            }
+
+            if (!cacheAnswers.contains(rotateValue)){
+                min = min(min, rotateValue)
+                lexStack.offer(rotateValue)
+                cacheAnswers.add(rotateValue)
+            }
+
+            next = lexStack.poll()
+        }
+        return min
     }
 
     private fun add(currentLex: String, add: Int): String{
@@ -222,32 +230,44 @@ class Solution {
         values.indices.forEach { index ->
             if (index % 2 == 1){
                 var newChar = values[index] + add
-                if (newChar.code !in 48..57){
-                    newChar -= 12
+                if (newChar !in '0'..'9'){
+                    newChar -= 10
                 }
                 values[index] = newChar
             }
         }
-        return values.toString()
+
+        return values.joinToString("")
     }
 
 
     private fun rotate(currentLex: String, rotate: Int): String{
+        val values = CharArray(currentLex.length)
+        var startIndex = currentLex.length - rotate
+        values.indices.forEach {
+            values[it] = currentLex[startIndex]
 
+            startIndex++
+
+            if (startIndex == currentLex.length){
+                startIndex = 0
+            }
+        }
+        return values.joinToString("")
     }
 
     private fun min(currentLex: String, lastMinLex: String): String{
-        var isCurrentLex: Boolean? = null
+        var isCurrentLexLeast: Boolean? = null
         var index = 0
-        while (isCurrentLex == null){
-            if (index >= currentLex.length) isCurrentLex = false
+        while (isCurrentLexLeast == null){
+            if (index >= currentLex.length) return currentLex
             if (currentLex[index] == lastMinLex[index]) {
                 index++
                 continue
             }
-            isCurrentLex = currentLex[index] < lastMinLex[index]
+            isCurrentLexLeast = currentLex[index] < lastMinLex[index]
         }
-        return if (isCurrentLex) currentLex else lastMinLex
+        return if (isCurrentLexLeast) currentLex else lastMinLex
     }
 }
 
