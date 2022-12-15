@@ -166,9 +166,18 @@ fun main(args: Array<String>) {
 //    println(Solution().deepestLeavesSum(root1))
 //    println(Solution().removeLeafNodes(root1, 2))
 //    println(Solution().removeLeafNodes(root2, 3))
-    println(Solution().findLexSmallestString("5525",9,2))
-    println(Solution().findLexSmallestString("74",5,1))
-    println(Solution().findLexSmallestString("0011",4,2))
+    println(Solution().watchedVideosByFriends(
+        watchedVideos = listOf(listOf("A","B"), listOf("C"), listOf("B","C"), listOf("D")),
+        friends = arrayOf(intArrayOf(1,2), intArrayOf(0,3), intArrayOf(0,3), intArrayOf(1,2)),
+        id = 0,
+        level = 1
+    ))
+    println(Solution().watchedVideosByFriends(
+        watchedVideos = listOf(listOf("A","B"), listOf("C"), listOf("B","C"), listOf("D")),
+        friends = arrayOf(intArrayOf(1,2), intArrayOf(0,3), intArrayOf(0,3), intArrayOf(1,2)),
+        id = 0,
+        level = 2
+    ))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -193,81 +202,42 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun findLexSmallestString(
-        currentLex: String,
-        add: Int,
-        rotate: Int
-    ): String {
-        val lexStack = LinkedList<String>()
-        val cacheAnswers = hashSetOf<String>()
+    fun watchedVideosByFriends(
+        watchedVideos: List<List<String>>,
+        friends: Array<IntArray>,
+        id: Int,
+        level: Int
+    ): List<String> {
+        val queue: Queue<Int> = LinkedList()
+        val idToLevels = hashMapOf<Int, Int>()
+        val answer = hashMapOf<String, Int>()
 
-        var min = currentLex
-        var next: String? = currentLex
+        idToLevels[id] = 0
+        var next: Int? = id
 
-        while (next != null){
-            val addValue = add(next, add)
-            val rotateValue = rotate(next, rotate)
+        while (next != null) {
+            friends[next].forEach { friendId ->
+                if (!idToLevels.containsKey(friendId)){
+                    val friendLevel = idToLevels[next!!]!! + 1
 
-            if (!cacheAnswers.contains(addValue)){
-                min = min(min, addValue)
-                lexStack.offer(addValue)
-                cacheAnswers.add(addValue)
-            }
-
-            if (!cacheAnswers.contains(rotateValue)){
-                min = min(min, rotateValue)
-                lexStack.offer(rotateValue)
-                cacheAnswers.add(rotateValue)
-            }
-
-            next = lexStack.poll()
-        }
-        return min
-    }
-
-    private fun add(currentLex: String, add: Int): String{
-        val values = currentLex.toCharArray()
-        values.indices.forEach { index ->
-            if (index % 2 == 1){
-                var newChar = values[index] + add
-                if (newChar !in '0'..'9'){
-                    newChar -= 10
+                    if (friendLevel == level){
+                        watchedVideos[friendId].forEach { video ->
+                            answer[video] = answer.getOrDefault(video, 0) + 1
+                        }
+                    } else {
+                        idToLevels[friendId] = friendLevel
+                        queue.offer(friendId)
+                    }
                 }
-                values[index] = newChar
             }
+
+            next = queue.poll()
         }
 
-        return values.joinToString("")
-    }
-
-
-    private fun rotate(currentLex: String, rotate: Int): String{
-        val values = CharArray(currentLex.length)
-        var startIndex = currentLex.length - rotate
-        values.indices.forEach {
-            values[it] = currentLex[startIndex]
-
-            startIndex++
-
-            if (startIndex == currentLex.length){
-                startIndex = 0
-            }
-        }
-        return values.joinToString("")
-    }
-
-    private fun min(currentLex: String, lastMinLex: String): String{
-        var isCurrentLexLeast: Boolean? = null
-        var index = 0
-        while (isCurrentLexLeast == null){
-            if (index >= currentLex.length) return currentLex
-            if (currentLex[index] == lastMinLex[index]) {
-                index++
-                continue
-            }
-            isCurrentLexLeast = currentLex[index] < lastMinLex[index]
-        }
-        return if (isCurrentLexLeast) currentLex else lastMinLex
+        return answer
+            .map { it.key to it.value }
+            .sortedWith(compareBy({ it.second }, { it.first }))
+            .map { it.first }
     }
 }
 
