@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.min
 
 fun main(args: Array<String>) {
 
@@ -208,36 +209,56 @@ class Solution {
         id: Int,
         level: Int
     ): List<String> {
-        val queue: Queue<Int> = LinkedList()
-        val idToLevels = hashMapOf<Int, Int>()
         val answer = hashMapOf<String, Int>()
 
-        idToLevels[id] = 0
-        var next: Int? = id
-
-        while (next != null) {
-            friends[next].forEach { friendId ->
-                if (!idToLevels.containsKey(friendId)){
-                    val friendLevel = idToLevels[next!!]!! + 1
-
-                    if (friendLevel == level){
-                        watchedVideos[friendId].forEach { video ->
-                            answer[video] = answer.getOrDefault(video, 0) + 1
-                        }
-                    } else {
-                        idToLevels[friendId] = friendLevel
-                        queue.offer(friendId)
-                    }
-                }
+        bfs(id, level, friends).forEach { friendId ->
+            watchedVideos[friendId].forEach { video ->
+                answer[video] = answer.getOrDefault(video, 0) + 1
             }
-
-            next = queue.poll()
         }
 
         return answer
             .map { it.key to it.value }
             .sortedWith(compareBy({ it.second }, { it.first }))
             .map { it.first }
+    }
+
+    private fun bfs(startFriendId: Int, level: Int, friends: Array<IntArray>): Set<Int>{
+        val shortWayFindFriend = IntArray(friends.size) { Int.MAX_VALUE }
+        val parentMap = hashMapOf<Int, Int>()
+        val availableFriends = hashSetOf<Int>()
+
+        shortWayFindFriend[startFriendId] = 0
+        parentMap[startFriendId] = -1
+
+        val queue: Queue<Int> = LinkedList()
+
+        var next: Int? = startFriendId
+        while (next != null){
+            friends[next].forEach {
+                if (!parentMap.containsKey(it)){
+                    queue.offer(it)
+                }
+
+                val newWay = shortWayFindFriend[next!!] + 1
+                val currentWay = shortWayFindFriend[it]
+
+               if (newWay < currentWay){
+                    parentMap[it] = next!!
+                    shortWayFindFriend[it] = newWay
+                }
+
+                if (shortWayFindFriend[it] == level){
+                    availableFriends.add(it)
+                } else {
+                    availableFriends.remove(it)
+                }
+            }
+
+            next = queue.poll()
+        }
+
+        return availableFriends
     }
 }
 
