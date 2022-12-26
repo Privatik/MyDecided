@@ -167,18 +167,8 @@ fun main(args: Array<String>) {
 //    println(Solution().deepestLeavesSum(root1))
 //    println(Solution().removeLeafNodes(root1, 2))
 //    println(Solution().removeLeafNodes(root2, 3))
-    println(Solution().watchedVideosByFriends(
-        watchedVideos = listOf(listOf("A","B"), listOf("C"), listOf("B","C"), listOf("D")),
-        friends = arrayOf(intArrayOf(1,2), intArrayOf(0,3), intArrayOf(0,3), intArrayOf(1,2)),
-        id = 0,
-        level = 1
-    ))
-    println(Solution().watchedVideosByFriends(
-        watchedVideos = listOf(listOf("A","B"), listOf("C"), listOf("B","C"), listOf("D")),
-        friends = arrayOf(intArrayOf(1,2), intArrayOf(0,3), intArrayOf(0,3), intArrayOf(1,2)),
-        id = 0,
-        level = 2
-    ))
+    println(Solution().maxProfit(intArrayOf(1,2,3,0,2)))
+    println(Solution().maxProfit(intArrayOf(1)))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
@@ -203,62 +193,9 @@ fun main(args: Array<String>) {
 
 class Solution {
 
-    fun watchedVideosByFriends(
-        watchedVideos: List<List<String>>,
-        friends: Array<IntArray>,
-        id: Int,
-        level: Int
-    ): List<String> {
-        val answer = hashMapOf<String, Int>()
+    fun maxProfit(prices: IntArray): Int {
+        var wallet = 0
 
-        bfs(id, level, friends).forEach { friendId ->
-            watchedVideos[friendId].forEach { video ->
-                answer[video] = answer.getOrDefault(video, 0) + 1
-            }
-        }
-
-        return answer
-            .map { it.key to it.value }
-            .sortedWith(compareBy({ it.second }, { it.first }))
-            .map { it.first }
-    }
-
-    private fun bfs(startFriendId: Int, level: Int, friends: Array<IntArray>): Set<Int>{
-        val shortWayFindFriend = IntArray(friends.size) { Int.MAX_VALUE }
-        val parentMap = hashMapOf<Int, Int>()
-        val availableFriends = hashSetOf<Int>()
-
-        shortWayFindFriend[startFriendId] = 0
-        parentMap[startFriendId] = -1
-
-        val queue: Queue<Int> = LinkedList()
-
-        var next: Int? = startFriendId
-        while (next != null){
-            friends[next].forEach {
-                if (!parentMap.containsKey(it)){
-                    queue.offer(it)
-                }
-
-                val newWay = shortWayFindFriend[next!!] + 1
-                val currentWay = shortWayFindFriend[it]
-
-               if (newWay < currentWay){
-                    parentMap[it] = next!!
-                    shortWayFindFriend[it] = newWay
-                }
-
-                if (shortWayFindFriend[it] == level){
-                    availableFriends.add(it)
-                } else {
-                    availableFriends.remove(it)
-                }
-            }
-
-            next = queue.poll()
-        }
-
-        return availableFriends
     }
 }
 
