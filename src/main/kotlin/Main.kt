@@ -1,5 +1,4 @@
-import java.util.*
-import kotlin.math.min
+import kotlin.math.max
 
 fun main(args: Array<String>) {
 
@@ -191,10 +190,22 @@ fun main(args: Array<String>) {
 //13
 //10
 
+
+//1,2,3,0,2
 class Solution {
 
     fun maxProfit(prices: IntArray): Int {
-        var wallet = 0
+        var sell = 0
+        var prev_sell = 0
+        var buy = Int.MIN_VALUE
+        var prev_buy = 0
+        for (price in prices) {
+            prev_buy = buy
+            buy = max(prev_sell - price, prev_buy)
+            prev_sell = sell
+            sell = max(prev_buy + price, prev_sell)
+        }
+        return sell
 
     }
 }
