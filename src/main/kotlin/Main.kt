@@ -1,4 +1,9 @@
-import kotlin.math.max
+import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.PBEKeySpec
+
 
 fun main(args: Array<String>) {
 
@@ -166,15 +171,48 @@ fun main(args: Array<String>) {
 //    println(Solution().deepestLeavesSum(root1))
 //    println(Solution().removeLeafNodes(root1, 2))
 //    println(Solution().removeLeafNodes(root2, 3))
-    println(Solution().maxProfit(intArrayOf(1,2,3,0,2)))
-    println(Solution().maxProfit(intArrayOf(1)))
+//    println(Solution().getOrder(
+//        arrayOf(
+//            intArrayOf(1,2),
+//            intArrayOf(2,4),
+//            intArrayOf(3,2),
+//            intArrayOf(4,1),
+//        )
+//    ).joinToString(" "))
+//    println(Solution().getOrder(
+//        arrayOf(
+//            intArrayOf(7,10),
+//            intArrayOf(7,12),
+//            intArrayOf(7,5),
+//            intArrayOf(7,4),
+//            intArrayOf(7,2),
+//        )
+//    ).joinToString(" "))
+//    println(Solution().getOrder(
+//        arrayOf(
+//            intArrayOf(19,13),
+//            intArrayOf(16,9),
+//            intArrayOf(21,10),
+//            intArrayOf(32,25),
+//            intArrayOf(37,4),
+//            intArrayOf(49,123),
+//            intArrayOf(2,15),
+//            intArrayOf(38,41),
+//            intArrayOf(37,34),
+//            intArrayOf(33,6),
+//            intArrayOf(45,4),
+//            intArrayOf(18,18),
+//            intArrayOf(46,39),
+//            intArrayOf(12,24),
+//        )
+//    ).joinToString(" "))
 //    println(Solution().hasPathSum(null, 0))
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
 //   println(Solution().maximumTime("1?:22"))
-//    println(Solution().swapNodes(link,3))
-//    println(Solution().swapNodes(link,2))
+    println(Solution().pushDominoes(".L.R...LR..L.."))
+    println(Solution().pushDominoes("RR.L"))
 //    println(Solution().swapNodes(link,1))
 //    println(Solution().lengthOfLIS(intArrayOf(7,7,7,7,7,7,7)))
 
@@ -193,21 +231,69 @@ fun main(args: Array<String>) {
 
 //1,2,3,0,2
 class Solution {
+    private val r = 'R'
+    private val l = 'L'
+    private val dot = '.'
+    private val q = '?'
 
-    fun maxProfit(prices: IntArray): Int {
-        var sell = 0
-        var prev_sell = 0
-        var buy = Int.MIN_VALUE
-        var prev_buy = 0
-        for (price in prices) {
-            prev_buy = buy
-            buy = max(prev_sell - price, prev_buy)
-            prev_sell = sell
-            sell = max(prev_buy + price, prev_sell)
+    fun pushDominoes(dominoes: String): String {
+        val builder = CharArray(dominoes.length)
+        val leftDominos = LinkedList<Int>()
+        val rightDominos = LinkedList<Int>()
+
+        dominoes.forEachIndexed { index, c ->
+            when (c){
+                r -> { rightDominos.add(index); builder[index] = r }
+                l -> { leftDominos.add(index); builder[index] = l }
+                else -> builder[index] = q
+            }
         }
-        return sell
 
+        builder.forEachIndexed { index, c ->
+            if (c == q){
+                val leftBorder = leftDominos.firstOrNull() ?: -1
+                val rightBorder = rightDominos.firstOrNull() ?: Int.MAX_VALUE
+
+                if (index in rightBorder..leftBorder) {
+                    val leftIndex = leftBorder - index
+                    val rightIndex = index - rightBorder
+
+                    when {
+                        leftIndex <= rightIndex -> builder.append(l)
+                        leftIndex >= rightIndex -> builder.append(r)
+                        else -> builder.append(dot)
+                    }
+                }
+            }
+        }
+
+        dominoes.indices.forEach { index ->
+            val leftBorder = leftDominos.firstOrNull() ?: -1
+            val rightBorder = rightDominos.firstOrNull() ?: -1
+            if (index in rightBorder..leftBorder) {
+                val leftIndex = leftBorder - index
+                val rightIndex = index - rightBorder
+
+                when {
+                    leftIndex <= rightIndex -> builder.append(l)
+                    leftIndex >= rightIndex -> builder.append(r)
+                    else -> builder.append(dot)
+                }
+            } else if (leftBorder in index until rightBorder) {
+                builder.append(l)
+            } else if (rightBorder in (leftBorder + 1)..index){
+                builder.append(r)
+            } else {
+                builder.append(dot)
+            }
+
+            if (index == leftBorder) leftDominos.removeFirstOrNull()
+            if (index == rightBorder) rightDominos.removeFirstOrNull()
+        }
+
+        return builder.joinToString()
     }
+
 }
 
 class UnionFind(private val nodes: IntArray) {
