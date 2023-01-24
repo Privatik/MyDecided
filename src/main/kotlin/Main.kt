@@ -1,8 +1,4 @@
 import java.util.*
-import javax.crypto.Cipher
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.PBEKeySpec
 
 
 fun main(args: Array<String>) {
@@ -237,61 +233,60 @@ class Solution {
     private val q = '?'
 
     fun pushDominoes(dominoes: String): String {
-        val builder = CharArray(dominoes.length)
-        val leftDominos = LinkedList<Int>()
-        val rightDominos = LinkedList<Int>()
-
-        dominoes.forEachIndexed { index, c ->
-            when (c){
-                r -> { rightDominos.add(index); builder[index] = r }
-                l -> { leftDominos.add(index); builder[index] = l }
-                else -> builder[index] = q
-            }
+        if (dominoes.isEmpty()) {
+            return dominoes
         }
 
-        builder.forEachIndexed { index, c ->
-            if (c == q){
-                val leftBorder = leftDominos.firstOrNull() ?: -1
-                val rightBorder = rightDominos.firstOrNull() ?: Int.MAX_VALUE
-
-                if (index in rightBorder..leftBorder) {
-                    val leftIndex = leftBorder - index
-                    val rightIndex = index - rightBorder
-
-                    when {
-                        leftIndex <= rightIndex -> builder.append(l)
-                        leftIndex >= rightIndex -> builder.append(r)
-                        else -> builder.append(dot)
-                    }
+        val leftR = IntArray(dominoes.length)
+        val rightL = IntArray(dominoes.length)
+        var lIndex = -1
+        for (i in dominoes.indices) {
+            val c: Char = dominoes[i]
+            when (c) {
+                'R' -> {
+                    lIndex = i
+                }
+                'L' -> {
+                    lIndex = -1
+                }
+                else -> {
+                    leftR[i] = if (lIndex == -1) Int.MAX_VALUE else i - lIndex + 1
+                }
+            }
+        }
+        var rIndex = -1
+        for (i in dominoes.length - 1 downTo 0) {
+            val c: Char = dominoes[i]
+            when (c) {
+                'L' -> {
+                    rIndex = i
+                }
+                'R' -> {
+                    rIndex = -1
+                }
+                else -> {
+                    rightL[i] = if (rIndex == -1) Int.MAX_VALUE else rIndex - i + 1
                 }
             }
         }
 
-        dominoes.indices.forEach { index ->
-            val leftBorder = leftDominos.firstOrNull() ?: -1
-            val rightBorder = rightDominos.firstOrNull() ?: -1
-            if (index in rightBorder..leftBorder) {
-                val leftIndex = leftBorder - index
-                val rightIndex = index - rightBorder
-
-                when {
-                    leftIndex <= rightIndex -> builder.append(l)
-                    leftIndex >= rightIndex -> builder.append(r)
-                    else -> builder.append(dot)
+        val sb = StringBuilder()
+        for (i in dominoes.indices) {
+            val c: Char = dominoes[i]
+            if (c == '.') {
+                if (leftR[i] < rightL[i]) {
+                    sb.append('R')
+                } else if (leftR[i] > rightL[i]) {
+                    sb.append('L')
+                } else {
+                    sb.append('.')
                 }
-            } else if (leftBorder in index until rightBorder) {
-                builder.append(l)
-            } else if (rightBorder in (leftBorder + 1)..index){
-                builder.append(r)
             } else {
-                builder.append(dot)
+                sb.append(c)
             }
-
-            if (index == leftBorder) leftDominos.removeFirstOrNull()
-            if (index == rightBorder) rightDominos.removeFirstOrNull()
         }
 
-        return builder.joinToString()
+        return sb.toString()
     }
 
 }
