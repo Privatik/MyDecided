@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.min
 
 
 fun main(args: Array<String>) {
@@ -206,9 +207,9 @@ fun main(args: Array<String>) {
 //    println(Solution().hasPathSum(root23, 1))
 //   println(Solution().maximumTime("??:?0"))
 //   println(Solution().maximumTime("0?:3?"))
-//   println(Solution().maximumTime("1?:22"))
-    println(Solution().pushDominoes(".L.R...LR..L.."))
-    println(Solution().pushDominoes("RR.L"))
+////   println(Solution().maximumTime("1?:22"))
+//    println(Solution().pushDominoes(".L.R...LR..L.."))
+//    println(Solution().pushDominoes("RR.L"))
 //    println(Solution().swapNodes(link,1))
 //    println(Solution().lengthOfLIS(intArrayOf(7,7,7,7,7,7,7)))
 
@@ -232,61 +233,20 @@ class Solution {
     private val dot = '.'
     private val q = '?'
 
-    fun pushDominoes(dominoes: String): String {
-        if (dominoes.isEmpty()) {
-            return dominoes
-        }
-
-        val leftR = IntArray(dominoes.length)
-        val rightL = IntArray(dominoes.length)
-        var lIndex = -1
-        for (i in dominoes.indices) {
-            val c: Char = dominoes[i]
-            when (c) {
-                'R' -> {
-                    lIndex = i
-                }
-                'L' -> {
-                    lIndex = -1
-                }
-                else -> {
-                    leftR[i] = if (lIndex == -1) Int.MAX_VALUE else i - lIndex + 1
-                }
+    fun minScoreTriangulation(values: IntArray): Int {
+        val n: Int = values.size
+        val dp = Array(n) { IntArray(n) }
+        for (d in 2 until n) {
+            var i = 0
+            while (i + d < n) {
+                val j = i + d
+                dp[i][j] = Int.MAX_VALUE
+                for (k in i + 1 until j) dp[i][j] =
+                    min(dp[i][j], dp[i][k] + dp[k][j] + values[i] * values[j] * values[k])
+                ++i
             }
         }
-        var rIndex = -1
-        for (i in dominoes.length - 1 downTo 0) {
-            val c: Char = dominoes[i]
-            when (c) {
-                'L' -> {
-                    rIndex = i
-                }
-                'R' -> {
-                    rIndex = -1
-                }
-                else -> {
-                    rightL[i] = if (rIndex == -1) Int.MAX_VALUE else rIndex - i + 1
-                }
-            }
-        }
-
-        val sb = StringBuilder()
-        for (i in dominoes.indices) {
-            val c: Char = dominoes[i]
-            if (c == '.') {
-                if (leftR[i] < rightL[i]) {
-                    sb.append('R')
-                } else if (leftR[i] > rightL[i]) {
-                    sb.append('L')
-                } else {
-                    sb.append('.')
-                }
-            } else {
-                sb.append(c)
-            }
-        }
-
-        return sb.toString()
+        return dp[0][n - 1]
     }
 
 }
