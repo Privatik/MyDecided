@@ -146,7 +146,9 @@ fun main(args: Array<String>) {
         }
     }
 
-//   println(Solution().validPath(3, arrayOf(intArrayOf(0,1),intArrayOf(1,2),intArrayOf(2,0)),0, 2))
+//    println(String(byteArrayOf(73,32,119,97,110,116,32,116,111,32,98,101,108,105,101,118,101)))
+
+   println(Solution().minScoreTriangulation(intArrayOf(3,7,4,5)))
 //   println(Solution().validPath(6, arrayOf(intArrayOf(0,1),intArrayOf(0,2),intArrayOf(3,5),intArrayOf(5,4),intArrayOf(4,3)),0, 5))
 //   println(Solution().validPath(
 //       10,
@@ -237,16 +239,30 @@ class Solution {
         val n: Int = values.size
         val dp = Array(n) { IntArray(n) }
         for (d in 2 until n) {
+            dp.print()
             var i = 0
             while (i + d < n) {
                 val j = i + d
                 dp[i][j] = Int.MAX_VALUE
-                for (k in i + 1 until j) dp[i][j] =
-                    min(dp[i][j], dp[i][k] + dp[k][j] + values[i] * values[j] * values[k])
+                for (k in i + 1 until j) {
+                    println("---------")
+                    println("var i = $i j = $j d = $d k = $k")
+                    println("---------")
+                    dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j] + values[i] * values[j] * values[k])
+                    dp.print()
+                }
                 ++i
             }
         }
         return dp[0][n - 1]
+    }
+
+    private fun Array<IntArray>.print(){
+        println("---------")
+        forEach {
+            println(it.joinToString(" "))
+        }
+        println("---------")
     }
 
 }
