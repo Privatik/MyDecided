@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.abs
 
 fun main(args: Array<String>) {
     println(
@@ -35,40 +36,51 @@ fun main(args: Array<String>) {
             )
         )
     )
+
+    println(
+        minReorder(
+            3,
+            arrayOf(
+                intArrayOf(1,2),
+                intArrayOf(2,0),
+            )
+        )
+    )
+
+
+    println(
+        minReorder(
+            6,
+            arrayOf(
+                intArrayOf(0,2),
+                intArrayOf(0,3),
+                intArrayOf(4,1),
+                intArrayOf(4,5),
+                intArrayOf(5,0),
+            )
+        )
+    )
 }
 
-fun minReorder(n: Int, connections: Array<IntArray>): Int {
-    val visited = IntArray(n)
-    val ways = Array(n) { LinkedList<Int>() }
-
+fun dfs(
+    al: Array<LinkedList<Int>>,
+    visited: BooleanArray,
+    from: Int
+): Int {
     var change = 0
-
-    connections.forEach {
-        ways[it[0]].add(it[1])
-    }
-
-    ways.indices.forEach { index ->
-        if (visited[index] != 1){
-            change += dfs(visited, ways, index)
-        }
-    }
-
+    visited[from] = true
+    for (to in al[from]) if (!visited[abs(to)]) change += dfs(al, visited, abs(to)) + if (to > 0) 1 else 0
     return change
 }
 
-private fun dfs(
-    visited: IntArray,
-    ways: Array<LinkedList<Int>>,
-    currentCity: Int
+fun minReorder(
+    n: Int,
+    connections: Array<IntArray>
 ): Int {
-    var countChange = 0
-
-    visited[currentCity] = 1
-    ways[currentCity].forEach { nextCity ->
-        if (visited[nextCity] == 0){
-            countChange += dfs(visited, ways, nextCity) + 1
-        }
+    val al: Array<LinkedList<Int>> = Array(n) { LinkedList() }
+    for (c in connections) {
+        al[c[0]].add(c[1])
+        al[c[1]].add(-c[0])
     }
-
-    return countChange
+    return dfs(al, BooleanArray(n), 0)
 }
