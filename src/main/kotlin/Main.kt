@@ -1,97 +1,72 @@
-import java.util.*
-import kotlin.collections.HashMap
-
 fun main(args: Array<String>) {
     println(
-        countSubTrees(
-            7,
-            arrayOf(
-                intArrayOf(0,1),
-                intArrayOf(0,2),
-                intArrayOf(1,4),
-                intArrayOf(1,5),
-                intArrayOf(2,3),
-                intArrayOf(2,6),
-            ),
-            "abaedcd"
+        searchRange(
+            intArrayOf(5,7,8,8,8,10),
+            8
         ).joinToString(" ")
     )
 
     println(
-        countSubTrees(
-            4,
-            arrayOf(
-                intArrayOf(0,1),
-                intArrayOf(1,2),
-                intArrayOf(0,3),
-            ),
-            "bbbb"
+        searchRange(
+            intArrayOf(5,7,8,8,9,10),
+            8
+        ).joinToString(" ")
+    )
+
+    println(
+        searchRange(
+            intArrayOf(5,8,8,9,9,10),
+            8
+        ).joinToString(" ")
+    )
+
+    println(
+        searchRange(
+            intArrayOf(1,3),
+            1
+        ).joinToString(" ")
+    )
+
+    println(
+        searchRange(
+            intArrayOf(5,7,7,8,8,10),
+            8
+        ).joinToString(" ")
+    )
+
+    println(
+        searchRange(
+            intArrayOf(5,7,7,8,8,10),
+            6
         ).joinToString(" ")
     )
 
 
     println(
-        countSubTrees(
-            5,
-            arrayOf(
-                intArrayOf(0,1),
-                intArrayOf(0,2),
-                intArrayOf(1,3),
-                intArrayOf(0,4),
-            ),
-            "aabab"
-        ).joinToString(" ")
-    )
-
-    println(
-        countSubTrees(
-            4,
-            arrayOf(
-                intArrayOf(0,2),
-                intArrayOf(0,3),
-                intArrayOf(1,2),
-            ),
-            "aabab"
+        searchRange(
+            intArrayOf(),
+            0
         ).joinToString(" ")
     )
 }
 
-fun countSubTrees(n: Int, edges: Array<IntArray>, labels: String): IntArray {
-    val result = IntArray(n) { 0 }
-    val vectors = Array<LinkedList<Int>>(n) { LinkedList() }
-
-    edges.forEach {
-        vectors[it[0]].add(it[1])
-        vectors[it[1]].add(it[0])
-    }
-
-    dfs(result, labels, vectors, 0, -1)
-
-    return result
-}
-
-fun dfs(
-    result: IntArray,
-    label: String,
-    vectors: Array<LinkedList<Int>>,
-    currentIndex: Int,
-    prevIndex: Int,
-): HashMap<Char, Int> {
-    val currentChar = label[currentIndex]
-    val cache: HashMap<Char, Int> = hashMapOf()
-
-    vectors[currentIndex].forEach { nextIndex ->
-        if (nextIndex != prevIndex){
-            val timeCache = dfs(result, label, vectors, nextIndex, currentIndex)
-
-            timeCache.forEach { (c, i) ->
-                cache[c] = cache.getOrDefault(c, 0) + i
+fun searchRange(nums: IntArray, target: Int): IntArray {
+    fun search(lowerBound: Boolean): Int {
+        var lower = 0
+        var upper = nums.size - 1
+        while (lower != upper) {
+            val mid = lower/2 + upper/2
+            val element = nums[mid]
+            when {
+                element < target -> lower = mid+1
+                element > target -> upper = mid
+                lowerBound -> upper = mid
+                else -> if (nums[mid+1] == target) lower = mid+1 else return mid
             }
         }
+
+        return if (nums[lower] == target) lower else -1
     }
 
-    cache[currentChar] = cache.getOrDefault(currentChar, 0) + 1
-    result[currentIndex] = cache[currentChar]!!
-
-    return cache
+    return if (nums.isEmpty()) intArrayOf(-1, -1) else intArrayOf(search(true), search(false))
 }
