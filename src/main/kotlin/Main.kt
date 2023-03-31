@@ -1,72 +1,102 @@
 fun main(args: Array<String>) {
     println(
-        searchRange(
-            intArrayOf(5,7,8,8,8,10),
-            8
-        ).joinToString(" ")
-    )
-
-    println(
-        searchRange(
-            intArrayOf(5,7,8,8,9,10),
-            8
-        ).joinToString(" ")
-    )
-
-    println(
-        searchRange(
-            intArrayOf(5,8,8,9,9,10),
-            8
-        ).joinToString(" ")
-    )
-
-    println(
-        searchRange(
-            intArrayOf(1,3),
-            1
-        ).joinToString(" ")
-    )
-
-    println(
-        searchRange(
-            intArrayOf(5,7,7,8,8,10),
-            8
-        ).joinToString(" ")
-    )
-
-    println(
-        searchRange(
-            intArrayOf(5,7,7,8,8,10),
+        search(
+            intArrayOf(8,1,2,3,4,5,6,7),
             6
-        ).joinToString(" ")
+        )
     )
-
 
     println(
-        searchRange(
-            intArrayOf(),
+        search(
+            intArrayOf(4,5,6,7,0,1,2),
             0
-        ).joinToString(" ")
+        )
     )
+
+    println(
+        search(
+            intArrayOf(4,5,6,7,0,1,2),
+            3
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(4,5,6,7,8,1,2,3),
+            8
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(3,1),
+            1
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(5,1,3),
+            1
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(3,1),
+            0
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(1,3),
+            0
+        )
+    )
+
+    println(
+        search(
+            intArrayOf(1),
+            0
+        )
+    )
+
 }
 
-fun searchRange(nums: IntArray, target: Int): IntArray {
-    fun search(lowerBound: Boolean): Int {
-        var lower = 0
-        var upper = nums.size - 1
-        while (lower != upper) {
-            val mid = lower/2 + upper/2
-            val element = nums[mid]
-            when {
-                element < target -> lower = mid+1
-                element > target -> upper = mid
-                lowerBound -> upper = mid
-                else -> if (nums[mid+1] == target) lower = mid+1 else return mid
-            }
+fun search(nums: IntArray, target: Int): Int {
+    val isFoundInRight = nums.last() < nums.first() && nums.last() > target
+
+    var lower = 0
+    var upper = nums.lastIndex
+
+    while (lower < upper){
+        when (target) {
+            nums[lower] -> { return lower }
+            nums[upper] -> { return upper }
         }
 
-        return if (nums[lower] == target) lower else -1
+        val mid = lower/2 + upper/2
+
+        when {
+            nums[mid] == target -> { return mid }
+            nums[mid] > target -> {
+                if (isFoundInRight){
+                    lower = mid + 1
+                } else {
+                    upper = mid - 1
+                }
+            }
+            nums[mid] < target -> {
+                if (isFoundInRight) {
+                    upper = mid - 1
+                } else {
+                    lower = mid + 1
+                }
+            }
+        }
     }
 
-    return if (nums.isEmpty()) intArrayOf(-1, -1) else intArrayOf(search(true), search(false))
+
+    return if (nums[lower] == target) lower else -1
 }
