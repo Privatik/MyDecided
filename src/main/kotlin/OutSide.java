@@ -1,49 +1,26 @@
 import java.io.IOException;
 
-class OutSide{
+interface TestSide {
+    void doTest();
+}
 
-    void doTest(){
-    }
 
-    static class Inside {
-        private static int count = 0;
+class OutSide implements TestSide{
+    private Integer oi = 10;
 
-        void inc(){
-            count++;
+    static class Inside{
+        Integer ii = 10;
+
+        void simpleIn(){
+            System.out.println(ii);
         }
 
-        int get(){
-            return count;
-        }
-    }
-
-    void testing() throws Simple1 {
-        System.out.println("Hello world");
-    }
-
-    void testing1() throws Simple {
-        System.out.println("Hello world");
-    }
-
-    void testing2() throws Simple2 {
-        System.out.println("Hello world");
-    }
-
-    class Simple2 extends Throwable{
-        public Simple2(String message) {
-            super(message);
+        void person(OutSide outSide){
+            System.out.println(outSide.oi);
         }
     }
 
-    class Simple1 extends RuntimeException{
-        public Simple1(String message) {
-            super(message);
-        }
-    }
-
-    class Simple extends IOException{
-        public Simple(String message) {
-            super(message);
-        }
+    public void doTest(){
+        System.out.println("OutSide");
     }
 }

@@ -1,90 +1,75 @@
 fun main(args: Array<String>) {
 //    println(
-//        search(
-//            intArrayOf(8,1,2,3,4,5,6,7),
-//            6
+//        searchMatrix(
+//            arrayOf(
+//                intArrayOf(1,3),
+//            ),
+//            2
 //        )
 //    )
 
-    println(
-        search(
-            intArrayOf(4,5,6,7,0,1,2),
-            0
-        )
-    )
 
     println(
-        search(
-            intArrayOf(4,5,6,7,0,1,2),
+        searchMatrix(
+            arrayOf(
+                intArrayOf(1,3,5,7),
+                intArrayOf(10,11,16,20),
+                intArrayOf(23,30,34,60),
+            ),
             3
         )
     )
 
     println(
-        search(
-            intArrayOf(4,5,6,7,8,1,2,3),
-            8
+        searchMatrix(
+            arrayOf(
+                intArrayOf(1,3,5,7),
+                intArrayOf(10,11,16,20),
+                intArrayOf(23,30,34,60),
+            ),
+            13
         )
     )
 
     println(
-        search(
-            intArrayOf(3,1),
-            1
+        searchMatrix(
+            arrayOf(
+                intArrayOf(1),
+            ),
+            2
         )
     )
 
-    println(
-        search(
-            intArrayOf(5,1,3),
-            1
-        )
-    )
 
-    println(
-        search(
-            intArrayOf(3,1),
-            0
-        )
-    )
-
-    println(
-        search(
-            intArrayOf(1,3),
-            0
-        )
-    )
-
-    println(
-        search(
-            intArrayOf(1),
-            0
-        )
-    )
 
 }
 
-fun search(nums: IntArray, target: Int): Int {
-    var low = 0
-    var high = nums.lastIndex
-    while (low <= high) {
-        val mid = (low + high) / 2
-        if (nums[mid] == target) {
-            return mid
-        }
-        if (nums[mid] >= nums[low]) {
-            if (target in nums[low]..nums[mid]) {
-                high = mid - 1
-            } else {
-                low = mid + 1
-            }
+fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+    val rows = matrix.size
+    val columns = matrix[0].size
+
+    var left = 0
+    var right = rows * columns - 1
+
+    while (left <= right) {
+        val middle = (right - left) / 2 + left
+        val middleValue = matrix[middle/columns][middle%columns]
+        if (middleValue == target) return true
+
+        if (middleValue > target) {
+            right = middle - 1
         } else {
-            if (target in nums[mid]..nums[high]) {
-                low = mid + 1
-            } else {
-                high = mid - 1
-            }
+            left = middle + 1
         }
     }
-    return -1
+
+    return false
 }
+
+
+
+
+
+
+
+
