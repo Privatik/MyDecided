@@ -1,4 +1,8 @@
+import kotlin.collections.ArrayDeque;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 interface TestSide {
     void doTest();
@@ -12,7 +16,9 @@ class OutSide implements TestSide{
         Integer ii = 10;
 
         void simpleIn(){
+
             System.out.println(ii);
+
         }
 
         void person(OutSide outSide){
