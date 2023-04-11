@@ -1,34 +1,69 @@
+import java.util.*
+
 fun main(args: Array<String>) {
     println(
-        findPeakElement(intArrayOf(1,2,1,3,5,6,4))
+        deleteDuplicates(
+            head = ListNode(1).apply {
+                val list = LinkedList<Int>().apply { addAll(listOf(2,3,3,4,4,5)) }
+                add(list)
+            }
+        )
     )
 
     println(
-        findPeakElement(intArrayOf(1,2,3,1))
+        deleteDuplicates(
+            head = ListNode(1).apply {
+                val list = LinkedList<Int>().apply { addAll(listOf(1,1,2,3)) }
+                add(list)
+            }
+        )
     )
 
 }
 
-fun findPeakElement(nums: IntArray): Int {
-    if(nums.size == 1) return 0
+fun deleteDuplicates(head: ListNode?): ListNode?{
+    if (head?.next == null) return head
 
-    val n = nums.size
+    var root: ListNode? = null
+    var nextRoot: ListNode? = null
 
-    // check if 0th/n-1th index is the peak element
-    if(nums[0] > nums[1]) return 0
-    if(nums[n-1] > nums[n-2]) return n-1
+    var firstPoint = head
+    var secondPoint = head.next
 
-    // search in the remaining array
-    var start = 1
-    var end = n-2
+    val moreTwoTimesSet = hashSetOf<Int>()
 
-    while(start <= end) {
-        val mid = start + (end - start)/2;
-        if(nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1]) return mid
-        else if(nums[mid] < nums[mid-1]) end = mid - 1
-        else if(nums[mid] < nums[mid+1]) start = mid + 1
+    while (secondPoint != null){
+        if (firstPoint.`val` == secondPoint.`val`) {
+            moreTwoTimesSet.add(secondPoint.`val`)
+            secondPoint = secondPoint.next
+
+
+        }
+
     }
-    return -1; // dummy return statement
+
+    return root
+}
+
+class ListNode(var `val`: Int) {
+    var next: ListNode? = null
+
+    fun add(list: LinkedList<Int>){
+        if (list.isNotEmpty()){
+            next = ListNode(list.removeFirst()).also { it.add(list) }
+        }
+    }
+
+}
+
+fun ListNode.getValues(): StringBuilder{
+    val builder = StringBuilder()
+    builder.append(`val`)
+    if (next != null){
+        builder.append(" ")
+        builder.append(next!!.getValues())
+    }
+    return builder
 }
 
 
