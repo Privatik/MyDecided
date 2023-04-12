@@ -7,7 +7,37 @@ fun main(args: Array<String>) {
                 val list = LinkedList<Int>().apply { addAll(listOf(2,3,3,4,4,5)) }
                 add(list)
             }
-        )
+        )?.getValues().toString()
+    )
+
+    println(
+        deleteDuplicates(
+            head = ListNode(1).apply {
+                val list = LinkedList<Int>().apply { addAll(listOf(1,1,1)) }
+                add(list)
+            }
+        )?.getValues().toString()
+    )
+
+    println(
+        deleteDuplicates(
+            head = null
+        )?.getValues().toString()
+    )
+
+    println(
+        deleteDuplicates(
+            head = ListNode(2)
+        )?.getValues().toString()
+    )
+
+    println(
+        deleteDuplicates(
+            head = ListNode(2).apply {
+                val list = LinkedList<Int>().apply { addAll(listOf(3,4,5,5)) }
+                add(list)
+            }
+        )?.getValues().toString()
     )
 
     println(
@@ -16,33 +46,27 @@ fun main(args: Array<String>) {
                 val list = LinkedList<Int>().apply { addAll(listOf(1,1,2,3)) }
                 add(list)
             }
-        )
+        )?.getValues().toString()
     )
 
 }
 
-fun deleteDuplicates(head: ListNode?): ListNode?{
-    if (head?.next == null) return head
-
-    var root: ListNode? = null
-    var nextRoot: ListNode? = null
-
-    var firstPoint = head
-    var secondPoint = head.next
-
-    val moreTwoTimesSet = hashSetOf<Int>()
-
-    while (secondPoint != null){
-        if (firstPoint.`val` == secondPoint.`val`) {
-            moreTwoTimesSet.add(secondPoint.`val`)
-            secondPoint = secondPoint.next
-
-
+fun deleteDuplicates(head: ListNode?): ListNode? {
+    var node: ListNode? = ListNode(101)
+    node?.next = head
+    val result = node
+    while (node?.next != null) {
+        val curr = node.next!!.`val`
+        var tmp = node.next!!.next
+        var hasDuplicate = false
+        while (tmp != null && curr == tmp.`val`) {
+            tmp = tmp.next
+            hasDuplicate = true
         }
-
+        if (hasDuplicate) node.next = tmp
+        else node = node.next
     }
-
-    return root
+    return result?.next
 }
 
 class ListNode(var `val`: Int) {
