@@ -2,71 +2,70 @@ import java.util.*
 
 fun main(args: Array<String>) {
     println(
-        deleteDuplicates(
-            head = ListNode(1).apply {
-                val list = LinkedList<Int>().apply { addAll(listOf(2,3,3,4,4,5)) }
-                add(list)
-            }
-        )?.getValues().toString()
+        backspaceCompare("ab#c","ad#c")
     )
 
     println(
-        deleteDuplicates(
-            head = ListNode(1).apply {
-                val list = LinkedList<Int>().apply { addAll(listOf(1,1,1)) }
-                add(list)
-            }
-        )?.getValues().toString()
+        backspaceCompare("ab##","c#d#")
     )
 
     println(
-        deleteDuplicates(
-            head = null
-        )?.getValues().toString()
-    )
-
-    println(
-        deleteDuplicates(
-            head = ListNode(2)
-        )?.getValues().toString()
-    )
-
-    println(
-        deleteDuplicates(
-            head = ListNode(2).apply {
-                val list = LinkedList<Int>().apply { addAll(listOf(3,4,5,5)) }
-                add(list)
-            }
-        )?.getValues().toString()
-    )
-
-    println(
-        deleteDuplicates(
-            head = ListNode(1).apply {
-                val list = LinkedList<Int>().apply { addAll(listOf(1,1,2,3)) }
-                add(list)
-            }
-        )?.getValues().toString()
+        backspaceCompare("a#c","b")
     )
 
 }
 
-fun deleteDuplicates(head: ListNode?): ListNode? {
-    var node: ListNode? = ListNode(101)
-    node?.next = head
-    val result = node
-    while (node?.next != null) {
-        val curr = node.next!!.`val`
-        var tmp = node.next!!.next
-        var hasDuplicate = false
-        while (tmp != null && curr == tmp.`val`) {
-            tmp = tmp.next
-            hasDuplicate = true
+fun backspaceCompare(s: String, t: String): Boolean {
+    val back = '#'
+
+    var indexFirstWord = s.lastIndex
+    var indexSecondWord = t.lastIndex
+
+    var countBackInFirst = 0
+    var countBackInSecond = 0
+
+    var answer = true
+
+    while (answer){
+        var indexNotBackInFirst = false
+        var indexNotBackInSecond = false
+
+        if (indexFirstWord > 0 && s[indexFirstWord] == back){
+            countBackInFirst++
+            indexFirstWord--
+        } else {
+            if (countBackInFirst != 0){
+                countBackInFirst--
+                indexFirstWord--
+            } else {
+                indexNotBackInFirst = true
+            }
         }
-        if (hasDuplicate) node.next = tmp
-        else node = node.next
+
+        if (indexSecondWord > 0 && t[indexSecondWord] == back){
+            countBackInSecond++
+            indexSecondWord--
+        } else {
+            if (countBackInSecond != 0){
+                countBackInSecond--
+                indexSecondWord--
+            } else {
+                indexNotBackInSecond = true
+            }
+        }
+
+        if (indexNotBackInFirst && indexNotBackInSecond){
+            if (s.getOrNull(indexFirstWord) != t.getOrNull(indexSecondWord)) {
+                answer = false
+            } else {
+                if (indexFirstWord < 0 && indexSecondWord < 0) { break }
+                indexFirstWord--
+                indexSecondWord--
+            }
+        }
     }
-    return result?.next
+
+    return answer
 }
 
 class ListNode(var `val`: Int) {
