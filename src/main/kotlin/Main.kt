@@ -13,6 +13,14 @@ fun main(args: Array<String>) {
         backspaceCompare("a#c","b")
     )
 
+    println(
+        backspaceCompare("xywrrmp","xywrrmu#p")
+    )
+
+    println(
+        backspaceCompare("a##c","#a#c")
+    )
+
 }
 
 fun backspaceCompare(s: String, t: String): Boolean {
@@ -30,7 +38,7 @@ fun backspaceCompare(s: String, t: String): Boolean {
         var indexNotBackInFirst = false
         var indexNotBackInSecond = false
 
-        if (indexFirstWord > 0 && s[indexFirstWord] == back){
+        if (indexFirstWord >= 0 && s[indexFirstWord] == back){
             countBackInFirst++
             indexFirstWord--
         } else {
@@ -42,7 +50,7 @@ fun backspaceCompare(s: String, t: String): Boolean {
             }
         }
 
-        if (indexSecondWord > 0 && t[indexSecondWord] == back){
+        if (indexSecondWord >= 0 && t[indexSecondWord] == back){
             countBackInSecond++
             indexSecondWord--
         } else {
