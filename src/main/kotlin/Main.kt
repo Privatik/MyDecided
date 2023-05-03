@@ -2,78 +2,37 @@ import java.util.*
 
 fun main(args: Array<String>) {
     println(
-        backspaceCompare("ab#c","ad#c")
+        canPlaceFlowers(
+            intArrayOf(1,0,0,0,1),
+            1
+        )
     )
 
     println(
-        backspaceCompare("ab##","c#d#")
-    )
-
-    println(
-        backspaceCompare("a#c","b")
-    )
-
-    println(
-        backspaceCompare("xywrrmp","xywrrmu#p")
-    )
-
-    println(
-        backspaceCompare("a##c","#a#c")
+        canPlaceFlowers(
+            intArrayOf(1,0,0,0,1),
+            2
+        )
     )
 
 }
 
-fun backspaceCompare(s: String, t: String): Boolean {
-    val back = '#'
+fun canPlaceFlowers(flowerbed: IntArray, n: Int): Boolean {
+    var count = n
 
-    var indexFirstWord = s.lastIndex
-    var indexSecondWord = t.lastIndex
+    flowerbed.indices.forEach { index ->
+        if (flowerbed[index] != 1){
+            var isCan = index == 0 || flowerbed[index - 1] == 0
+            isCan = isCan && (index == flowerbed.size - 1 || flowerbed[index + 1] == 0)
 
-    var countBackInFirst = 0
-    var countBackInSecond = 0
-
-    var answer = true
-
-    while (answer){
-        var indexNotBackInFirst = false
-        var indexNotBackInSecond = false
-
-        if (indexFirstWord >= 0 && s[indexFirstWord] == back){
-            countBackInFirst++
-            indexFirstWord--
-        } else {
-            if (countBackInFirst != 0){
-                countBackInFirst--
-                indexFirstWord--
-            } else {
-                indexNotBackInFirst = true
-            }
-        }
-
-        if (indexSecondWord >= 0 && t[indexSecondWord] == back){
-            countBackInSecond++
-            indexSecondWord--
-        } else {
-            if (countBackInSecond != 0){
-                countBackInSecond--
-                indexSecondWord--
-            } else {
-                indexNotBackInSecond = true
-            }
-        }
-
-        if (indexNotBackInFirst && indexNotBackInSecond){
-            if (s.getOrNull(indexFirstWord) != t.getOrNull(indexSecondWord)) {
-                answer = false
-            } else {
-                if (indexFirstWord < 0 && indexSecondWord < 0) { break }
-                indexFirstWord--
-                indexSecondWord--
+            if (isCan && count != 0) {
+                count--
+                flowerbed[index] = 1
             }
         }
     }
 
-    return answer
+    return count == 0
 }
 
 class ListNode(var `val`: Int) {
