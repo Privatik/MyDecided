@@ -2,38 +2,43 @@ import java.util.*
 
 fun main(args: Array<String>) {
     println(
-        canPlaceFlowers(
-            intArrayOf(1,0,0,0,1),
-            1
-        )
+        increasingTriplet(intArrayOf(1,2,3,4,5))
     )
 
     println(
-        canPlaceFlowers(
-            intArrayOf(1,0,0,0,1),
-            2
-        )
+        increasingTriplet(intArrayOf(5,4,3,2,1))
+    )
+
+    println(
+        increasingTriplet(intArrayOf(2,1,5,0,4,6))
     )
 
 }
 
-fun canPlaceFlowers(flowerbed: IntArray, n: Int): Boolean {
-    var count = n
+fun increasingTriplet(nums: IntArray): Boolean {
+    if (nums.size < 3) return false
 
-    flowerbed.indices.forEach { index ->
-        if (flowerbed[index] != 1){
-            var isCan = index == 0 || flowerbed[index - 1] == 0
-            isCan = isCan && (index == flowerbed.size - 1 || flowerbed[index + 1] == 0)
+    var index = 0
+    var secondValue = Int.MIN_VALUE
+    var tripleValue = Int.MIN_VALUE
 
-            if (isCan && count != 0) {
-                count--
-                flowerbed[index] = 1
-            }
+    while (true){
+        val value = nums[index + 1]
+
+        if (value > secondValue){
+            secondValue = value
+            index++
+            continue
         }
+
+        if ()
+
+        return true
     }
 
-    return count == 0
+    return false
 }
+
 
 class ListNode(var `val`: Int) {
     var next: ListNode? = null
