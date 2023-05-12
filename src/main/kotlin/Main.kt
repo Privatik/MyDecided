@@ -1,42 +1,62 @@
 import java.util.*
 
 fun main(args: Array<String>) {
-    println(
-        increasingTriplet(intArrayOf(1,2,3,4,5))
-    )
 
+    var arr = intArrayOf(0,1,0,3,12)
     println(
-        increasingTriplet(intArrayOf(5,4,3,2,1))
+        moveZeroes(arr)
     )
+    println(arr.joinToString(" "))
 
+    arr = intArrayOf(0)
     println(
-        increasingTriplet(intArrayOf(2,1,5,0,4,6))
+        moveZeroes(arr)
     )
+    println(arr.joinToString(" "))
+
+    arr = intArrayOf(0,1,2,3,4,5)
+    println(
+        moveZeroes(arr)
+    )
+    println(arr.joinToString(" "))
+
+    arr = intArrayOf(1,2,3,4,5, 0, 0)
+    println(
+        moveZeroes(arr)
+    )
+    println(arr.joinToString(" "))
+
+    arr = intArrayOf(1,0,0,0,5, 0, 0)
+    println(
+        moveZeroes(arr)
+    )
+    println(arr.joinToString(" "))
+
+    arr = intArrayOf(1,0,2,0,5, 0, 2)
+    println(
+        moveZeroes(arr)
+    )
+    println(arr.joinToString(" "))
 
 }
 
-fun increasingTriplet(nums: IntArray): Boolean {
-    if (nums.size < 3) return false
+fun moveZeroes(nums: IntArray): Unit {
+    var zeroPointer = -1
+    var nonZeroPonter = 0
 
-    var index = 0
-    var secondValue = Int.MIN_VALUE
-    var tripleValue = Int.MIN_VALUE
+    while (nonZeroPonter < nums.size && nums[nonZeroPonter] != 0) { nonZeroPonter++ }
 
-    while (true){
-        val value = nums[index + 1]
+    zeroPointer = nonZeroPonter
+    nonZeroPonter++
 
-        if (value > secondValue){
-            secondValue = value
-            index++
-            continue
+    while (nonZeroPonter < nums.size){
+        if (nums[nonZeroPonter] != 0){
+            nums[zeroPointer] = nums[nonZeroPonter]
+            nums[nonZeroPonter] = 0
+            zeroPointer++
         }
-
-        if ()
-
-        return true
+        nonZeroPonter++
     }
-
-    return false
 }
 
 
