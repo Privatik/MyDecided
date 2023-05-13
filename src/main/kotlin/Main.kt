@@ -2,61 +2,41 @@ import java.util.*
 
 fun main(args: Array<String>) {
 
-    var arr = intArrayOf(0,1,0,3,12)
     println(
-        moveZeroes(arr)
+        maxOperations(intArrayOf(1,2,3,4), 5)
     )
-    println(arr.joinToString(" "))
 
-    arr = intArrayOf(0)
     println(
-        moveZeroes(arr)
+        maxOperations(intArrayOf(3,1,3,4,3), 6)
     )
-    println(arr.joinToString(" "))
 
-    arr = intArrayOf(0,1,2,3,4,5)
-    println(
-        moveZeroes(arr)
-    )
-    println(arr.joinToString(" "))
-
-    arr = intArrayOf(1,2,3,4,5, 0, 0)
-    println(
-        moveZeroes(arr)
-    )
-    println(arr.joinToString(" "))
-
-    arr = intArrayOf(1,0,0,0,5, 0, 0)
-    println(
-        moveZeroes(arr)
-    )
-    println(arr.joinToString(" "))
-
-    arr = intArrayOf(1,0,2,0,5, 0, 2)
-    println(
-        moveZeroes(arr)
-    )
-    println(arr.joinToString(" "))
 
 }
 
-fun moveZeroes(nums: IntArray): Unit {
-    var zeroPointer = -1
-    var nonZeroPonter = 0
+fun maxOperations(nums: IntArray, k: Int): Int {
+    nums.sort()
 
-    while (nonZeroPonter < nums.size && nums[nonZeroPonter] != 0) { nonZeroPonter++ }
+    var l = 0
+    var r = nums.lastIndex
 
-    zeroPointer = nonZeroPonter
-    nonZeroPonter++
+    var maxOperations = 0
 
-    while (nonZeroPonter < nums.size){
-        if (nums[nonZeroPonter] != 0){
-            nums[zeroPointer] = nums[nonZeroPonter]
-            nums[nonZeroPonter] = 0
-            zeroPointer++
+    while (l < r){
+        val left = nums[l]
+        val right = nums[r]
+
+        if (left + right == k){
+            maxOperations++
+            l++
+            r--
+        } else if (right + left < k){
+            l++
+        } else {
+            r--
         }
-        nonZeroPonter++
     }
+
+    return maxOperations
 }
 
 
