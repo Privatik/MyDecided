@@ -3,42 +3,35 @@ import java.util.*
 fun main(args: Array<String>) {
 
     println(
-        maxOperations(intArrayOf(1,2,3,4), 5)
+        maxVowels("abciiidef",3)
     )
 
     println(
-        maxOperations(intArrayOf(3,1,3,4,3), 6)
+        maxVowels("aeiou",2)
     )
 
+    println(
+        maxVowels("leetcode",3)
+    )
 
 }
 
-fun maxOperations(nums: IntArray, k: Int): Int {
-    nums.sort()
+private val vowel = intArrayOf(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0)
 
-    var l = 0
-    var r = nums.lastIndex
 
-    var maxOperations = 0
-
-    while (l < r){
-        val left = nums[l]
-        val right = nums[r]
-
-        if (left + right == k){
-            maxOperations++
-            l++
-            r--
-        } else if (right + left < k){
-            l++
-        } else {
-            r--
-        }
+fun maxVowels(s: String, k: Int): Int {
+    var r0 = 0
+    for (i in 0 until k)
+        r0 += vowel[s[i] - 'a']
+    var r = r0
+    for (i in k until s.length) {
+        r0 -= vowel[s[i - k] - 'a']
+        r0 += vowel[s[i] - 'a']
+        if (r0 > r)
+            r = r0
     }
-
-    return maxOperations
+    return r
 }
-
 
 class ListNode(var `val`: Int) {
     var next: ListNode? = null
