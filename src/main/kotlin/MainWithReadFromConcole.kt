@@ -7,36 +7,30 @@
 **.**
  */
 
-class MainWithReadFromConcole(){
-    private val i = 10
-    private val ii = 10
+class MainWithReadFromConcole {
 
-    fun simpleOut(){
-        println(o)
-        println(i)
-        simpleIn()
+
+    val value = 2
+
+    init {
+        println("Private")
     }
 
-    companion object{
-        private val o = 10
+    companion object {
 
-        fun simpleIn(){
-            println(o)
-        }
-
-        fun accessPrivateField(myClass: MainWithReadFromConcole) {
-            println(myClass.i)
-        }
-
-        fun accessProtectedField(myClass: MainWithReadFromConcole) {
-            println(myClass.ii)
+        @JvmStatic
+        fun accessProtectedField() {
+            println("Hello")
         }
     }
-}
 
-object Single{
+    object Single{
 
-    fun simple() {
-        println(10)
+        val value = 1
+
+        @JvmStatic
+        fun simple() {
+            println(10)
+        }
     }
 }
