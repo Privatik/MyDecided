@@ -4,40 +4,21 @@ import kotlin.math.max
 fun main() {
 
 
-    println(
-        longestSubarray(intArrayOf(1,1,0,1))
-    )
+    println(largestAltitude(intArrayOf(-5,1,5,0,-7)))
 
-    println(
-        longestSubarray(intArrayOf(0,1,1,1,0,1,1,0,1))
-    )
-
-    println(
-        longestSubarray(intArrayOf(1,1,1))
-    )
-
+    println(largestAltitude(intArrayOf(-4,-3,-2,-1,4,3,2)))
 
 }
 
 
-fun longestSubarray(nums: IntArray): Int {
+fun largestAltitude(gain: IntArray): Int {
+    val prefixSum = IntArray(gain.size + 1)
     var max = 0
-    var canDeleteZeros = 1
-    var start = 0
 
-    var end = 0
-    while (end < nums.size){
-        if (nums[end] == 0){
-            if (canDeleteZeros == 1){
-                canDeleteZeros = 0
-            } else {
-                start++
-                if (nums[start] == 1) { end-- }
-            }
-        }
-
-        max = max(end - start, max)
-        end++
+    repeat(gain.size) { index ->
+        val value = prefixSum[index] + gain[index]
+        prefixSum[index + 1] = value
+        max = max(max, value)
     }
 
     return max
