@@ -1,49 +1,41 @@
-import java.util.*
-import kotlin.math.max
-
 fun main() {
 
 
-    println(largestAltitude(intArrayOf(-5,1,5,0,-7)))
+    println(pivotIndex(intArrayOf(1,7,3,6,5,6)))
 
-    println(largestAltitude(intArrayOf(-4,-3,-2,-1,4,3,2)))
+    println(pivotIndex(intArrayOf(1,2,3)))
+
+    println(pivotIndex(intArrayOf(2,1,-1)))
 
 }
 
 
-fun largestAltitude(gain: IntArray): Int {
-    val prefixSum = IntArray(gain.size + 1)
-    var max = 0
+fun pivotIndex(nums: IntArray): Int {
+    var rightSum = nums.sum() - nums[0]
+    var leftSum = 0
 
-    repeat(gain.size) { index ->
-        val value = prefixSum[index] + gain[index]
-        prefixSum[index + 1] = value
-        max = max(max, value)
+    if (leftSum == rightSum) return 0
+
+    repeat(nums.size - 1){ i ->
+        val index = i + 1
+        leftSum += nums[index - 1]
+        rightSum -= nums[index]
+
+        if (leftSum == rightSum) return index
     }
 
-    return max
+    return -1
 }
 
-class ListNode(var `val`: Int) {
-    var next: ListNode? = null
-
-    fun add(list: LinkedList<Int>){
-        if (list.isNotEmpty()){
-            next = ListNode(list.removeFirst()).also { it.add(list) }
-        }
-    }
-
-}
-
-fun ListNode.getValues(): StringBuilder{
-    val builder = StringBuilder()
-    builder.append(`val`)
-    if (next != null){
-        builder.append(" ")
-        builder.append(next!!.getValues())
-    }
-    return builder
-}
+//fun ListNode.getValues(): StringBuilder{
+//    val builder = StringBuilder()
+//    builder.append(`val`)
+//    if (next != null){
+//        builder.append(" ")
+//        builder.append(next!!.getValues())
+//    }
+//    return builder
+//}
 
 
 
