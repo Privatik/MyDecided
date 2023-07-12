@@ -1,30 +1,49 @@
+import java.util.*
+import kotlin.collections.ArrayList
+
 fun main() {
 
+    println(
+        findDifference(
+            intArrayOf(1,2,3),
+            intArrayOf(2,4,6),
+        )
+    )
 
-    println(pivotIndex(intArrayOf(1,7,3,6,5,6)))
+    println(
+        findDifference(
+            intArrayOf(1,2,3,3),
+            intArrayOf(1,1,2,2),
+        )
+    )
 
-    println(pivotIndex(intArrayOf(1,2,3)))
-
-    println(pivotIndex(intArrayOf(2,1,-1)))
+    println(
+        findDifference(
+            intArrayOf(-3,6,-5,4,5,5),
+            intArrayOf(6,6,-3,-3,3,5),
+        )
+    )
 
 }
 
 
-fun pivotIndex(nums: IntArray): Int {
-    var rightSum = nums.sum() - nums[0]
-    var leftSum = 0
+fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
+    val list = ArrayList<List<Int>>(2)
 
-    if (leftSum == rightSum) return 0
+    val firstSet = hashSetOf<Int>()
+    val secondSet = nums2.toHashSet()
+    val removedSet = hashSetOf<Int>()
 
-    repeat(nums.size - 1){ i ->
-        val index = i + 1
-        leftSum += nums[index - 1]
-        rightSum -= nums[index]
-
-        if (leftSum == rightSum) return index
+    nums1.forEach { item ->
+        if (!secondSet.contains(item) && !removedSet.contains(item)) firstSet.add(item)
+        secondSet.remove(item)
+        removedSet.add(item)
     }
 
-    return -1
+    list.add(firstSet.toList())
+    list.add(secondSet.toList())
+
+    return list
 }
 
 //fun ListNode.getValues(): StringBuilder{
