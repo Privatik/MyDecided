@@ -4,46 +4,36 @@ import kotlin.collections.ArrayList
 fun main() {
 
     println(
-        findDifference(
-            intArrayOf(1,2,3),
-            intArrayOf(2,4,6),
+        uniqueOccurrences(
+            intArrayOf(1,2,2,1,1,3)
         )
     )
 
     println(
-        findDifference(
-            intArrayOf(1,2,3,3),
-            intArrayOf(1,1,2,2),
+        uniqueOccurrences(
+            intArrayOf(1,2)
         )
     )
 
     println(
-        findDifference(
-            intArrayOf(-3,6,-5,4,5,5),
-            intArrayOf(6,6,-3,-3,3,5),
+        uniqueOccurrences(
+            intArrayOf(-3,0,1,-3,1,1,1,-3,10,0)
         )
     )
 
 }
 
-
-fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
-    val list = ArrayList<List<Int>>(2)
-
-    val firstSet = hashSetOf<Int>()
-    val secondSet = nums2.toHashSet()
-    val removedSet = hashSetOf<Int>()
-
-    nums1.forEach { item ->
-        if (!secondSet.contains(item) && !removedSet.contains(item)) firstSet.add(item)
-        secondSet.remove(item)
-        removedSet.add(item)
+fun uniqueOccurrences(arr: IntArray): Boolean {
+    val count = IntArray(arr.size)
+    val map = hashMapOf<Int, Int>()
+    arr.forEach { value ->
+        val newValue = (map[value] ?: 0) + 1
+        map[value] = newValue
+        count[newValue]++
+        if (newValue != 1) count[newValue - 1]--
     }
 
-    list.add(firstSet.toList())
-    list.add(secondSet.toList())
-
-    return list
+    return count.none { it > 1 }
 }
 
 //fun ListNode.getValues(): StringBuilder{
