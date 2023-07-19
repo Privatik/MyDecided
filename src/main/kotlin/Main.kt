@@ -6,53 +6,64 @@ const val codeA = 1040
 fun main() {
 
     println(
-        closeStrings("abc","bca")
+        equalPairs(
+            arrayOf(
+                intArrayOf(3,2,1),
+                intArrayOf(1,7,6),
+                intArrayOf(2,7,7),
+            )
+        )
     )
 
     println(
-        closeStrings("a","aa")
-    )
-
-    println(
-        closeStrings("cabbba","abbccc")
-    )
-
-    println(
-        closeStrings("uau","ssx")
+        equalPairs(
+            arrayOf(
+                intArrayOf(3,1,2,2),
+                intArrayOf(3,1,2,2),
+                intArrayOf(2,4,2,2),
+                intArrayOf(2,4,2,2),
+            )
+        )
     )
 
 }
 
-fun closeStrings(word1: String, word2: String): Boolean {
-    if (word1.length != word2.length) return false
+fun equalPairs(grid: Array<IntArray>): Int {
+    val cache = Array(grid.size) { BooleanArray(grid.size) }
+    cache[0][0] = true
 
-    val elWord1 = IntArray(26)
-    word1.forEach { element ->
-        elWord1[element - 'a']++
+    grid.indices.forEach { row ->
+        var column  = 0
+        while (column < grid.size){
+            if (row > column) {
+                column++
+                continue
+            }
+            if (column == row) {
+                cache[row][column] = true
+                cache[column][row] = true
+            }
+            if (
+                cache[row].getOrElse(column - 1) { true } &&
+                cache.getOrNull(row - 1)?.get(column) == true &&
+                grid[row][column] == grid[column][row]
+            ){
+                cache[row][column] = true
+                cache[column][row] = true
+            }
+            column++
+        }
     }
 
-    val elWord2 = IntArray(26)
-    word2.forEach { element ->
-        elWord2[element - 'a']++
+
+    cache.indices.forEach { row ->
+        cache.indices.forEach { column ->
+            print(" ${cache[row][column]}")
+        }
+        println()
     }
 
-    elWord1.indices.forEach { index ->
-        if (elWord1[index] > 0 && elWord2[index] == 0) return false
-        if (elWord2[index] > 0 && elWord1[index] == 0) return false
-    }
-
-
-    elWord1.sortDescending()
-    elWord2.sortDescending()
-
-    var index = 0
-    while (index != elWord1.size){
-        if (elWord1[index] == 0 && elWord2[index] == 0) break
-        if (elWord1[index] != elWord2[index]) return false
-        index++
-    }
-
-    return true
+    return 0
 }
 
 //fun ListNode.getValues(): StringBuilder{
