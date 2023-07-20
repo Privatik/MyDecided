@@ -1,69 +1,33 @@
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 const val codeA = 1040
 
 fun main() {
 
     println(
-        equalPairs(
-            arrayOf(
-                intArrayOf(3,2,1),
-                intArrayOf(1,7,6),
-                intArrayOf(2,7,7),
-            )
-        )
+        removeStars("leet**cod*e")
     )
 
     println(
-        equalPairs(
-            arrayOf(
-                intArrayOf(3,1,2,2),
-                intArrayOf(3,1,2,2),
-                intArrayOf(2,4,2,2),
-                intArrayOf(2,4,2,2),
-            )
-        )
+        removeStars("erase*****")
     )
 
 }
 
-fun equalPairs(grid: Array<IntArray>): Int {
-    val cache = Array(grid.size) { BooleanArray(grid.size) }
-    cache[0][0] = true
+fun removeStars(s: String): String {
+    val builder = StringBuilder()
 
-    grid.indices.forEach { row ->
-        var column  = 0
-        while (column < grid.size){
-            if (row > column) {
-                column++
-                continue
-            }
-            if (column == row) {
-                cache[row][column] = true
-                cache[column][row] = true
-            }
-            if (
-                cache[row].getOrElse(column - 1) { true } &&
-                cache.getOrNull(row - 1)?.get(column) == true &&
-                grid[row][column] == grid[column][row]
-            ){
-                cache[row][column] = true
-                cache[column][row] = true
-            }
-            column++
+    s.indices.forEach { index ->
+        val item = s[index]
+        if (item == '*'){
+            if (builder.isNotEmpty()) builder.deleteCharAt(builder.length - 1)
+        } else {
+            builder.append(item)
         }
     }
 
-
-    cache.indices.forEach { row ->
-        cache.indices.forEach { column ->
-            print(" ${cache[row][column]}")
-        }
-        println()
-    }
-
-    return 0
+    return builder.toString()
 }
 
 //fun ListNode.getValues(): StringBuilder{
