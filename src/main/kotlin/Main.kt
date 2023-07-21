@@ -1,4 +1,6 @@
+
 import java.util.*
+import kotlin.math.log10
 
 
 const val codeA = 1040
@@ -6,28 +8,69 @@ const val codeA = 1040
 fun main() {
 
     println(
-        removeStars("leet**cod*e")
+        asteroidCollision(intArrayOf(5,10,-5)).joinToString(" ")
     )
 
     println(
-        removeStars("erase*****")
+        asteroidCollision(intArrayOf(8,-8)).joinToString(" ")
+    )
+
+    println(
+        asteroidCollision(intArrayOf(10,2,-5)).joinToString(" ")
     )
 
 }
 
-fun removeStars(s: String): String {
-    val builder = StringBuilder()
+fun asteroidCollision(asteroids: IntArray): IntArray {
+    val stack = Stack<Int>()
+    var index = 1
 
-    s.indices.forEach { index ->
-        val item = s[index]
-        if (item == '*'){
-            if (builder.isNotEmpty()) builder.deleteCharAt(builder.length - 1)
-        } else {
-            builder.append(item)
+    stack.push(asteroids[0])
+    while (index < asteroids.size && !stack.isEmpty()){
+        val valueBefore = stack.peek()
+        val dif = valueBefore + asteroids[index]
+
+        if (dif == 0){
+            stack.pop()
+            val nextValue = asteroids.getOrNull(index + 1)
+            if (nextValue != 0){ stack.push(nextValue) }
+            index += 2
+            continue
+        }
+
+        if (valueBefore > 0){
+            if (dif < 0) {
+                stack.pop();
+                stack.push(asteroids[index])
+            }
+            else if (dif > valueBefore){
+                stack.push(asteroids[index])
+            }
+        } else if (valueBefore < 0){
+            if (dif > 0) {
+                stack.pop();
+                stack.push(asteroids[index])
+            }
+            else if (dif < valueBefore){
+                stack.push(asteroids[index])
+            }
+        }
+        index++
+    }
+
+    if (stack.size == 1){
+        if (stack.peek() == null){
+            return intArrayOf()
         }
     }
 
-    return builder.toString()
+    val result = IntArray(stack.size)
+
+    result.indices.reversed().forEach { insideIndex ->
+        result[insideIndex] = stack.pop()
+    }
+
+    return result
 }
 
 //fun ListNode.getValues(): StringBuilder{
