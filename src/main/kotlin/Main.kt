@@ -1,6 +1,8 @@
 
 import java.util.*
 import kotlin.math.log10
+import kotlin.math.max
+import kotlin.math.min
 
 
 const val codeA = 1040
@@ -54,35 +56,15 @@ class RecentCounter() {
 }
 
 fun maxProfit(prices: IntArray): Int {
-    val dp = Array(prices.size) { IntArray(prices.size) { Int.MIN_VALUE } }
+    var profit = 0
+    var min = prices[0]
 
-    dp[0][0] = 0
-
-    if (prices.size > 1){
-        if (prices[1] - prices[0] > 0){
-            dp[0][1] = -prices[0]
-        }
+    (1 until prices.size).forEach { index ->
+        min = min(min, prices[index])
+        profit = max(prices[index] - min, profit)
     }
 
-    (1 until prices.size).forEach { firstIndex->
-        (0..firstIndex).forEach { secondIndex ->
-            val next = (dp[firstIndex - 1].getOrNull(secondIndex + 1) ?: Int.MIN_VALUE)
-
-            dp[firstIndex][secondIndex] = maxOf(
-                dp[firstIndex - 1][secondIndex],
-                -prices[firstIndex] ,
-                if (next <= 0) { next + prices[firstIndex] } else Int.MIN_VALUE
-            )
-        }
-    }
-
-    println("-------")
-    println(
-        dp.joinToString("\n") { it.joinToString(" ") }
-    )
-    println("-------")
-
-    return dp.last().first()
+    return profit
 }
 
 //fun ListNode.getValues(): StringBuilder{
