@@ -1,8 +1,5 @@
 
 import java.util.*
-import kotlin.math.log10
-import kotlin.math.max
-import kotlin.math.min
 
 
 const val codeA = 1040
@@ -27,44 +24,42 @@ fun main() {
 //    )
 
     println(
-        maxProfit(intArrayOf(7,1,5,3,6,4))
+        predictPartyVictory("RD")
     )
 
     println(
-        maxProfit(intArrayOf(7,6,4,3,1))
-    )
-
-    println(
-        maxProfit(intArrayOf(1,2,3))
-    )
-
-    println(
-        maxProfit(intArrayOf(6,1,3,2,4,7))
+        predictPartyVictory("RDD")
     )
 }
 
-class RecentCounter() {
-    private val queue: Queue<Int> = LinkedList()
+//DA
 
-    fun ping(t: Int): Int {
-        queue.offer(t)
-        while (queue.peek() < t - 3000){ queue.poll() }
-        return queue.size
+fun predictPartyVictory(senate: String): String {
+    val queue: Queue<Char> = LinkedList()
+
+    senate.forEach { item -> queue.offer(item) }
+    queue.offer('A')
+    var isOnlyOneParties = true
+
+    while (queue.size != 2){
+        val value = queue.poll()
+        var nextValue = queue.peek()
+        queue.offer(value)
+
+        if (nextValue == 'A') {
+            if (isOnlyOneParties) { break }
+            queue.poll()
+            nextValue = queue.peek()
+            queue.offer('A')
+        }
+
+        if (value != nextValue){
+            isOnlyOneParties = false
+            queue.poll()
+        }
     }
 
-
-}
-
-fun maxProfit(prices: IntArray): Int {
-    var profit = 0
-    var min = prices[0]
-
-    (1 until prices.size).forEach { index ->
-        min = min(min, prices[index])
-        profit = max(prices[index] - min, profit)
-    }
-
-    return profit
+    return if (queue.peek() == 'R') "Radiant" else "Dire"
 }
 
 //fun ListNode.getValues(): StringBuilder{
