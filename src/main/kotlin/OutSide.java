@@ -17,6 +17,8 @@ class OutSide implements TestSide{
 
         void simpleIn(){
 
+
+
             System.out.println(ii);
 
         }
