@@ -7,70 +7,33 @@ const val codeA = 1040
 
 fun main() {
 
-//    println(
-//        deleteMiddle(
-//            createListNode(values = intArrayOf(1,3,4,7,1,2,6))
-//        )?.getValues()
-//    )
-//
-//    println(
-//        deleteMiddle(
-//            createListNode(values = intArrayOf(1,2,3,4))
-//        )?.getValues()
-//    )
-//
-//    println(
-//        deleteMiddle(
-//            createListNode(values = intArrayOf(2,1))
-//        )?.getValues()
-//    )
-
     println(
-        minSubArrayLen(7, intArrayOf(2,3,1,2,4,3))
+        deleteMiddle(
+            createListNode(values = intArrayOf(1,3,4,7,1,2,6))
+        )?.getValues()
     )
 
     println(
-        minSubArrayLen(4, intArrayOf(1,4,4))
+        deleteMiddle(
+            createListNode(values = intArrayOf(1,2,3,4))
+        )?.getValues()
     )
 
     println(
-        minSubArrayLen(11, intArrayOf(1,1,1,1,1,1,1,1))
+        deleteMiddle(
+            createListNode(values = intArrayOf(2,1))
+        )?.getValues()
     )
 
-    println(
-        minSubArrayLen(213, intArrayOf(12,28,83,4,25,26,25,2,25,25,25,12))
-    )
+
 
 }
 
-fun minSubArrayLen(target: Int, nums: IntArray): Int {
-    val prefixSum = IntArray(nums.size + 1)
-
-    (nums.indices).forEach { index ->
-        prefixSum[index + 1] = prefixSum[index] + nums[index]
-    }
-
-    var firstPointer = 0
-    var secondPointer = 1
-
-    var min = Int.MAX_VALUE
-    while (secondPointer != nums.size){
-        if (prefixSum[secondPointer] - prefixSum[firstPointer] >= target){
-            min = min(min, secondPointer - firstPointer)
-            if (firstPointer++ >= secondPointer) secondPointer++
-        } else {
-            secondPointer++
-        }
-    }
-
-    while (firstPointer != nums.size){
-        if (prefixSum[secondPointer] - prefixSum[firstPointer] >= target){
-            min = min(min, secondPointer - firstPointer)
-            firstPointer++
-        } else { break }
-    }
-
-    return if (min == Int.MAX_VALUE) 0 else min
+fun deleteMiddle(head: ListNode?): ListNode? {
+    if (head?.next == null) return null
+    val preMiddleItem = findPreMiddle(0,0, head.next, head)
+    preMiddleItem?.next = preMiddleItem?.next?.next
+    return head
 }
 
 private fun findPreMiddle(
@@ -82,8 +45,8 @@ private fun findPreMiddle(
     var nextPreMiddle: ListNode? = currentPreMiddle
     var _middleIndex = middleIndex
 
-    if ((currentSize + 1) / 2 != middleIndex){
-        nextPreMiddle = if (currentPreMiddle == null) head else currentPreMiddle.next
+    if ((currentSize)/ 2 != middleIndex){
+        nextPreMiddle = currentPreMiddle?.next
         _middleIndex++
     }
 
