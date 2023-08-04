@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.min
 
 const val codeA = 1040
 
@@ -58,30 +59,48 @@ fun main() {
 }
 
 fun trap(height: IntArray): Int {
-    val result = IntArray(height.size)
+    var sum = 0
+    var intervalSum = 0
 
-    var lastMax = height[0]
-    (1 until height.size).forEach { index ->
-        if (lastMax > height[index]){
-            result[index] = lastMax - height[index]
+    var firstMaxIndex = 0
+    var lastMaxIndex = height.size - 1
+
+    var index = 1
+    while (index < height.size){
+        if (firstMaxIndex == lastMaxIndex) break
+        val endIndex = (height.size - 1 - index)
+        if (height[lastMaxIndex] < height[endIndex]){ lastMaxIndex = endIndex }
+        if (height[firstMaxIndex] < height[index]) { firstMaxIndex = index }
+        index++
+    }
+
+    var max = height[0]
+    (1..firstMaxIndex).forEach { insideIndex ->
+        if (max <= height[insideIndex]){
+            max = height[insideIndex]
+            sum += intervalSum
+            intervalSum = 0
         } else {
-            lastMax = height[index]
+            intervalSum += max - height[insideIndex]
         }
     }
 
-    val stopHeight = lastMax
-    lastMax = height[height.size - 1]
-    var index = height.size - 2
-    while (lastMax != stopHeight){
-        if (lastMax > height[index]){
-            result[index] = lastMax - height[index]
-        } else {
-            lastMax = height[index]
-        }
-        index--
+    (firstMaxIndex..lastMaxIndex).forEach { insideIndex ->
+        sum += height[lastMaxIndex] - height[insideIndex]
     }
 
-    return result.sum()
+    max = height[height.size - 1]
+    (height.size - 1 downTo lastMaxIndex).forEach { insideIndex ->
+        if (max <= height[insideIndex]){
+            max = height[insideIndex]
+            sum += intervalSum
+            intervalSum = 0
+        } else {
+            intervalSum += max - height[insideIndex]
+        }
+    }
+
+    return sum
 }
 
 fun letterCombinations(digits: String): List<String> {
