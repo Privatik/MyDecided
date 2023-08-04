@@ -1,32 +1,123 @@
-
 import java.util.*
-import kotlin.math.min
-
 
 const val codeA = 1040
 
 fun main() {
 
+//    println(
+//        deleteMiddle(
+//            createListNode(values = intArrayOf(1,3,4,7,1,2,6))
+//        )?.getValues()
+//    )
+//
+//    println(
+//        deleteMiddle(
+//            createListNode(values = intArrayOf(1,2,3,4))
+//        )?.getValues()
+//    )
+//
+//    println(
+//        deleteMiddle(
+//            createListNode(values = intArrayOf(2,1))
+//        )?.getValues()
+//    )
+
+//    println(
+//        letterCombinations("23").joinToString(" ")
+//    )
+//
+//    println(
+//        letterCombinations("").joinToString(" ")
+//    )
+//
+//    println(
+//        letterCombinations("7").joinToString(" ")
+//    )
+//
+//    println(
+//        letterCombinations("8").joinToString(" ")
+//    )
+//
+//    println(
+//        letterCombinations("9").joinToString(" ")
+//    )
+//
+//    println(
+//        letterCombinations("67").joinToString(" ")
+//    )
+
+
     println(
-        deleteMiddle(
-            createListNode(values = intArrayOf(1,3,4,7,1,2,6))
-        )?.getValues()
+        trap(intArrayOf(0,1,0,2,1,0,1,3,2,1,2,1))
     )
 
     println(
-        deleteMiddle(
-            createListNode(values = intArrayOf(1,2,3,4))
-        )?.getValues()
+        trap(intArrayOf(4,2,0,3,2,5))
     )
 
-    println(
-        deleteMiddle(
-            createListNode(values = intArrayOf(2,1))
-        )?.getValues()
-    )
+}
+
+fun trap(height: IntArray): Int {
+    val result = IntArray(height.size)
+
+    var lastMax = height[0]
+    (1 until height.size).forEach { index ->
+        if (lastMax > height[index]){
+            result[index] = lastMax - height[index]
+        } else {
+            lastMax = height[index]
+        }
+    }
+
+    val stopHeight = lastMax
+    lastMax = height[height.size - 1]
+    var index = height.size - 2
+    while (lastMax != stopHeight){
+        if (lastMax > height[index]){
+            result[index] = lastMax - height[index]
+        } else {
+            lastMax = height[index]
+        }
+        index--
+    }
+
+    return result.sum()
+}
+
+fun letterCombinations(digits: String): List<String> {
+    if (digits.isEmpty()) return listOf()
+
+    val result = LinkedList<String>()
+    backTracking(0, digits, StringBuilder(), result)
+    return result
+}
+
+fun backTracking(
+    index: Int,
+    digits: String,
+    builder: StringBuilder,
+    result: LinkedList<String>
+) {
+    if (index >= digits.length) {
+        result.add(builder.toString())
+        return
+    }
+
+    val number = digits[index] - '2'
+    val startChar = if (number <= 5 ){ 'a' + (3 * number) } else { 'a' + (3 * (number - 1)) + 4 }
+
+    (startChar until startChar + (if (number == 5 || number == 7) 4 else 3)).forEach { item ->
+        builder.append(item)
+        backTracking(index + 1, digits, builder, result)
+        builder.deleteCharAt(index)
+    }
+}
 
 
+fun twoSum(nums: IntArray, target: Int): IntArray {
+    val cache = IntArray(nums.size) { -1 }
 
+    return intArrayOf()
 }
 
 fun deleteMiddle(head: ListNode?): ListNode? {
