@@ -1,5 +1,4 @@
-import java.util.*
-import kotlin.math.min
+import kotlin.math.pow
 
 const val codeA = 1040
 
@@ -9,26 +8,78 @@ fun main() {
 //        oddEvenList(createListNode(array = intArrayOf(1,2,3,4,5)))?.getValues()
 //    )
 
+//    println(
+//        missingNumber(intArrayOf(1))
+//    )
+//
+//    println(
+//        missingNumber(intArrayOf(3,0,1))
+//    )
+//
+//    println(
+//        missingNumber(intArrayOf(0,1))
+//    )
+//
+//    println(
+//        missingNumber(intArrayOf(9,6,4,2,3,5,7,0,1))
+//    )
+//
+//    println(
+//        missingNumber(intArrayOf(0,3,5,8,4,6,1,9,7))
+//    )
+
     println(
-        missingNumber(intArrayOf(1))
+        sumRootToLeaf(
+            TreeNode(1).apply {
+                left = TreeNode(0).apply {
+                    left = TreeNode(0)
+                    right = TreeNode(1)
+                }
+                right = TreeNode(1).apply {
+                    left = TreeNode(0)
+                    right = TreeNode(1)
+                }
+            }
+        )
     )
 
     println(
-        missingNumber(intArrayOf(3,0,1))
+        sumRootToLeaf(TreeNode(0))
     )
 
-    println(
-        missingNumber(intArrayOf(0,1))
-    )
+}
 
-    println(
-        missingNumber(intArrayOf(9,6,4,2,3,5,7,0,1))
-    )
+fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
+    if(root == null) return 0
+    val value = (current*2) + root.`val`
+    if(root.left == null && root.right == null) return value
+    return sumRootToLeaf(root.left, value) + sumRootToLeaf(root.right, value)
+}
 
-    println(
-        missingNumber(intArrayOf(0,3,5,8,4,6,1,9,7))
-    )
+//fun sumRootToLeaf(root: TreeNode?): Int {
+//    val space = IntArray(32)
+//    return dfs(space, root, 0)
+//}
 
+fun dfs(
+    space: IntArray,
+    node: TreeNode?,
+    currentIndex: Int,
+): Int {
+    var sum = 0
+    if (node == null) return sum
+
+    space[currentIndex] = node.`val`
+    if (node.left == null && node.right == null){
+        (0..currentIndex).forEach { index ->
+            sum += 2.0.pow(index.toDouble()).toInt() * space[currentIndex - index]
+        }
+    } else {
+        sum += dfs(space, node.left, currentIndex + 1)
+        sum += dfs(space, node.right, currentIndex + 1)
+    }
+
+    return sum
 }
 
 fun missingNumber(nums: IntArray): Int {
@@ -102,6 +153,11 @@ fun createListNode(index: Int = 0, array: IntArray): ListNode? {
     val node = ListNode(array[index])
     node.next = createListNode(index + 1, array)
     return node
+}
+
+class TreeNode(var `val`: Int) {
+     var left: TreeNode? = null
+     var right: TreeNode? = null
 }
 
 
