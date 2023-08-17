@@ -30,18 +30,50 @@ fun main() {
 //    )
 
     println(
-        createTreeNode(0, listOf(3,5,1,6,2,9,8,null,null,7,4))?.getValues()
+        leafSimilar(
+            root1 = createTreeNode(0, listOf(3,5,1,6,2,9,8,null,null,7,4)),
+            root2 = createTreeNode(0, listOf(3,5,1,6,7,4,2,null,null,null,null,null,null,9,8))
+        )
     )
 
     println(
-        createTreeNode(0, listOf(3,5,1,6,7,4,2,null,null,null,null,null,null,9,8))?.getValues()
+        leafSimilar(
+            root1 = createTreeNode(0, listOf(1,2,3)),
+            root2 = createTreeNode(0, listOf(1,3,2)),
+        )
     )
 
 }
 
 fun leafSimilar(root1: TreeNode?, root2: TreeNode?): Boolean {
-    return false
+    val ans1  = mutableListOf<Int>()
+    findLeaf(root1, ans1)
+
+    val ans2 = mutableListOf<Int>()
+    findLeaf(root2, ans2)
+
+    return ans1.size == ans2.size && (0 until ans1.size).all { index -> ans1[index] == ans2[index] }
 }
+
+private fun findLeaf(
+    head: TreeNode?,
+    answer: MutableList<Int>
+){
+    if (head == null) return
+
+    if (
+        head.left == null
+        && head.right == null
+    ){
+        answer.add(head.`val`)
+    }
+
+    findLeaf(head.left, answer)
+    findLeaf(head.right, answer)
+}
+
+
+
 
 fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
     if(root == null) return 0
