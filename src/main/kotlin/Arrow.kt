@@ -2,6 +2,18 @@ import kotlin.math.*
 
 class Arrow {
 
+    init {
+        println("init no static block")
+    }
+
+    constructor(count: Int){
+        println("constructor block")
+    }
+
+    constructor(count: Int, number: Int){
+        println("constructor block 1")
+    }
+
     private val offset = 3.0
     private val offsetCather  = 2.0
     fun draw(){
@@ -17,6 +29,17 @@ class Arrow {
         val triplePoint = Point(firstPoint.x + (offsetCather * cos(des - w)),firstPoint.y + (offsetCather * sin(des - w)))
 
         println("des $des first $firstPoint second $secondPoint triple $triplePoint")
+    }
+
+    fun call(){}
+
+    companion object{
+        private var count = 0
+
+        init {
+            count++
+            println("Init block")
+        }
     }
 }
 
