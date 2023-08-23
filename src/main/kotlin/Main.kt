@@ -1,5 +1,5 @@
-import java.util.LinkedList
-import java.util.Queue
+import java.util.*
+
 
 const val codeA = 1040
 
@@ -72,6 +72,25 @@ private fun findLeaf(
     findLeaf(head.right, answer)
 }
 
+fun pathSum(root: TreeNode?, sum: Int): Int {
+    val preSum = HashMap<Int, Int>()
+    preSum[0] = 1
+    return helper(root, 0, sum, preSum)
+}
+
+fun helper(root: TreeNode?, beforeSum: Int, target: Int, preSum: HashMap<Int, Int>): Int {
+    if (root == null) { return 0 }
+
+    val currSum = beforeSum + root.`val`
+
+    var res = preSum.getOrDefault(currSum - target, 0)
+    preSum[currSum] = preSum.getOrDefault(currSum, 0) + 1
+
+    res += helper(root.left, currSum, target, preSum) + helper(root.right, currSum, target, preSum)
+    preSum[currSum] = preSum[currSum]!! - 1
+
+    return res
+}
 
 
 
