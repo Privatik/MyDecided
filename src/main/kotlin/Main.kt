@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.math.max
 
 
 const val codeA = 1040
@@ -30,69 +31,33 @@ fun main() {
 //    )
 
     println(
-        leafSimilar(
-            root1 = createTreeNode(0, listOf(3,5,1,6,2,9,8,null,null,7,4)),
-            root2 = createTreeNode(0, listOf(3,5,1,6,7,4,2,null,null,null,null,null,null,9,8))
+        longestZigZag(
+            createTreeNode(0, listOf(1,null,1,1,1,null,null,1,1,null,1,null,null,null,1))
         )
     )
 
     println(
-        leafSimilar(
-            root1 = createTreeNode(0, listOf(1,2,3)),
-            root2 = createTreeNode(0, listOf(1,3,2)),
+        longestZigZag(
+            createTreeNode(0, listOf(1,1,1,null,1,null,null,1,1,null,1))
         )
     )
 
 }
 
-fun leafSimilar(root1: TreeNode?, root2: TreeNode?): Boolean {
-    val ans1  = mutableListOf<Int>()
-    findLeaf(root1, ans1)
 
-    val ans2 = mutableListOf<Int>()
-    findLeaf(root2, ans2)
+fun longestZigZag(
+    root: TreeNode?,
+    nodeBeforeIsLeft: Boolean = false,
+    maxLength: Int = -1
+): Int {
+    if (root == null) return maxLength
+    val newMax = maxLength + 1
 
-    return ans1.size == ans2.size && (0 until ans1.size).all { index -> ans1[index] == ans2[index] }
+    return max(
+        longestZigZag(root.left,  nodeBeforeIsLeft, if (nodeBeforeIsLeft) 0 else newMax),
+        longestZigZag(root.right,!nodeBeforeIsLeft, if (nodeBeforeIsLeft) newMax else 0)
+    )
 }
-
-private fun findLeaf(
-    head: TreeNode?,
-    answer: MutableList<Int>
-){
-    if (head == null) return
-
-    if (
-        head.left == null
-        && head.right == null
-    ){
-        answer.add(head.`val`)
-    }
-
-    findLeaf(head.left, answer)
-    findLeaf(head.right, answer)
-}
-
-fun pathSum(root: TreeNode?, sum: Int): Int {
-    val preSum = HashMap<Int, Int>()
-    preSum[0] = 1
-    return helper(root, 0, sum, preSum)
-}
-
-fun helper(root: TreeNode?, beforeSum: Int, target: Int, preSum: HashMap<Int, Int>): Int {
-    if (root == null) { return 0 }
-
-    val currSum = beforeSum + root.`val`
-
-    var res = preSum.getOrDefault(currSum - target, 0)
-    preSum[currSum] = preSum.getOrDefault(currSum, 0) + 1
-
-    res += helper(root.left, currSum, target, preSum) + helper(root.right, currSum, target, preSum)
-    preSum[currSum] = preSum[currSum]!! - 1
-
-    return res
-}
-
-
 
 fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
     if(root == null) return 0
