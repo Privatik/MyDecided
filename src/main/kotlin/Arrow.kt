@@ -31,8 +31,6 @@ class Arrow {
         println("des $des first $firstPoint second $secondPoint triple $triplePoint")
     }
 
-    fun call(){}
-
     companion object{
         private var count = 0
 
@@ -41,6 +39,25 @@ class Arrow {
             println("Init block")
         }
     }
+
+    fun call() {
+        SomeClass()
+        SomeObject()
+    }
+}
+
+private class SomeClass private constructor(){
+    companion object{
+        operator fun invoke(){
+            println("SomeClass invoke")
+        }
+    }
+}
+
+private object SomeObject
+
+private operator fun SomeObject.invoke() {
+    println("SomeObject invoke")
 }
 
 data class Point(val x: Double, val y: Double)

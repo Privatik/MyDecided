@@ -47,16 +47,25 @@ fun main() {
 
 fun longestZigZag(
     root: TreeNode?,
-    nodeBeforeIsLeft: Boolean = false,
+    nextZigZagStepIsLeft: Boolean = true,
     maxLength: Int = -1
 ): Int {
     if (root == null) return maxLength
-    val newMax = maxLength + 1
+    val currentLength = maxLength + 1
 
-    return max(
-        longestZigZag(root.left,  nodeBeforeIsLeft, if (nodeBeforeIsLeft) 0 else newMax),
-        longestZigZag(root.right,!nodeBeforeIsLeft, if (nodeBeforeIsLeft) newMax else 0)
+    val currentMaxZigZag = longestZigZag(
+        if (nextZigZagStepIsLeft) root.left else root.right,
+        !nextZigZagStepIsLeft,
+        currentLength
     )
+
+    val mayMaxZigZag = longestZigZag(
+        if (nextZigZagStepIsLeft) root.right else root.left,
+        nextZigZagStepIsLeft,
+        -1
+    )
+
+    return max(currentMaxZigZag, mayMaxZigZag)
 }
 
 fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
