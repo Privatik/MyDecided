@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.math.max
 
 
 const val codeA = 1040
@@ -31,41 +30,50 @@ fun main() {
 //    )
 
     println(
-        longestZigZag(
-            createTreeNode(0, listOf(1,null,1,1,1,null,null,1,1,null,1,null,null,null,1))
+        findCircleNum(
+            arrayOf(
+                intArrayOf(1,1,0),
+                intArrayOf(1,1,0),
+                intArrayOf(0,0,1),
+            )
         )
     )
 
     println(
-        longestZigZag(
-            createTreeNode(0, listOf(1,1,1,null,1,null,null,1,1,null,1))
+        findCircleNum(
+            arrayOf(
+                intArrayOf(1,0,0),
+                intArrayOf(0,1,0),
+                intArrayOf(0,0,1),
+            )
         )
     )
 
 }
 
+fun findCircleNum(isConnected: Array<IntArray>): Int {
+    var result = 0
+    val visitedCity = BooleanArray(isConnected.size)
+    (isConnected.indices).forEach { city ->
+        result += helper(isConnected, city, visitedCity)
+    }
+    return result
+}
 
-fun longestZigZag(
-    root: TreeNode?,
-    nextZigZagStepIsLeft: Boolean = true,
-    maxLength: Int = -1
-): Int {
-    if (root == null) return maxLength
-    val currentLength = maxLength + 1
-
-    val currentMaxZigZag = longestZigZag(
-        if (nextZigZagStepIsLeft) root.left else root.right,
-        !nextZigZagStepIsLeft,
-        currentLength
-    )
-
-    val mayMaxZigZag = longestZigZag(
-        if (nextZigZagStepIsLeft) root.right else root.left,
-        nextZigZagStepIsLeft,
-        -1
-    )
-
-    return max(currentMaxZigZag, mayMaxZigZag)
+private fun helper(
+    isConnected: Array<IntArray>,
+    currentCity: Int = 0,
+    visitedCity: BooleanArray
+) : Int{
+    var countProvinces = 1
+    visitedCity[currentCity] = true
+    (currentCity + 1 until visitedCity.size).forEach { city ->
+        if (isConnected[currentCity][city] != 0 && !visitedCity[city]){
+            countProvinces++
+            helper(isConnected, city, visitedCity)
+        }
+    }
+    return countProvinces
 }
 
 fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
@@ -126,6 +134,7 @@ fun createListNode(index: Int = 0, array: IntArray): ListNode? {
     return node
 }
 
+//1,null,1,1,1,null,null,1,1,null,1,null,null,null,1
 fun createTreeNode(index: Int = 0, list: List<Int?>): TreeNode? {
     if (index !in list.indices) return null
     if (list[index] == null) return null
