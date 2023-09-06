@@ -30,50 +30,58 @@ fun main() {
 //    )
 
     println(
-        findCircleNum(
+        minReorder(
+            6,
             arrayOf(
-                intArrayOf(1,1,0),
-                intArrayOf(1,1,0),
-                intArrayOf(0,0,1),
+                intArrayOf(0,1),
+                intArrayOf(1,3),
+                intArrayOf(2,3),
+                intArrayOf(4,0),
+                intArrayOf(4,5),
             )
         )
     )
 
     println(
-        findCircleNum(
+        minReorder(
+            5,
             arrayOf(
-                intArrayOf(1,0,0),
-                intArrayOf(0,1,0),
-                intArrayOf(0,0,1),
+                intArrayOf(1,0),
+                intArrayOf(1,2),
+                intArrayOf(3,2),
+                intArrayOf(3,4),
+            )
+        )
+    )
+
+    println(
+        minReorder(
+            3,
+            arrayOf(
+                intArrayOf(1,0),
+                intArrayOf(2,0),
             )
         )
     )
 
 }
 
-fun findCircleNum(isConnected: Array<IntArray>): Int {
-    var result = 0
-    val visitedCity = BooleanArray(isConnected.size)
-    (isConnected.indices).forEach { city ->
-        result += helper(isConnected, city, visitedCity)
-    }
-    return result
+fun minReorder(n: Int, connections: Array<IntArray>): Int{
+    return 0
 }
 
 private fun helper(
     isConnected: Array<IntArray>,
     currentCity: Int = 0,
     visitedCity: BooleanArray
-) : Int{
-    var countProvinces = 1
+) {
+    println("enter to $currentCity")
     visitedCity[currentCity] = true
-    (currentCity + 1 until visitedCity.size).forEach { city ->
+    (visitedCity.indices).forEach { city ->
         if (isConnected[currentCity][city] != 0 && !visitedCity[city]){
-            countProvinces++
             helper(isConnected, city, visitedCity)
         }
     }
-    return countProvinces
 }
 
 fun sumRootToLeaf(root: TreeNode?, current: Int = 0): Int {
